@@ -1,0 +1,5 @@
+name: WarpDrive
+main: no.runsafe.warpdrive.WarpDrive
+version: 1.0
+author: Kruithne
+description: Warping
