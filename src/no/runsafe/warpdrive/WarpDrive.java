@@ -2,7 +2,7 @@ package no.runsafe.warpdrive;
 
 import no.runsafe.framework.RunsafePlugin;
 import no.runsafe.framework.event.player.IPlayerInteractEvent;
-import no.runsafe.framework.server.RunsafeBlock;
+import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.event.player.RunsafePlayerInteractEvent;
