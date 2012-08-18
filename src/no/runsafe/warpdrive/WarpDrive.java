@@ -1,11 +1,12 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.RunsafePlugin;
-import no.runsafe.framework.event.player.IPlayerInteractEvent;
+import no.runsafe.framework.event.IAsyncEvent;
+import no.runsafe.framework.event.player.IPlayerRightClickBlockEvent;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
-import no.runsafe.framework.server.event.player.RunsafePlayerInteractEvent;
+import no.runsafe.framework.server.event.player.RunsafePlayerClickEvent;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,31 +16,28 @@ import org.bukkit.block.Sign;
 
 import java.util.HashMap;
 
-public class WarpDrive extends RunsafePlugin implements IPlayerInteractEvent
+public class WarpDrive extends RunsafePlugin implements IPlayerRightClickBlockEvent, IAsyncEvent
 {
 	@Override
 	protected void PluginSetup()
 	{
 	}
 
-	public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
+	@Override
+	public void OnPlayerRightClick(RunsafePlayerClickEvent event)
 	{
 		RunsafePlayer thePlayer = event.getPlayer();
 		RunsafeBlock theBlock = event.getBlock();
 
-		if (theBlock != null)
+		BlockState theBlockState = theBlock.getRaw().getState();
+		if ((theBlockState instanceof Sign))
 		{
-			BlockState theBlockState = theBlock.getRaw().getState();
+			Sign theSign = (Sign) theBlockState;
 
-			if ((theBlockState instanceof Sign))
+			if (theSign.getLine(0).equalsIgnoreCase(ChatColor.DARK_BLUE + "[Snazzy Warp]"))
 			{
-				Sign theSign = (Sign) theBlockState;
-
-				if (theSign.getLine(0).equalsIgnoreCase(ChatColor.DARK_BLUE + "[Snazzy Warp]"))
-				{
-					setRandomWarp(theSign, thePlayer);
-					event.setCancelled(true);
-				}
+				setRandomWarp(theSign, thePlayer);
+				event.setCancelled(true);
 			}
 		}
 	}
