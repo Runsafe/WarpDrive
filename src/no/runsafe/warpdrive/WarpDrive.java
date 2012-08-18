@@ -2,141 +2,133 @@ package no.runsafe.warpdrive;
 
 import no.runsafe.framework.RunsafePlugin;
 import no.runsafe.framework.event.player.IPlayerInteractEvent;
-import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
+import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.server.player.RunsafePlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
+import org.bukkit.World;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import sun.misc.SignalHandler;
 
 import java.util.HashMap;
 
 public class WarpDrive extends RunsafePlugin implements IPlayerInteractEvent
 {
-    private HashMap<String, RunsafeLocation> signWarpLocations = new HashMap<String, RunsafeLocation>();
+	@Override
+	protected void PluginSetup()
+	{
+	}
 
-    public WarpDrive()
-    {
-        super();
-    }
+	public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
+	{
+		RunsafePlayer thePlayer = event.getPlayer();
+		RunsafeBlock theBlock = event.getBlock();
 
-    @Override
-    protected void PluginSetup()
-    {
-        //Add components
-    }
+		if (theBlock != null)
+		{
+			BlockState theBlockState = theBlock.getRaw().getState();
 
-    @Override
-    public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
-    {
-        RunsafePlayer thePlayer = event.getPlayer();
-        Block theBlock = event.getBlock();
+			if ((theBlockState instanceof Sign))
+			{
+				Sign theSign = (Sign) theBlockState;
 
-        if (theBlock != null)
-        {
-            BlockState theBlockState = theBlock.getState();
+				if (theSign.getLine(0).equalsIgnoreCase(ChatColor.DARK_BLUE + "[Snazzy Warp]"))
+				{
+					setRandomWarp(theSign, thePlayer);
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
 
-            if (theBlockState instanceof Sign)
-            {
-                Sign theSign = (Sign) theBlockState;
+	private void setRandomWarp(Sign theSign, RunsafePlayer thePlayer)
+	{
+		String warpName = theSign.getLine(1);
 
-                if (theSign.getLine(0).equalsIgnoreCase("[Dynamic Warp]"))
-                {
-                    this.setRandomWarp(theSign, thePlayer);
-                    event.setCancelled(true);
-                }
-            }
-        }
-    }
+		long difference = 0L;
+		if (this.signWarpExpires.containsKey(warpName))
+		{
+			difference = System.currentTimeMillis() / 1000L - (Long) this.signWarpExpires.get(warpName);
+		}
 
-    private void setRandomWarp(Sign theSign, RunsafePlayer thePlayer)
-    {
-        String warpName = theSign.getLine(1);
-        //!this.signWarpLocations.containsKey(signLocation)
-        if (!this.signWarpLocations.containsKey(warpName))
-        {
-            int radius = Integer.parseInt(theSign.getLine(2));
-            int boundingRadius = Integer.parseInt(theSign.getLine(3));
+		if ((!this.signWarpLocations.containsKey(warpName)) || (difference > 60L))
+		{
+			int radius = Integer.parseInt(theSign.getLine(2));
+			int boundingRadius = Integer.parseInt(theSign.getLine(3));
 
-            boolean negX = (Math.random() * 100) > 50;
-            boolean negY = (Math.random() * 100) > 50;
+			boolean negX = Math.random() * 100.0D > 50.0D;
+			boolean negZ = Math.random() * 100.0D > 50.0D;
 
-            double randomXB = (negX ? -1 : 1) * (((radius -boundingRadius) * Math.random()) + boundingRadius);
-            double randomZB = (negY ? -1 : 1) * (((radius -boundingRadius) * Math.random()) + boundingRadius);
+			double randomXB = (negX ? -1 : 1) * ((radius - boundingRadius) * Math.random() + boundingRadius);
+			double randomZB = (negZ ? -1 : 1) * ((radius - boundingRadius) * Math.random() + boundingRadius);
 
-            thePlayer.sendMessage("X: " + randomXB);
-            thePlayer.sendMessage("Z: " + randomZB);
+			double randomX = randomXB + theSign.getX();
+			double randomZ = randomZB + theSign.getZ();
 
-            double randomX = randomXB + theSign.getX();
-            double randomZ = randomZB + theSign.getZ();
+			RunsafeWorld theWorld = new RunsafeWorld(theSign.getWorld());
+			RunsafeLocation newLocation = new RunsafeLocation(theWorld, randomX, 60.0D, randomZ);
 
-            RunsafeWorld theWorld = new RunsafeWorld(theSign.getWorld());
-            RunsafeLocation newLocation = new RunsafeLocation(theWorld, randomX, 60, randomZ);
+			this.signWarpLocations.put(warpName, newLocation);
+			this.signWarpExpires.put(warpName, System.currentTimeMillis() / 1000L);
 
-            this.signWarpLocations.put(warpName, newLocation);
+			safePlayerTeleport(newLocation, thePlayer);
+		}
+		else
+		{
+			long out = System.currentTimeMillis() / 1000L - (Long) this.signWarpExpires.get(warpName);
+			RunsafeLocation location = (RunsafeLocation) this.signWarpLocations.get(warpName);
+			safePlayerTeleport(location, thePlayer);
+		}
+	}
 
-            this.safeTeleport(newLocation, thePlayer);
-        }
-        else
-        {
-            RunsafeLocation location = this.signWarpLocations.get(warpName);
-            this.safeTeleport(location, thePlayer);
-        }
-    }
+	public void safePlayerTeleport(RunsafeLocation location, RunsafePlayer player)
+	{
+		boolean canTeleport = false;
+		RunsafeWorld world = location.getWorld();
+		int x = location.getBlockX();
+		int z = location.getBlockZ();
 
-    public void safeTeleport(RunsafeLocation location, RunsafePlayer player)
-    {
-        int x = location.getBlockX();
-        int y = Math.max(0, location.getBlockY());
-        int origY = y;
-        int z = location.getBlockZ();
+		int maxHeight = world.getMaxHeight();
+		int minHeight = 50;
 
-        RunsafeWorld world = location.getWorld();
+		if (world.getRaw().getEnvironment() == World.Environment.NETHER)
+		{
+			maxHeight = 126;
+			minHeight = 0;
+		}
 
-        byte free = 0;
+		int y = maxHeight;
+		while (y > minHeight)
+		{
+			RunsafeBlock theBlockBelow = world.getBlockAt(x, y, z);
+			RunsafeBlock theBlockWithin = world.getBlockAt(x, y + 1, z);
+			RunsafeBlock theBlockAbove = world.getBlockAt(x, y + 2, z);
 
-        while (y <= world.getMaxHeight() + 1)
-        {
-            RunsafeBlock theBlock = world.getBlockAt(x, y, z);
-            if (theBlock.canPassThrough())
-            {
-                free++;
-            }
-            else
-            {
-                free = 0;
-            }
+			if (((!theBlockBelow.canPassThrough()) || (theBlockBelow.getTypeId() == Material.WATER.getId())) && (theBlockWithin.canPassThrough()) && (!theBlockWithin.isHazardous()) && (theBlockAbove.canPassThrough()) && (!theBlockAbove.isHazardous()) && (!world.getBlockAt(x + 1, y + 1, z).isHazardous()) && (!world.getBlockAt(x - 1, y + 1, z).isHazardous()) && (!world.getBlockAt(x, y + 1, z + 1).isHazardous()) && (!world.getBlockAt(x, y + 1, z - 1).isHazardous()) && (!world.getBlockAt(x + 1, y + 1, z - 1).isHazardous()) && (!world.getBlockAt(x - 1, y + 1, z + 1).isHazardous()) && (!world.getBlockAt(x - 1, y + 1, z - 1).isHazardous()) && (!world.getBlockAt(x + 1, y + 1, z + 1).isHazardous()))
+			{
+				canTeleport = true;
+				break;
+			}
 
-            if (free == 2)
-            {
-                if (y - 1 != origY || y == 1)
-                {
-                    location.setX(x + 0.5);
-                    location.setY(y);
-                    location.setZ(z + 0.5);
+			y--;
+		}
 
-                    if (y <= 2 && world.getBlockAt(x,0,z).getTypeId() == Material.AIR.getId())
-                    {
-                        world.getBlockAt(x,0,z).setTypeId(Material.GLASS.getId());
-                        location.setY(2);
-                    }
-                    player.setFallDistance(0F);
-                    player.teleport(location);
-                }
-                else
-                {
-                    location.setX(location.getX() + 20);
-                    location.setZ(location.getZ() + 20);
-                    this.safeTeleport(location, player);
-                }
-                return;
-            }
+		if (canTeleport)
+		{
+			player.setFallDistance(0.0F);
+			player.teleport(world, x + 0.5D, y + 1, z + 0.5D);
+		}
+		else
+		{
+			location.setX(x + 1);
+			location.setZ(z + 1);
+			safePlayerTeleport(location, player);
+		}
+	}
 
-            y++;
-        }
-    }
+	private HashMap<String, RunsafeLocation> signWarpLocations = new HashMap<String, RunsafeLocation>();
+	private HashMap<String, Long> signWarpExpires = new HashMap<String, Long>();
 }
