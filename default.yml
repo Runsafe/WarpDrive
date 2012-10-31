@@ -1,0 +1,4 @@
+snazzy.enable: true
+public.enable: true
+private.enable: true
+private.max: 5

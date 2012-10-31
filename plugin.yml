@@ -1,5 +1,18 @@
 name: WarpDrive
-main: no.runsafe.warpdrive.WarpDrive
-version: 1.0
-author: Kruithne
-description: Warping
+main: no.runsafe.warpdrive.Plugin
+version: 1.1
+author: Kruithne, mortenn
+description: Public and private warps for minecraft
+commands:
+  sethome:
+    description: Set private warp location
+  delhome:
+    description: Remove a private warp location
+  home:
+    description: Teleport to a private warp location
+  setwarp:
+    description: Set public warp location
+  delwarp:
+    description: Remove a private warp location
+  warp:
+    description: Teleport to a private warp location
