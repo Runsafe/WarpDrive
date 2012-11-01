@@ -14,6 +14,12 @@ public class DelWarp extends RunsafeAsyncPlayerCommand
 	}
 
 	@Override
+	public String requiredPermission()
+	{
+		return "runsafe.warp.delete";
+	}
+
+	@Override
 	public String OnExecute(RunsafePlayer player, String[] strings)
 	{
 		warpRepository.DelPublic(getArg("name"));

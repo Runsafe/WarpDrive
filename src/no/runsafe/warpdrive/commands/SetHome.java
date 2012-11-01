@@ -13,6 +13,13 @@ public class SetHome extends RunsafeAsyncPlayerCommand
 		warpRepository = repository;
 	}
 
+
+	@Override
+	public String requiredPermission()
+	{
+		return "runsafe.home.set";
+	}
+
 	@Override
 	public String OnExecute(RunsafePlayer player, String[] strings)
 	{

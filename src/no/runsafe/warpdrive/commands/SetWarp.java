@@ -14,6 +14,12 @@ public class SetWarp extends RunsafeAsyncPlayerCommand
 	}
 
 	@Override
+	public String requiredPermission()
+	{
+		return "runsafe.warp.set";
+	}
+
+	@Override
 	public String OnExecute(RunsafePlayer player, String[] strings)
 	{
 		warpRepository.Persist(player.getName(), getArg("name"), true, player.getLocation());

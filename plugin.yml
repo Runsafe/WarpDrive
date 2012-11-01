@@ -16,3 +16,5 @@ commands:
     description: Remove a private warp location
   warp:
     description: Teleport to a private warp location
+  top:
+    description: Teleports the player to the top block of his or her x/z coordinate.

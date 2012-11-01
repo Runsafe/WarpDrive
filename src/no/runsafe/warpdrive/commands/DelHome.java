@@ -14,6 +14,12 @@ public class DelHome extends RunsafeAsyncPlayerCommand
 	}
 
 	@Override
+	public String requiredPermission()
+	{
+		return "runsafe.home.delete";
+	}
+
+	@Override
 	public String OnExecute(RunsafePlayer player, String[] strings)
 	{
 		warpRepository.DelPrivate(player.getName(), getArg("name"));

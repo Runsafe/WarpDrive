@@ -30,7 +30,7 @@ public class SnazzyWarp implements IPlayerRightClickBlockEvent, IAsyncEvent
 
 			if (theSign.getLine(0).equalsIgnoreCase(ChatColor.DARK_BLUE + "[Snazzy Warp]"))
 			{
-				safePlayerTeleport(getRandomWarp(theSign), thePlayer);
+				safePlayerTeleport(getRandomWarp(theSign), thePlayer, true);
 				event.setCancelled(true);
 			}
 		}
