@@ -1,6 +1,7 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.command.RunsafeAsyncPlayerCommand;
+import no.runsafe.framework.command.RunsafePlayerCommand;
 import no.runsafe.framework.event.block.ISignChange;
 import no.runsafe.framework.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.output.IOutput;
@@ -14,11 +15,11 @@ import no.runsafe.warpdrive.StaticWarp;
 import no.runsafe.warpdrive.database.WarpRepository;
 import org.bukkit.ChatColor;
 
-public class Warp extends RunsafeAsyncPlayerCommand implements IPlayerRightClickSign, ISignChange
+public class Warp extends RunsafePlayerCommand implements IPlayerRightClickSign, ISignChange
 {
-	public Warp(IScheduler scheduler, WarpRepository repository, IOutput output)
+	public Warp(WarpRepository repository, IOutput output)
 	{
-		super("warp", scheduler, "destination");
+		super("warp", "destination");
 		warpRepository = repository;
 		console = output;
 	}
@@ -34,7 +35,7 @@ public class Warp extends RunsafeAsyncPlayerCommand implements IPlayerRightClick
 	{
 		RunsafeLocation destination = warpRepository.GetPublic(getArg("destination"));
 		StaticWarp.safePlayerTeleport(destination, player, false);
-		return "";
+		return null;
 	}
 
 	@Override

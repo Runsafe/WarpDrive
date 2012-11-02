@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class WarpRepository implements ISchemaChanges
@@ -101,11 +102,19 @@ public class WarpRepository implements ISchemaChanges
 	{
 		if (publicWarp)
 			return name;
-		return String.format("{0}:{1}", creator, name);
+		return String.format("%s:%s", creator, name);
 	}
 
 	private RunsafeLocation GetWarp(String owner, String name, boolean publicWarp)
 	{
+		console.outputDebugToConsole(
+			String.format(
+				"[%s, %s] Loading location for %s",
+				owner, name,
+				cacheKey(owner, name, publicWarp)
+			),
+			Level.FINER
+		);
 		String key = cacheKey(owner, name, publicWarp);
 		if (cache.containsKey(key))
 			return cache.get(key);
@@ -145,7 +154,7 @@ public class WarpRepository implements ISchemaChanges
 						result.getFloat("yaw"),
 						result.getFloat("pitch")
 					),
-					Level.FINE
+					Level.FINER
 				);
 				cache.put(key, location);
 				return location;
@@ -187,6 +196,6 @@ public class WarpRepository implements ISchemaChanges
 	}
 
 	private IDatabase database;
-	private HashMap<String, RunsafeLocation> cache = new HashMap<String, RunsafeLocation>();
+	private ConcurrentHashMap<String, RunsafeLocation> cache = new ConcurrentHashMap<String, RunsafeLocation>();
 	private IOutput console;
 }
