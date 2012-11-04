@@ -78,6 +78,16 @@ public class WarpRepository implements ISchemaChanges
 		}
 	}
 
+	public List<String> GetPublicList()
+	{
+		return GetWarps(null, true);
+	}
+
+	public List<String> GetPrivateList(String owner)
+	{
+		return GetWarps(owner, false);
+	}
+
 	public RunsafeLocation GetPublic(String name)
 	{
 		return GetWarp("", name, true);
@@ -105,16 +115,36 @@ public class WarpRepository implements ISchemaChanges
 		return String.format("%s:%s", creator, name);
 	}
 
+	private List<String> GetWarps(String owner, boolean publicWarp)
+	{
+		ArrayList<String> names = new ArrayList<String>();
+		PreparedStatement query;
+		if (publicWarp)
+			query = database.prepare(
+				"SELECT name FROM warpdrive_locations WHERE `public`=?"
+			);
+		else
+			query = database.prepare(
+				"SELECT name FROM warpdrive_locations WHERE `public`=? AND creator=?"
+			);
+		try
+		{
+			query.setBoolean(1, publicWarp);
+			if (!publicWarp)
+				query.setString(2, owner);
+			ResultSet result = query.executeQuery();
+			while(result.next())
+				names.add(result.getString("name"));
+		}
+		catch (SQLException e)
+		{
+			console.write(e.getMessage());
+		}
+		return names;
+	}
+
 	private RunsafeLocation GetWarp(String owner, String name, boolean publicWarp)
 	{
-		console.outputDebugToConsole(
-			String.format(
-				"[%s, %s] Loading location for %s",
-				owner, name,
-				cacheKey(owner, name, publicWarp)
-			),
-			Level.FINER
-		);
 		String key = cacheKey(owner, name, publicWarp);
 		if (cache.containsKey(key))
 			return cache.get(key);

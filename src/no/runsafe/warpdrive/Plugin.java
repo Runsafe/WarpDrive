@@ -18,5 +18,7 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(DelHome.class);
 		addComponent(Home.class);
 		addComponent(Top.class);
+		addComponent(TeleportPos.class);
+		addComponent(Teleport.class);
 	}
 }
