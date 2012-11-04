@@ -1,42 +1,31 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.event.IAsyncEvent;
-import no.runsafe.framework.event.player.IPlayerRightClickBlockEvent;
+import no.runsafe.framework.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeWorld;
-import no.runsafe.framework.server.block.RunsafeBlock;
-import no.runsafe.framework.server.event.player.RunsafePlayerClickEvent;
+import no.runsafe.framework.server.block.RunsafeSign;
+import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.ChatColor;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 
 import java.util.HashMap;
 
 import static no.runsafe.warpdrive.StaticWarp.safePlayerTeleport;
 
-public class SnazzyWarp implements IPlayerRightClickBlockEvent, IAsyncEvent
+public class SnazzyWarp implements IPlayerRightClickSign, IAsyncEvent
 {
 	@Override
-	public void OnPlayerRightClick(RunsafePlayerClickEvent event)
+	public boolean OnPlayerRightClickSign(RunsafePlayer thePlayer, RunsafeItemStack runsafeItemStack, RunsafeSign theSign)
 	{
-		RunsafePlayer thePlayer = event.getPlayer();
-		RunsafeBlock theBlock = event.getBlock();
-
-		BlockState theBlockState = theBlock.getRaw().getState();
-		if ((theBlockState instanceof Sign))
+		if (theSign.getLine(0).equalsIgnoreCase(ChatColor.DARK_BLUE + "[Snazzy Warp]"))
 		{
-			Sign theSign = (Sign) theBlockState;
-
-			if (theSign.getLine(0).equalsIgnoreCase(ChatColor.DARK_BLUE + "[Snazzy Warp]"))
-			{
-				safePlayerTeleport(getRandomWarp(theSign), thePlayer, true);
-				event.setCancelled(true);
-			}
+			safePlayerTeleport(getRandomWarp(theSign), thePlayer, true);
+			return false;
 		}
+		return true;
 	}
 
-	private RunsafeLocation getRandomWarp(Sign theSign)
+	private RunsafeLocation getRandomWarp(RunsafeSign theSign)
 	{
 		String warpName = theSign.getLine(1);
 
@@ -58,8 +47,7 @@ public class SnazzyWarp implements IPlayerRightClickBlockEvent, IAsyncEvent
 		double randomX = randomXB + theSign.getX();
 		double randomZ = randomZB + theSign.getZ();
 
-		RunsafeWorld theWorld = new RunsafeWorld(theSign.getWorld());
-		RunsafeLocation newLocation = new RunsafeLocation(theWorld, randomX, 60.0D, randomZ);
+		RunsafeLocation newLocation = new RunsafeLocation(theSign.getWorld(), randomX, 60.0D, randomZ);
 
 		signWarpLocations.put(warpName, newLocation);
 		signWarpExpires.put(warpName, System.currentTimeMillis());
