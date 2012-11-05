@@ -11,16 +11,15 @@ import java.util.List;
 
 public class SetHome extends RunsafeAsyncPlayerCommand implements IConfigurationChanged
 {
-	public SetHome(IScheduler scheduler, WarpRepository repository, IConfiguration config)
+	public SetHome(IScheduler scheduler, WarpRepository repository)
 	{
 		super("sethome", scheduler, "name");
 		warpRepository = repository;
-		configuration = config;
 	}
 
 
 	@Override
-	public void OnConfigurationChanged()
+	public void OnConfigurationChanged(IConfiguration configuration)
 	{
 		privateWarpLimit = configuration.getConfigValueAsInt("private.max");
 	}
@@ -45,6 +44,5 @@ public class SetHome extends RunsafeAsyncPlayerCommand implements IConfiguration
 	}
 
 	WarpRepository warpRepository;
-	IConfiguration configuration;
 	int privateWarpLimit;
 }
