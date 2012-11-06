@@ -225,7 +225,7 @@ public class WarpRepository implements ISchemaChanges
 		}
 	}
 
-	private IDatabase database;
-	private ConcurrentHashMap<String, RunsafeLocation> cache = new ConcurrentHashMap<String, RunsafeLocation>();
-	private IOutput console;
+	private final IDatabase database;
+	private final ConcurrentHashMap<String, RunsafeLocation> cache = new ConcurrentHashMap<String, RunsafeLocation>();
+	private final IOutput console;
 }

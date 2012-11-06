@@ -26,5 +26,5 @@ public class DelHome extends RunsafeAsyncPlayerCommand
 		return String.format("Home location %s removed.", getArg("name"));
 	}
 
-	WarpRepository warpRepository;
+	final WarpRepository warpRepository;
 }

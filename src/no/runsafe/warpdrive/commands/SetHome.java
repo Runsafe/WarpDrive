@@ -43,6 +43,6 @@ public class SetHome extends RunsafeAsyncPlayerCommand implements IConfiguration
 		return String.format("Current location saved as the home %s.", getArg("name"));
 	}
 
-	WarpRepository warpRepository;
+	final WarpRepository warpRepository;
 	int privateWarpLimit;
 }

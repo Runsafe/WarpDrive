@@ -74,5 +74,5 @@ public class Teleport extends RunsafePlayerCommand
 		return String.format("Unable to safely teleport to %1$s, try /tp %1$s -f", player);
 	}
 
-	IOutput console;
+	final IOutput console;
 }

@@ -26,5 +26,5 @@ public class SetWarp extends RunsafeAsyncPlayerCommand
 		return String.format("Current location saved as the warp %s.", getArg("name"));
 	}
 
-	WarpRepository warpRepository;
+	final WarpRepository warpRepository;
 }

@@ -13,6 +13,7 @@ import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
 import no.runsafe.warpdrive.StaticWarp;
 import no.runsafe.warpdrive.database.WarpRepository;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 
 public class Warp extends RunsafePlayerCommand implements IPlayerRightClickSign, ISignChange
@@ -36,6 +37,16 @@ public class Warp extends RunsafePlayerCommand implements IPlayerRightClickSign,
 		RunsafeLocation destination = warpRepository.GetPublic(getArg("destination"));
 		StaticWarp.safePlayerTeleport(destination, player, false);
 		return null;
+	}
+
+	@Override
+	public String getCommandUsage(RunsafePlayer executor)
+	{
+		return String.format(
+			"/%1$s\nExisting warps: %2$s",
+			getCommandParams(),
+			StringUtils.join(warpRepository.GetPublicList(), ", ")
+		);
 	}
 
 	@Override
@@ -71,6 +82,6 @@ public class Warp extends RunsafePlayerCommand implements IPlayerRightClickSign,
 		return false;
 	}
 
-	WarpRepository warpRepository;
-	IOutput console;
+	final WarpRepository warpRepository;
+	final IOutput console;
 }

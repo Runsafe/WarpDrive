@@ -55,6 +55,6 @@ public class SnazzyWarp implements IPlayerRightClickSign, IAsyncEvent
 		return signWarpLocations.get(warpName);
 	}
 
-	private HashMap<String, RunsafeLocation> signWarpLocations = new HashMap<String, RunsafeLocation>();
-	private HashMap<String, Long> signWarpExpires = new HashMap<String, Long>();
+	private final HashMap<String, RunsafeLocation> signWarpLocations = new HashMap<String, RunsafeLocation>();
+	private final HashMap<String, Long> signWarpExpires = new HashMap<String, Long>();
 }

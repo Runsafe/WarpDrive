@@ -26,5 +26,5 @@ public class DelWarp extends RunsafeAsyncPlayerCommand
 		return String.format("Deleted public warp %s.", getArg("name"));
 	}
 
-	WarpRepository warpRepository;
+	final WarpRepository warpRepository;
 }

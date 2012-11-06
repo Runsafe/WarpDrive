@@ -14,12 +14,10 @@ import java.util.List;
 
 public class Home extends RunsafePlayerCommand
 {
-	public Home(WarpRepository repository, IOutput output, IConfiguration config)
+	public Home(WarpRepository repository)
 	{
 		super("home");
 		warpRepository = repository;
-		console = output;
-		configuration = config;
 	}
 
 	@Override
@@ -58,7 +56,5 @@ public class Home extends RunsafePlayerCommand
 		return null;
 	}
 
-	WarpRepository warpRepository;
-	IOutput console;
-	IConfiguration configuration;
+	final WarpRepository warpRepository;
 }
