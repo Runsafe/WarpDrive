@@ -20,17 +20,17 @@ public class Teleport extends RunsafePlayerCommand
 	@Override
 	public boolean CanExecute(RunsafePlayer player, String[] args)
 	{
-		if (player.hasPermission("runsafe.teleport.world.*"))
-		{
-			console.outputDebugToConsole("Has access to all worlds", Level.FINE);
-			return true;
-		}
 		RunsafePlayer target = null;
 		if (args.length > 0)
 			target = RunsafeServer.Instance.getPlayer(args[0]);
-		if (target == null)
+		if (target == null || !target.isOnline() || !player.canSee(target))
 		{
 			console.outputDebugToConsole("No teleport target", Level.FINE);
+			return true;
+		}
+		if (player.hasPermission("runsafe.teleport.world.*"))
+		{
+			console.outputDebugToConsole("Has access to all worlds", Level.FINE);
 			return true;
 		}
 		if (player.hasPermission(String.format("runsafe.teleport.world.%s", target.getWorld().getName())))
