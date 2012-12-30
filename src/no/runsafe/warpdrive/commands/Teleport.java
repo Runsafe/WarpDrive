@@ -3,7 +3,9 @@ package no.runsafe.warpdrive.commands;
 import no.runsafe.framework.command.RunsafePlayerCommand;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeServer;
+import no.runsafe.framework.server.player.RunsafeAmbiguousPlayer;
 import no.runsafe.framework.server.player.RunsafePlayer;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.logging.Level;
 
@@ -22,8 +24,8 @@ public class Teleport extends RunsafePlayerCommand
 	{
 		RunsafePlayer target = null;
 		if (args.length > 0)
-			target = RunsafeServer.Instance.getPlayer(args[0]);
-		if (target == null || !target.isOnline() || !player.canSee(target))
+			target = RunsafeServer.Instance.getOnlinePlayer(player, args[0]);
+		if (target == null || !target.isOnline() || !player.canSee(target) || target instanceof RunsafeAmbiguousPlayer)
 		{
 			console.outputDebugToConsole("No teleport target", Level.FINE);
 			return true;
@@ -50,28 +52,62 @@ public class Teleport extends RunsafePlayerCommand
 	@Override
 	public String OnExecute(RunsafePlayer executor, String[] args)
 	{
-		String player = getArg("player");
-		RunsafePlayer destination = RunsafeServer.Instance.getPlayer(player);
-		if (destination == null)
-			return String.format("Could not find player %s.", player);
-
-		if(destination.getWorld().getName().equals(executor.getWorld().getName()))
+		String movePlayer;
+		RunsafePlayer move;
+		String toPlayer;
+		RunsafePlayer to;
+		if (args.length > 1)
 		{
-			if(destination.isCreative() && executor.isCreative())
+			movePlayer = getArg("player");
+			move = RunsafeServer.Instance.getOnlinePlayer(executor, movePlayer);
+			toPlayer = args[1];
+			to = RunsafeServer.Instance.getOnlinePlayer(executor, toPlayer);
+		}
+		else
+		{
+			movePlayer = executor.getName();
+			move = executor;
+			toPlayer = getArg("player");
+			to = RunsafeServer.Instance.getOnlinePlayer(executor, toPlayer);
+		}
+
+		if (move instanceof RunsafeAmbiguousPlayer)
+			return formatAmbiguity((RunsafeAmbiguousPlayer) move);
+
+		if (to instanceof RunsafeAmbiguousPlayer)
+			return formatAmbiguity((RunsafeAmbiguousPlayer) to);
+
+		if (move == null || !move.isOnline())
+			return String.format("Could not find player %s to teleport.", movePlayer);
+
+		if (to == null || !to.isOnline())
+			return String.format("Could not find destination player %s.", toPlayer);
+
+		if (to.getWorld().getName().equals(move.getWorld().getName()))
+		{
+			if (to.isCreative() && move.isCreative())
 			{
-				executor.teleport(destination.getLocation());
+				move.teleport(to.getLocation());
 				return null;
 			}
 		}
 		if (args.length > 1 && args[1].equals("-f"))
 		{
-			executor.teleport(destination.getLocation());
-			return String.format("Performed unsafe teleport to %s.", player);
+			move.teleport(to.getLocation());
+			return String.format("Performed unsafe teleport of %s to %s.", movePlayer, toPlayer);
 		}
-		if (safePlayerTeleport(destination.getLocation(), executor, false))
+		if (safePlayerTeleport(to.getLocation(), move, false))
 			return null;
 
-		return String.format("Unable to safely teleport to %1$s, try /tp %1$s -f", player);
+		return String.format("Unable to safely teleport %1$s to %2$s, try /tp %1$s %2$s -f", movePlayer, toPlayer);
+	}
+
+	private String formatAmbiguity(RunsafeAmbiguousPlayer player)
+	{
+		return String.format(
+			"Multiple players found, please specify better: %s",
+			StringUtils.join(player.getAmbiguity(), ", ")
+		);
 	}
 
 	final IOutput console;
