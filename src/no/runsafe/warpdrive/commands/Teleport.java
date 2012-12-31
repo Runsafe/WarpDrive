@@ -68,6 +68,7 @@ public class Teleport extends RunsafePlayerCommand
 			movePlayer = executor.getName();
 			move = executor;
 			toPlayer = getArg("player");
+			Console.outputDebugToConsole(String.format("Getting online player %s", toPlayer), Level.FINE);
 			to = RunsafeServer.Instance.getOnlinePlayer(executor, toPlayer);
 		}
 
@@ -94,12 +95,12 @@ public class Teleport extends RunsafePlayerCommand
 		if (args.length > 1 && args[1].equals("-f"))
 		{
 			move.teleport(to.getLocation());
-			return String.format("Performed unsafe teleport of %s to %s.", movePlayer, toPlayer);
+			return String.format("Performed unsafe teleport of %s to %s.", move.getPrettyName(), to.getPrettyName());
 		}
 		if (safePlayerTeleport(to.getLocation(), move, false))
 			return null;
 
-		return String.format("Unable to safely teleport %1$s to %2$s, try /tp %1$s %2$s -f", movePlayer, toPlayer);
+		return String.format("Unable to safely teleport %1$s to %2$s, try /tp %1$s %2$s -f", move.getPrettyName(), to.getPrettyName());
 	}
 
 	private String formatAmbiguity(RunsafeAmbiguousPlayer player)
