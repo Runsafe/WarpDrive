@@ -20,5 +20,6 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(Top.class);
 		addComponent(TeleportPos.class);
 		addComponent(Teleport.class);
+		addComponent(WipeHomes.class);
 	}
 }

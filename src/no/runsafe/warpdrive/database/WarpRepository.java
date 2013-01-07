@@ -108,6 +108,23 @@ public class WarpRepository implements ISchemaChanges
 		DelWarp(owner, name, false);
 	}
 
+	public void DelAllPrivate(String world)
+	{
+		PreparedStatement query = database.prepare(
+			"DELETE FROM warpdrive_locations WHERE world=? AND public=?"
+		);
+		try
+		{
+			query.setString(1, world);
+			query.setBoolean(2, true);
+			query.execute();
+		}
+		catch (Exception e)
+		{
+			console.write(e.getMessage());
+		}
+	}
+
 	private String cacheKey(String creator, String name, boolean publicWarp)
 	{
 		if (publicWarp)
@@ -133,7 +150,7 @@ public class WarpRepository implements ISchemaChanges
 			if (!publicWarp)
 				query.setString(2, owner);
 			ResultSet result = query.executeQuery();
-			while(result.next())
+			while (result.next())
 				names.add(result.getString("name"));
 		}
 		catch (SQLException e)
