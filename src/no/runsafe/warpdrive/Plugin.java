@@ -21,5 +21,6 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(TeleportPos.class);
 		addComponent(Teleport.class);
 		addComponent(WipeHomes.class);
+		addComponent(TeleportToEntityID.class);
 	}
 }
