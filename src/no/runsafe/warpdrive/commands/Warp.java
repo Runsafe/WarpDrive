@@ -38,6 +38,8 @@ public class Warp extends RunsafePlayerCommand implements IPlayerRightClickSign,
 			return "You do not have permission to use this warp.";
 
 		RunsafeLocation destination = warpRepository.GetPublic(target);
+		if (destination == null)
+			return String.format("The warp %s does not exist.", target);
 		StaticWarp.safePlayerTeleport(destination, player, false);
 		return null;
 	}
