@@ -3,6 +3,7 @@ package no.runsafe.warpdrive.commands;
 import no.runsafe.framework.command.RunsafePlayerCommand;
 import no.runsafe.framework.event.block.ISignChange;
 import no.runsafe.framework.event.player.IPlayerRightClickSign;
+import no.runsafe.framework.output.ChatColour;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.block.RunsafeBlock;
@@ -12,7 +13,6 @@ import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.warpdrive.StaticWarp;
 import no.runsafe.warpdrive.database.WarpRepository;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
 
 public class Warp extends RunsafePlayerCommand implements IPlayerRightClickSign, ISignChange
 {
@@ -90,5 +90,5 @@ public class Warp extends RunsafePlayerCommand implements IPlayerRightClickSign,
 
 	final WarpRepository warpRepository;
 	final IOutput console;
-	private String warpHeader = "[" + ChatColor.BLUE + "warp" + ChatColor.RESET + "]";
+	private static final String warpHeader = "[" + ChatColour.BLUE.toBukkit() + "warp" + ChatColour.RESET.toBukkit() + "]";
 }

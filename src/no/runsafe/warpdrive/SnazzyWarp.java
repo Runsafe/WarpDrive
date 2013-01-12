@@ -4,6 +4,7 @@ import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IAsyncEvent;
 import no.runsafe.framework.event.IConfigurationChanged;
 import no.runsafe.framework.event.player.IPlayerRightClickSign;
+import no.runsafe.framework.output.ChatColour;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
@@ -13,7 +14,6 @@ import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.framework.timer.IScheduler;
-import org.bukkit.ChatColor;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
@@ -35,7 +35,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	@Override
 	public boolean OnPlayerRightClickSign(RunsafePlayer thePlayer, RunsafeItemStack runsafeItemStack, RunsafeSign theSign)
 	{
-		if (theSign.getLine(0).equalsIgnoreCase(ChatColor.DARK_BLUE + "[Snazzy Warp]"))
+		if (theSign.getLine(0).equalsIgnoreCase(signHeader))
 		{
 			if (!snazzyWarps.containsKey(theSign.getLine(1)))
 				snazzyWarps.put(theSign.getLine(1), new WarpParameters(theSign));
@@ -123,4 +123,5 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	private final ConcurrentHashMap<String, WarpParameters> snazzyWarps = new ConcurrentHashMap<String, WarpParameters>();
 	private final IOutput console;
 	private Duration change_after;
+	private static final String signHeader = ChatColour.DARK_BLUE.toBukkit() + "[Snazzy Warp]";
 }
