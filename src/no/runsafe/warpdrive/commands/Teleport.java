@@ -1,56 +1,47 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.command.RunsafePlayerCommand;
+import no.runsafe.framework.command.IContextPermissionProvider;
+import no.runsafe.framework.command.player.PlayerCommand;
 import no.runsafe.framework.output.IOutput;
+import no.runsafe.framework.server.ICommandExecutor;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafeAmbiguousPlayer;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import static no.runsafe.warpdrive.StaticWarp.safePlayerTeleport;
 
-public class Teleport extends RunsafePlayerCommand
+public class Teleport extends PlayerCommand implements IContextPermissionProvider
 {
 	public Teleport(IOutput output)
 	{
-		super("teleport", "player");
+		super("teleport", "Teleports you or another player to another player", null, "player");
 		console = output;
 	}
 
-	@Override
-	public boolean CanExecute(RunsafePlayer player, String[] args)
+	public String getPermission(ICommandExecutor executor, HashMap<String, String> parameters, String[] args)
 	{
-		RunsafePlayer target = null;
-		if (args.length > 0)
-			target = RunsafeServer.Instance.getOnlinePlayer(player, args[0]);
-		if (target == null || !target.isOnline() || !player.canSee(target) || target instanceof RunsafeAmbiguousPlayer)
+		if (executor instanceof RunsafePlayer)
 		{
-			console.outputDebugToConsole("No teleport target", Level.FINE);
-			return true;
+			RunsafePlayer teleporter = (RunsafePlayer) executor;
+			RunsafePlayer target;
+			if (args.length == 0)
+				target = RunsafeServer.Instance.getOnlinePlayer(teleporter, parameters.get("player"));
+			else
+				target = RunsafeServer.Instance.getOnlinePlayer(teleporter, args[0]);
+			if (target == null)
+				return null;
+
+			return "runsafe.teleport.world." + target.getWorld().getName();
 		}
-		if (player.hasPermission("runsafe.teleport.world.*"))
-		{
-			console.outputDebugToConsole("Has access to all worlds", Level.FINE);
-			return true;
-		}
-		if (player.hasPermission(String.format("runsafe.teleport.world.%s", target.getWorld().getName())))
-		{
-			console.outputDebugToConsole("Has access to world " + target.getWorld().getName(), Level.FINE);
-			return true;
-		}
-		return false;
+		return null;
 	}
 
 	@Override
-	public boolean CouldExecute(RunsafePlayer player)
-	{
-		return true;
-	}
-
-	@Override
-	public String OnExecute(RunsafePlayer executor, String[] args)
+	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
 	{
 		String movePlayer;
 		RunsafePlayer move;
@@ -58,18 +49,17 @@ public class Teleport extends RunsafePlayerCommand
 		RunsafePlayer to;
 		if (args.length > 1)
 		{
-			movePlayer = getArg("player");
-			move = RunsafeServer.Instance.getOnlinePlayer(executor, movePlayer);
+			movePlayer = parameters.get("player");
+			move = RunsafeServer.Instance.getOnlinePlayer(player, movePlayer);
 			toPlayer = args[1];
-			to = RunsafeServer.Instance.getOnlinePlayer(executor, toPlayer);
+			to = RunsafeServer.Instance.getOnlinePlayer(player, toPlayer);
 		}
 		else
 		{
-			movePlayer = executor.getName();
-			move = executor;
-			toPlayer = getArg("player");
-			Console.outputDebugToConsole(String.format("Getting online player %s", toPlayer), Level.FINE);
-			to = RunsafeServer.Instance.getOnlinePlayer(executor, toPlayer);
+			movePlayer = player.getName();
+			move = player;
+			toPlayer = parameters.get("player");
+			to = RunsafeServer.Instance.getOnlinePlayer(player, toPlayer);
 		}
 
 		if (move instanceof RunsafeAmbiguousPlayer)

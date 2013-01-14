@@ -1,26 +1,21 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.command.RunsafeAsyncPlayerCommand;
+import no.runsafe.framework.command.player.PlayerCommand;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.player.RunsafePlayer;
-import no.runsafe.framework.timer.IScheduler;
 import no.runsafe.warpdrive.StaticWarp;
 
-public class Top extends RunsafeAsyncPlayerCommand
+import java.util.HashMap;
+
+public class Top extends PlayerCommand
 {
-	public Top(IScheduler scheduler)
+	public Top()
 	{
-		super("top", scheduler);
+		super("top", "Teleports you to the surface", "runsafe.teleport.top");
 	}
 
 	@Override
-	public String requiredPermission()
-	{
-		return "runsafe.teleport.top";
-	}
-
-	@Override
-	public String OnExecute(RunsafePlayer player, String[] strings)
+	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
 	{
 		RunsafeLocation top = StaticWarp.findTop(player.getLocation());
 		top.setY(top.getY() + 1);

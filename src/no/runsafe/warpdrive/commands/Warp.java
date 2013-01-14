@@ -1,6 +1,5 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.command.RunsafePlayerCommand;
 import no.runsafe.framework.event.block.ISignChange;
 import no.runsafe.framework.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.output.ChatColour;
@@ -10,48 +9,38 @@ import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.block.RunsafeSign;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.timer.IScheduler;
+import no.runsafe.warpdrive.PlayerTeleportCommand;
 import no.runsafe.warpdrive.StaticWarp;
 import no.runsafe.warpdrive.database.WarpRepository;
 import org.apache.commons.lang.StringUtils;
 
-public class Warp extends RunsafePlayerCommand implements IPlayerRightClickSign, ISignChange
+import java.util.HashMap;
+
+public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign, ISignChange
 {
-	public Warp(WarpRepository repository, IOutput output)
+	public Warp(WarpRepository repository, IOutput output, IScheduler scheduler)
 	{
-		super("warp", "destination");
+		super("warp", "Teleports you to a predefined warp location", "runsafe.warp.use.<destination>", scheduler, "destination");
 		warpRepository = repository;
 		console = output;
 	}
 
 	@Override
-	public String requiredPermission()
+	public PlayerTeleport OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
 	{
-		return "runsafe.warp.use";
+		PlayerTeleport target = new PlayerTeleport();
+		target.player = player;
+		target.location = warpRepository.GetPublic(parameters.get("warp"));
+		if (target.location == null)
+			target.message = String.format("The warp %s does not exist.", target);
+		return target;
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer player, String[] strings)
+	public String getUsage()
 	{
-		String target = getArg("destination");
-		if (!player.hasPermission("runsafe.warp.use.*")
-			&& !player.hasPermission(String.format("runsafe.warp.use.%s", target)))
-			return "You do not have permission to use this warp.";
-
-		RunsafeLocation destination = warpRepository.GetPublic(target);
-		if (destination == null)
-			return String.format("The warp %s does not exist.", target);
-		StaticWarp.safePlayerTeleport(destination, player, false);
-		return null;
-	}
-
-	@Override
-	public String getCommandUsage(RunsafePlayer executor)
-	{
-		return String.format(
-			"/%1$s\nExisting warps: %2$s",
-			getCommandParams(),
-			StringUtils.join(warpRepository.GetPublicList(), ", ")
-		);
+		return String.format("\nExisting warps: %1$s", StringUtils.join(warpRepository.GetPublicList(), ", "));
 	}
 
 	@Override

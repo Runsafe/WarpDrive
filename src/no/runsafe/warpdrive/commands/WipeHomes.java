@@ -1,28 +1,24 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.command.RunsafeAsyncConsoleCommand;
-import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.command.console.ConsoleAsyncCommand;
+import no.runsafe.framework.server.RunsafeConsole;
 import no.runsafe.framework.timer.IScheduler;
 import no.runsafe.warpdrive.database.WarpRepository;
 
-public class WipeHomes extends RunsafeAsyncConsoleCommand
+import java.util.HashMap;
+
+public class WipeHomes extends ConsoleAsyncCommand
 {
 	public WipeHomes(IScheduler scheduler, WarpRepository warpRepository)
 	{
-		super("wipehomes", scheduler, "world");
+		super("wipehomes", "Deletes all private warp locations from the given world", scheduler, "world");
 		repository = warpRepository;
 	}
 
 	@Override
-	public String requiredPermission()
+	public String OnAsyncExecute(RunsafeConsole runsafeConsole, HashMap<String, String> parameters, String[] args)
 	{
-		return "runsafe.home.wipe";
-	}
-
-	@Override
-	public String OnExecute(RunsafePlayer player, String[] strings)
-	{
-		String world = getArg("world");
+		String world = parameters.get("world");
 		repository.DelAllPrivate(world);
 		return String.format("Deleted all homes from world %s", world);
 	}

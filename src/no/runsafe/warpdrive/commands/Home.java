@@ -1,59 +1,59 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.command.RunsafePlayerCommand;
-import no.runsafe.framework.configuration.IConfiguration;
-import no.runsafe.framework.event.IConfigurationChanged;
-import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.player.RunsafePlayer;
-import no.runsafe.warpdrive.StaticWarp;
+import no.runsafe.framework.timer.IScheduler;
+import no.runsafe.warpdrive.PlayerTeleportCommand;
 import no.runsafe.warpdrive.database.WarpRepository;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
-public class Home extends RunsafePlayerCommand
+public class Home extends PlayerTeleportCommand
 {
-	public Home(WarpRepository repository)
+	public Home(WarpRepository repository, IScheduler scheduler)
 	{
-		super("home");
+		super("home", "Teleports you to a home location", "runsafe.home.use", scheduler);
 		warpRepository = repository;
 	}
 
 	@Override
-	public String requiredPermission()
+	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
 	{
-		return "runsafe.home.use";
-	}
-
-	@Override
-	public String OnExecute(RunsafePlayer player, String[] strings)
-	{
+		PlayerTeleport target = new PlayerTeleport();
+		target.player = player;
 		String home;
-		if(strings.length == 0)
+		if (args.length == 0)
 		{
 			List<String> homes = warpRepository.GetPrivateList(player.getName());
-			if(homes.isEmpty())
-				return "You do not have any homes set.";
-			if(homes.size() == 1)
+			if (homes.isEmpty())
+			{
+				target.message = "You do not have any homes set.";
+				return target;
+			}
+			if (homes.size() == 1)
 				home = homes.get(0);
 			else
-				return String.format("Homes: %s", StringUtils.join(homes, ", "));
+			{
+				target.message = String.format("Homes: %s", StringUtils.join(homes, ", "));
+				return target;
+			}
 		}
 		else
 		{
-			home = strings[0];
+			home = args[0];
 		}
-		RunsafeLocation destination = warpRepository.GetPrivate(player.getName(), home);
-		if (destination == null)
-			return String.format("You do not have a home named %s.", home);
-		if (strings.length > 1 && strings[1].equals("-f"))
+		target.location = warpRepository.GetPrivate(player.getName(), home);
+		if (target.location == null)
 		{
-			player.teleport(destination);
-			return "Forced unsafe teleport.";
+			target.message = String.format("You do not have a home named %s.", home);
 		}
-		StaticWarp.safePlayerTeleport(destination, player, false);
-		return null;
+		else if (args.length > 1 && args[1].equals("-f"))
+		{
+			target.message = "Forced unsafe teleport.";
+			target.force = true;
+		}
+		return target;
 	}
 
 	final WarpRepository warpRepository;
