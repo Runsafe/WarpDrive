@@ -18,7 +18,7 @@ public class Home extends PlayerTeleportCommand
 	}
 
 	@Override
-	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
+	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(RunsafePlayer player, HashMap<String, String> params, String[] args)
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.player = player;
@@ -54,6 +54,12 @@ public class Home extends PlayerTeleportCommand
 			target.force = true;
 		}
 		return target;
+	}
+
+	@Override
+	public PlayerTeleport OnAsyncExecute(RunsafePlayer player, HashMap<String, String> stringStringHashMap)
+	{
+		return null;
 	}
 
 	final WarpRepository warpRepository;

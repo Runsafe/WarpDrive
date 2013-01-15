@@ -15,7 +15,7 @@ public class TeleportToEntityID extends PlayerCommand
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
+	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters)
 	{
 		String entityId = parameters.get("entityid");
 		int id = Integer.parseInt(entityId);

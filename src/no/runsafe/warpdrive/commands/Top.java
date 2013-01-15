@@ -15,7 +15,7 @@ public class Top extends PlayerCommand
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
+	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters)
 	{
 		RunsafeLocation top = StaticWarp.findTop(player.getLocation());
 		top.setY(top.getY() + 1);

@@ -15,7 +15,7 @@ public class TeleportPos extends PlayerCommand
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
+	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters)
 	{
 		Double x = Double.valueOf(parameters.get("x"));
 		Double y;

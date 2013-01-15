@@ -16,7 +16,7 @@ public class DelHome extends PlayerAsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
+	public String OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
 	{
 		warpRepository.DelPrivate(player.getName(), parameters.get("name"));
 		return String.format("Home location %s removed.", parameters.get("name"));

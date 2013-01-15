@@ -10,7 +10,6 @@ import no.runsafe.framework.server.player.RunsafePlayer;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import static no.runsafe.warpdrive.StaticWarp.safePlayerTeleport;
 
@@ -91,6 +90,12 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 			return null;
 
 		return String.format("Unable to safely teleport %1$s to %2$s, try /tp %1$s %2$s -f", move.getPrettyName(), to.getPrettyName());
+	}
+
+	@Override
+	public String OnExecute(RunsafePlayer player, HashMap<String, String> stringStringHashMap)
+	{
+		return null;
 	}
 
 	private String formatAmbiguity(RunsafeAmbiguousPlayer player)

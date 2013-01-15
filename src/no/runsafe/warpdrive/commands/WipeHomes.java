@@ -16,7 +16,7 @@ public class WipeHomes extends ConsoleAsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(RunsafeConsole runsafeConsole, HashMap<String, String> parameters, String[] args)
+	public String OnAsyncExecute(RunsafeConsole runsafeConsole, HashMap<String, String> parameters)
 	{
 		String world = parameters.get("world");
 		repository.DelAllPrivate(world);

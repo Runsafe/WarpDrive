@@ -25,7 +25,7 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	}
 
 	@Override
-	public String OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
+	public String OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
 	{
 		if (privateWarpLimit > 0)
 		{

@@ -27,7 +27,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	}
 
 	@Override
-	public PlayerTeleport OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
+	public PlayerTeleport OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.player = player;
