@@ -6,9 +6,11 @@ import no.runsafe.framework.event.IConfigurationChanged;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
 import no.runsafe.warpdrive.database.WarpRepository;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 {
@@ -21,22 +23,34 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	@Override
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
-		privateWarpLimit = configuration.getConfigValueAsInt("private.max");
+		ConfigurationSection section = configuration.getSection("private.max");
+		privateWarpLimit.clear();
+		for (String key : section.getKeys(false))
+			privateWarpLimit.put(key, section.getInt(key));
 	}
 
 	@Override
 	public String OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
 	{
-		if (privateWarpLimit > 0)
+		List<String> homes = warpRepository.GetPrivateList(player.getName());
+		if (!homes.contains(parameters.get("name")))
 		{
-			List<String> homes = warpRepository.GetPrivateList(player.getName());
-			if (!homes.contains(parameters.get("name")) && homes.size() >= privateWarpLimit)
-				return String.format("You are only allowed %d homes on this server.", privateWarpLimit);
+			int limit = 0;
+			for (String group : player.getGroups())
+			{
+				if (privateWarpLimit.containsKey(group))
+					limit = Math.max(limit, privateWarpLimit.get(group));
+			}
+			if (limit == 0)
+				limit = privateWarpLimit.get("default");
+			if (homes.size() >= limit)
+				return String.format("You are only allowed %d homes on this server.", limit);
 		}
+
 		warpRepository.Persist(player.getName(), parameters.get("name"), false, player.getLocation());
 		return String.format("Current location saved as the home %s.", parameters.get("name"));
 	}
 
 	final WarpRepository warpRepository;
-	int privateWarpLimit;
+	final ConcurrentHashMap<String, Integer> privateWarpLimit = new ConcurrentHashMap<String, Integer>();
 }
