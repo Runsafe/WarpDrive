@@ -6,10 +6,10 @@ import no.runsafe.framework.event.IConfigurationChanged;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
 import no.runsafe.warpdrive.database.WarpRepository;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
@@ -23,10 +23,12 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	@Override
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
-		ConfigurationSection section = configuration.getSection("private.max");
+		Map<String, String> section = configuration.getConfigValuesAsMap("private.max");
+
 		privateWarpLimit.clear();
-		for (String key : section.getKeys(false))
-			privateWarpLimit.put(key, section.getInt(key));
+		if (section != null)
+			for (String key : section.keySet())
+				privateWarpLimit.put(key, Integer.valueOf(section.get(key)));
 	}
 
 	@Override

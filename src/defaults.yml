@@ -1,2 +1,3 @@
 private.max.default: 5
+private.max.admin: 10
 snazzy.timeout: 60
