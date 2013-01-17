@@ -9,6 +9,7 @@ import no.runsafe.framework.server.player.RunsafeAmbiguousPlayer;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static no.runsafe.warpdrive.StaticWarp.safePlayerTeleport;
@@ -46,6 +47,12 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		RunsafePlayer move;
 		String toPlayer;
 		RunsafePlayer to;
+		boolean force = false;
+		if (args.length > 0 && args[args.length - 1].equals("-f"))
+		{
+			force = true;
+			args = Arrays.copyOfRange(args, 1, args.length);
+		}
 		if (args.length > 1)
 		{
 			movePlayer = parameters.get("player");
@@ -81,7 +88,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 				return null;
 			}
 		}
-		if (args.length > 1 && args[1].equals("-f"))
+		if (force)
 		{
 			move.teleport(to.getLocation());
 			return String.format("Performed unsafe teleport of %s to %s.", move.getPrettyName(), to.getPrettyName());
