@@ -44,7 +44,8 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
 	{
 		console.fine(String.format("Params: %s", parameters));
-		console.fine(String.format("Args: %s", args));
+		if (args != null && args.length > 0)
+			console.fine(String.format("Args: %s", args));
 		String movePlayer;
 		RunsafePlayer move;
 		String toPlayer;
@@ -55,7 +56,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 			force = true;
 			args = Arrays.copyOfRange(args, 0, args.length - 1);
 		}
-		if (args.length > 1)
+		if (args.length > 0)
 		{
 			movePlayer = parameters.get("player");
 			move = RunsafeServer.Instance.getOnlinePlayer(player, movePlayer);
