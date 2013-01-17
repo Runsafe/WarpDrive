@@ -60,7 +60,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		{
 			movePlayer = parameters.get("player");
 			move = RunsafeServer.Instance.getOnlinePlayer(player, movePlayer);
-			toPlayer = args[1];
+			toPlayer = args[0];
 			to = RunsafeServer.Instance.getOnlinePlayer(player, toPlayer);
 		}
 		else
