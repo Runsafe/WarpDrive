@@ -51,7 +51,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		if (args.length > 0 && args[args.length - 1].equals("-f"))
 		{
 			force = true;
-			args = Arrays.copyOfRange(args, 1, args.length);
+			args = Arrays.copyOfRange(args, 0, args.length - 1);
 		}
 		if (args.length > 1)
 		{
