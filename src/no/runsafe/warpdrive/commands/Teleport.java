@@ -43,9 +43,6 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	@Override
 	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
 	{
-		console.fine(String.format("Params: %s", parameters));
-		if (args != null && args.length > 0)
-			console.fine(String.format("Args: %s", args));
 		if (args == null)
 			args = new String[0];
 		String movePlayer;
