@@ -23,5 +23,5 @@ public class WipeHomes extends ConsoleAsyncCommand
 		return String.format("Deleted all homes from world %s", world);
 	}
 
-	private WarpRepository repository;
+	private final WarpRepository repository;
 }

@@ -31,9 +31,8 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 		for (String key : section.keySet())
 			console.write(String.format("  %s: %s", key, section.get(key)));
 		privateWarpLimit.clear();
-		if (section != null)
-			for (String key : section.keySet())
-				privateWarpLimit.put(key, Integer.valueOf(section.get(key)));
+		for (String key : section.keySet())
+			privateWarpLimit.put(key, Integer.valueOf(section.get(key)));
 	}
 
 	@Override
@@ -58,7 +57,7 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 		return String.format("Current location saved as the home %s.", parameters.get("name"));
 	}
 
-	final WarpRepository warpRepository;
-	final ConcurrentHashMap<String, Integer> privateWarpLimit = new ConcurrentHashMap<String, Integer>();
-	final IOutput console;
+	private final WarpRepository warpRepository;
+	private final ConcurrentHashMap<String, Integer> privateWarpLimit = new ConcurrentHashMap<String, Integer>();
+	private final IOutput console;
 }

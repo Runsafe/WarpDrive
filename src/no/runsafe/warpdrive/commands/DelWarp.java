@@ -22,5 +22,5 @@ public class DelWarp extends PlayerAsyncCommand
 		return String.format("Deleted public warp %s.", parameters.get("name"));
 	}
 
-	final WarpRepository warpRepository;
+	private final WarpRepository warpRepository;
 }

@@ -22,5 +22,5 @@ public class SetWarp extends PlayerAsyncCommand
 		return String.format("Current location saved as the warp %s.", parameters.get("name"));
 	}
 
-	final WarpRepository warpRepository;
+	private final WarpRepository warpRepository;
 }

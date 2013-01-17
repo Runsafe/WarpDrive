@@ -62,5 +62,5 @@ public class Home extends PlayerTeleportCommand
 		return null;
 	}
 
-	final WarpRepository warpRepository;
+	private final WarpRepository warpRepository;
 }

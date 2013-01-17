@@ -7,7 +7,7 @@ import no.runsafe.framework.timer.IScheduler;
 
 public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<PlayerTeleportCommand.PlayerTeleport>
 {
-	public PlayerTeleportCommand(String name, String description, String permission, IScheduler scheduler, String... args)
+	protected PlayerTeleportCommand(String name, String description, String permission, IScheduler scheduler, String... args)
 	{
 		super(name, description, permission, scheduler, args);
 	}

@@ -46,6 +46,8 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		console.fine(String.format("Params: %s", parameters));
 		if (args != null && args.length > 0)
 			console.fine(String.format("Args: %s", args));
+		if (args == null)
+			args = new String[0];
 		String movePlayer;
 		RunsafePlayer move;
 		String toPlayer;
@@ -116,5 +118,5 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		);
 	}
 
-	final IOutput console;
+	private final IOutput console;
 }

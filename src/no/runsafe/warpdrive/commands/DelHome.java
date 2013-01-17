@@ -22,5 +22,5 @@ public class DelHome extends PlayerAsyncCommand
 		return String.format("Home location %s removed.", parameters.get("name"));
 	}
 
-	final WarpRepository warpRepository;
+	private final WarpRepository warpRepository;
 }
