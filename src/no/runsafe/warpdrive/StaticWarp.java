@@ -70,7 +70,7 @@ public class StaticWarp
 			{
 				if (world.getBlockAt(location).isAir())
 					air++;
-				else if(air > 1)
+				else if (air > 1)
 					break;
 				else
 					air = 0;
@@ -93,7 +93,10 @@ public class StaticWarp
 			floor = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
 		else
 			floor = location.getWorld().getBlockAt(location);
-		if (floor.isHazardous() || (floor.canPassThrough() && floor.getTypeId() != Material.WATER.getId()))
+		if (floor.isHazardous() ||
+			(floor.canPassThrough() &&
+				(floor.getTypeId() != Material.WATER.getId() || floor.getTypeId() != Material.STATIONARY_WATER.getId())
+			))
 			return false;
 
 		for (int y = playerLocation ? 0 : 1; y < (playerLocation ? 2 : 3); ++y)
