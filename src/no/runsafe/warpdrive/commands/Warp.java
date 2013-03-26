@@ -71,6 +71,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 			return true;
 		if (player.hasPermission("runsafe.warpsign.create"))
 		{
+			console.writeColoured("%s created a warp sign for the warp %s.", player.getPrettyName(), strings[1]);
 			((RunsafeSign) runsafeBlock.getBlockState()).setLine(0, warpHeader);
 			return true;
 		}
