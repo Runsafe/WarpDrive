@@ -68,15 +68,15 @@ public class StaticWarp
 			int air = 0;
 			while (y > minHeight)
 			{
-				location.setY(y);
 				if (world.getBlockAt(location).isAir())
 					air++;
+				else if(air > 1)
+					break;
 				else
 					air = 0;
-				if (air > 1)
-					break;
 				y--;
 			}
+			location.setY(y);
 			return location;
 		}
 		else
