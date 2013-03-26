@@ -93,9 +93,12 @@ public class StaticWarp
 			floor = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
 		else
 			floor = location.getWorld().getBlockAt(location);
-		if (floor.isHazardous() ||
-			(floor.canPassThrough() &&
-				(floor.getTypeId() != Material.WATER.getId() || floor.getTypeId() != Material.STATIONARY_WATER.getId())
+		if (
+			floor.isHazardous()
+			|| (
+				floor.canPassThrough()
+				&& floor.getTypeId() != Material.WATER.getId()
+				&& floor.getTypeId() != Material.STATIONARY_WATER.getId()
 			))
 			return false;
 
