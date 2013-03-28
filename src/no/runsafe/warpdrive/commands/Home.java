@@ -54,6 +54,11 @@ public class Home extends PlayerTeleportCommand
 			target.message = "Forced unsafe teleport.";
 			target.force = true;
 		}
+		else if (!engine.targetFloorIsSafe(target.location, true))
+		{
+			target.location = null;
+			target.message = String.format("That home may be unsafe, type \"/home %s -f\" to force teleport.", home);
+		}
 		return target;
 	}
 
