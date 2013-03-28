@@ -1,11 +1,9 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.event.block.ISignChange;
 import no.runsafe.framework.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.output.ChatColour;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.block.RunsafeSign;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
@@ -17,7 +15,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 
-public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign, ISignChange
+public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 {
 	public Warp(WarpRepository repository, IOutput output, IScheduler scheduler)
 	{
@@ -46,7 +44,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	@Override
 	public boolean OnPlayerRightClickSign(RunsafePlayer player, RunsafeItemStack itemStack, RunsafeSign sign)
 	{
-		if (!sign.getLine(0).contains(warpHeader))
+		if (!sign.getLine(0).contains(signHeader))
 			return true;
 
 		String name = sign.getLine(1).toLowerCase();
@@ -64,21 +62,8 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 		return false;
 	}
 
-	@Override
-	public boolean OnSignChange(RunsafePlayer player, RunsafeBlock runsafeBlock, String[] strings)
-	{
-		if (!strings[0].toLowerCase().contains("[warp]") && !strings[0].toLowerCase().contains(warpHeader))
-			return true;
-		if (player.hasPermission("runsafe.warpsign.create"))
-		{
-			console.writeColoured("%s created a warp sign for the warp %s.", player.getPrettyName(), strings[1]);
-			strings[0] = warpHeader;
-			return true;
-		}
-		return false;
-	}
-
 	private final WarpRepository warpRepository;
 	private final IOutput console;
-	private static final String warpHeader = "[" + ChatColour.BLUE.toBukkit() + "warp" + ChatColour.RESET.toBukkit() + "]";
+	public static final String signHeader = "[" + ChatColour.BLUE.toBukkit() + "warp" + ChatColour.RESET.toBukkit() + "]";
+	public static final String signTag = "[warp]";
 }

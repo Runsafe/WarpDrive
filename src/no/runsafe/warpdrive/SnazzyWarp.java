@@ -3,14 +3,12 @@ package no.runsafe.warpdrive;
 import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IAsyncEvent;
 import no.runsafe.framework.event.IConfigurationChanged;
-import no.runsafe.framework.event.block.ISignChange;
 import no.runsafe.framework.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.output.ChatColour;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.RunsafeWorld;
-import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.block.RunsafeSign;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
@@ -27,7 +25,7 @@ import static no.runsafe.warpdrive.StaticWarp.findSafeSpot;
 import static no.runsafe.warpdrive.StaticWarp.targetFloorIsSafe;
 
 public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
-	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged, ISignChange
+	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged
 {
 	public SnazzyWarp(IScheduler scheduler, IOutput output)
 	{
@@ -67,22 +65,6 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
 		change_after = Duration.standardSeconds(configuration.getConfigValueAsInt("snazzy.timeout"));
-	}
-
-	@Override
-	public boolean OnSignChange(RunsafePlayer player, RunsafeBlock block, String[] strings)
-	{
-		if (!strings[0].toLowerCase().contains("[snazzy warp]") && !strings[0].toLowerCase().contains(signHeader))
-			return true;
-		if (player.hasPermission("runsafe.snazzysign.create"))
-		{
-			console.writeColoured("%s created a snazzy warp sign named %s.", player.getPrettyName(), strings[1]);
-			if (snazzyWarps.containsKey(strings[1]))
-				snazzyWarps.remove(strings[1]);
-			strings[0] = signHeader;
-			return true;
-		}
-		return false;
 	}
 
 	class WarpParameters
@@ -144,5 +126,6 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	private final ConcurrentHashMap<String, WarpParameters> snazzyWarps = new ConcurrentHashMap<String, WarpParameters>();
 	private final IOutput console;
 	private Duration change_after;
-	private static final String signHeader = ChatColour.DARK_BLUE.toBukkit() + "[Snazzy Warp]";
+	public static final String signHeader = ChatColour.DARK_BLUE.toBukkit() + "[Snazzy Warp]";
+	public static final String signTag = "[snazzy warp]";
 }
