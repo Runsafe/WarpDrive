@@ -6,7 +6,6 @@ import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.World;
 
 import java.util.ArrayList;
@@ -14,9 +13,9 @@ import java.util.List;
 
 public class Engine
 {
-	public boolean safePlayerTeleport(RunsafeLocation originalLocation, RunsafePlayer player, boolean keepY)
+	public boolean safePlayerTeleport(RunsafeLocation originalLocation, RunsafePlayer player, boolean randomY)
 	{
-		RunsafeLocation target = findSafeSpot(originalLocation, keepY);
+		RunsafeLocation target = randomY ? findRandomSafeSpot(originalLocation) : findSafeSpot(originalLocation);
 		if (target != null)
 		{
 			player.setFallDistance(0.0F);
@@ -26,7 +25,33 @@ public class Engine
 		return false;
 	}
 
-	public RunsafeLocation findSafeSpot(RunsafeLocation originalLocation, boolean keepY)
+	public RunsafeLocation findSafeSpot(RunsafeLocation location)
+	{
+		int maxScan = 100;
+		double x = location.getX();
+		double z = location.getZ();
+		int posX = (int) x;
+		int posZ = (int) z;
+
+		while (true)
+		{
+			location.setX(posX);
+			location.setZ(posZ);
+			if (targetFloorIsSafe(location, false))
+				return location;
+
+			maxScan--;
+			if (maxScan < 0)
+				return null;
+
+			// Spiral out to find a safe location
+			double t = 100 - maxScan;
+			posX = (int) (5 * t * Math.cos(t) + x);
+			posZ = (int) (5 * t * Math.sin(t) + z);
+		}
+	}
+
+	public RunsafeLocation findRandomSafeSpot(RunsafeLocation originalLocation)
 	{
 		int maxScan = 100;
 		double x = originalLocation.getX();
@@ -36,21 +61,14 @@ public class Engine
 
 		while (true)
 		{
-			if (keepY)
+			for (RunsafeLocation option : findSafePoints(originalLocation.getWorld(), posX, posZ))
 			{
-				RunsafeLocation option = new RunsafeLocation(originalLocation.getWorld(), x, originalLocation.getY(), z);
 				if (targetFloorIsSafe(option, false))
-					return option;
-			}
-			else
-				for (RunsafeLocation option : findSafePoints(originalLocation.getWorld(), posX, posZ))
 				{
-					if (targetFloorIsSafe(option, false))
-					{
-						option.setY(option.getBlockY() + 2);
-						return option;
-					}
+					option.setY(option.getBlockY() + 2);
+					return option;
 				}
+			}
 			maxScan--;
 			if (maxScan < 0)
 				return null;
@@ -87,7 +105,7 @@ public class Engine
 			if (!safeFloor)
 				continue;
 
-			if (block.canPassThrough())
+			if (block.isAir())
 				safe++;
 			if (safe == 2)
 				options.add(floor);
@@ -128,17 +146,11 @@ public class Engine
 		if (!chunk.isLoaded())
 			chunk.load();
 		RunsafeBlock floor;
-		if (playerLocation)
+		if (location.getWorld().getBlockAt(location).isAir() || playerLocation)
 			floor = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
 		else
 			floor = location.getWorld().getBlockAt(location);
-		if (
-			floor.isHazardous()
-				|| (
-				floor.canPassThrough()
-					&& floor.getTypeId() != Material.WATER.getId()
-					&& floor.getTypeId() != Material.STATIONARY_WATER.getId()
-			))
+		if (floor.isHazardous() || floor.canPassThrough())
 			return false;
 
 		for (int y = playerLocation ? 0 : 1; y < (playerLocation ? 2 : 3); ++y)
