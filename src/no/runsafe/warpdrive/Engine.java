@@ -33,21 +33,16 @@ public class Engine
 		double z = originalLocation.getZ();
 		int posX = (int) x;
 		int posZ = (int) z;
-		RunsafeLocation location = new RunsafeLocation(
-			originalLocation.getWorld(),
-			originalLocation.getX(),
-			originalLocation.getY() - 1,
-			originalLocation.getZ(),
-			originalLocation.getYaw(),
-			originalLocation.getPitch()
-		);
 
 		while (true)
 		{
 			for (RunsafeLocation option : findSafePoints(originalLocation.getWorld(), posX, posZ))
 			{
 				if (targetFloorIsSafe(option, false))
+				{
+					option.setY(option.getBlockY() + 2);
 					return option;
+				}
 			}
 			maxScan--;
 			if (maxScan < 0)
