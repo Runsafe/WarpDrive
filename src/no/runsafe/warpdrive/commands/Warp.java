@@ -28,6 +28,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	public PlayerTeleport OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
 	{
 		PlayerTeleport target = new PlayerTeleport();
+		target.force = true;
 		target.player = player;
 		target.location = warpRepository.GetPublic(parameters.get("destination"));
 		if (target.location == null)
@@ -58,7 +59,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 			&& !player.hasPermission(String.format("runsafe.warpsign.use.%s", name)))
 			return false;
 
-		engine.safePlayerTeleport(destination, player, true);
+		player.teleport(destination);
 		return false;
 	}
 

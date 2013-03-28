@@ -8,7 +8,6 @@ import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafeAmbiguousPlayer;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.warpdrive.Engine;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,6 +21,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		this.engine = engine;
 	}
 
+	@Override
 	public String getPermission(ICommandExecutor executor, HashMap<String, String> parameters, String[] args)
 	{
 		if (executor instanceof RunsafePlayer)
@@ -71,10 +71,10 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		}
 
 		if (move instanceof RunsafeAmbiguousPlayer)
-			return formatAmbiguity((RunsafeAmbiguousPlayer) move);
+			return move.toString();
 
 		if (to instanceof RunsafeAmbiguousPlayer)
-			return formatAmbiguity((RunsafeAmbiguousPlayer) to);
+			return to.toString();
 
 		if (move == null || !move.isOnline())
 			return String.format("Could not find player %s to teleport.", movePlayer);
@@ -105,14 +105,6 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	public String OnExecute(RunsafePlayer player, HashMap<String, String> stringStringHashMap)
 	{
 		return null;
-	}
-
-	private String formatAmbiguity(RunsafeAmbiguousPlayer player)
-	{
-		return String.format(
-			"Multiple players found, please specify better: %s",
-			StringUtils.join(player.getAmbiguity(), ", ")
-		);
 	}
 
 	private final IOutput console;
