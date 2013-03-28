@@ -71,7 +71,7 @@ public class Engine
 			maxy = 125;
 		for (int y = 0; y < maxy; ++y)
 		{
-			RunsafeBlock block = world.getBlockAt(x, 0, z);
+			RunsafeBlock block = world.getBlockAt(x, y, z);
 			if (!block.canPassThrough())
 			{
 				safeFloor = !block.isHazardous();
