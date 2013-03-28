@@ -76,10 +76,10 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 			return true;
 		if (player.hasPermission("runsafe.snazzysign.create"))
 		{
-			console.writeColoured("%s created a snazzy warp sign for named %s.", player.getPrettyName(), strings[1]);
-			strings[0] = signHeader;
+			console.writeColoured("%s created a snazzy warp sign named %s.", player.getPrettyName(), strings[1]);
 			if (snazzyWarps.containsKey(strings[1]))
 				snazzyWarps.remove(strings[1]);
+			strings[0] = signHeader;
 			return true;
 		}
 		return false;
