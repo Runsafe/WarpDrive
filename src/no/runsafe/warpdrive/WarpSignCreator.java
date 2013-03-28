@@ -41,5 +41,5 @@ public class WarpSignCreator implements ISignChange
 		return true;
 	}
 
-	private IOutput console;
+	private final IOutput console;
 }

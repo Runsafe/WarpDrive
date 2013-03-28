@@ -2,7 +2,6 @@ package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.command.IContextPermissionProvider;
 import no.runsafe.framework.command.player.PlayerCommand;
-import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.ICommandExecutor;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.player.RunsafeAmbiguousPlayer;
@@ -14,10 +13,9 @@ import java.util.HashMap;
 
 public class Teleport extends PlayerCommand implements IContextPermissionProvider
 {
-	public Teleport(IOutput output, Engine engine)
+	public Teleport(Engine engine)
 	{
 		super("teleport", "Teleports you or another player to another player", null, "player");
-		console = output;
 		this.engine = engine;
 	}
 
@@ -95,7 +93,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 			move.teleport(to.getLocation());
 			return String.format("Performed unsafe teleport of %s to %s.", move.getPrettyName(), to.getPrettyName());
 		}
-		if (engine.safePlayerTeleport(to.getLocation(), move, true))
+		if (engine.safePlayerTeleport(to.getLocation(), move))
 			return null;
 
 		return String.format("Unable to safely teleport %1$s to %2$s, try /tp %1$s %2$s -f", move.getPrettyName(), to.getPrettyName());
@@ -107,6 +105,5 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		return null;
 	}
 
-	private final IOutput console;
 	private final Engine engine;
 }

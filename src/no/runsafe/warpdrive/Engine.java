@@ -13,9 +13,9 @@ import java.util.List;
 
 public class Engine
 {
-	public boolean safePlayerTeleport(RunsafeLocation originalLocation, RunsafePlayer player, boolean randomY)
+	public boolean safePlayerTeleport(RunsafeLocation originalLocation, RunsafePlayer player)
 	{
-		RunsafeLocation target = randomY ? findRandomSafeSpot(originalLocation) : findSafeSpot(originalLocation);
+		RunsafeLocation target = findSafeSpot(originalLocation);
 		if (target != null)
 		{
 			player.setFallDistance(0.0F);

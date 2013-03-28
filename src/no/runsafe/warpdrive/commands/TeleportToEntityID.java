@@ -3,16 +3,14 @@ package no.runsafe.warpdrive.commands;
 import no.runsafe.framework.command.player.PlayerCommand;
 import no.runsafe.framework.server.entity.RunsafeEntity;
 import no.runsafe.framework.server.player.RunsafePlayer;
-import no.runsafe.warpdrive.Engine;
 
 import java.util.HashMap;
 
 public class TeleportToEntityID extends PlayerCommand
 {
-	public TeleportToEntityID(Engine engine)
+	public TeleportToEntityID()
 	{
 		super("teleporttoentityid", "Teleports you to the given entity in your current world.", "runsafe.teleport.entity", "entityid");
-		this.engine = engine;
 	}
 
 	@Override
@@ -24,6 +22,4 @@ public class TeleportToEntityID extends PlayerCommand
 		player.teleport(entity.getLocation());
 		return null;
 	}
-
-	private final Engine engine;
 }
