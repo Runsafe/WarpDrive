@@ -21,7 +21,7 @@ public class TeleportToEntityID extends PlayerCommand
 		String entityId = parameters.get("entityid");
 		int id = Integer.parseInt(entityId);
 		RunsafeEntity entity = player.getWorld().getEntityById(id);
-		engine.safePlayerTeleport(entity.getLocation(), player);
+		player.teleport(entity.getLocation());
 		return null;
 	}
 

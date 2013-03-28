@@ -95,7 +95,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 			move.teleport(to.getLocation());
 			return String.format("Performed unsafe teleport of %s to %s.", move.getPrettyName(), to.getPrettyName());
 		}
-		if (engine.safePlayerTeleport(to.getLocation(), move))
+		if (engine.safePlayerTeleport(to.getLocation(), move, true))
 			return null;
 
 		return String.format("Unable to safely teleport %1$s to %2$s, try /tp %1$s %2$s -f", move.getPrettyName(), to.getPrettyName());

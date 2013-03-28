@@ -14,9 +14,9 @@ import java.util.List;
 
 public class Engine
 {
-	public boolean safePlayerTeleport(RunsafeLocation originalLocation, RunsafePlayer player)
+	public boolean safePlayerTeleport(RunsafeLocation originalLocation, RunsafePlayer player, boolean keepY)
 	{
-		RunsafeLocation target = findSafeSpot(originalLocation);
+		RunsafeLocation target = findSafeSpot(originalLocation, keepY);
 		if (target != null)
 		{
 			player.setFallDistance(0.0F);
@@ -26,7 +26,7 @@ public class Engine
 		return false;
 	}
 
-	public RunsafeLocation findSafeSpot(RunsafeLocation originalLocation)
+	public RunsafeLocation findSafeSpot(RunsafeLocation originalLocation, boolean keepY)
 	{
 		int maxScan = 100;
 		double x = originalLocation.getX();
@@ -36,14 +36,21 @@ public class Engine
 
 		while (true)
 		{
-			for (RunsafeLocation option : findSafePoints(originalLocation.getWorld(), posX, posZ))
+			if (keepY)
 			{
+				RunsafeLocation option = new RunsafeLocation(originalLocation.getWorld(), x, originalLocation.getY(), z);
 				if (targetFloorIsSafe(option, false))
-				{
-					option.setY(option.getBlockY() + 2);
 					return option;
-				}
 			}
+			else
+				for (RunsafeLocation option : findSafePoints(originalLocation.getWorld(), posX, posZ))
+				{
+					if (targetFloorIsSafe(option, false))
+					{
+						option.setY(option.getBlockY() + 2);
+						return option;
+					}
+				}
 			maxScan--;
 			if (maxScan < 0)
 				return null;
