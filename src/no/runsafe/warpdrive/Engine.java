@@ -72,7 +72,7 @@ public class Engine
 				safeFloor = !block.isHazardous();
 				floor = block.getLocation();
 			}
-			if (block.isHazardous())
+			if (block.isHazardous() || !block.isAir())
 			{
 				safe = 0;
 				continue;
