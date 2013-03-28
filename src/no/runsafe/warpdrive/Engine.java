@@ -1,5 +1,6 @@
 package no.runsafe.warpdrive;
 
+import com.google.common.collect.Lists;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
@@ -89,7 +90,8 @@ public class Engine
 			if (safe == 2)
 				options.add(floor);
 		}
-		return options;
+		// Return top first
+		return Lists.reverse(options);
 	}
 
 	public RunsafeLocation findTop(RunsafeLocation location)
