@@ -156,7 +156,7 @@ public class Engine
 		for (int y = playerLocation ? 0 : 1; y < (playerLocation ? 2 : 3); ++y)
 		{
 			RunsafeBlock block = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY() + y, location.getBlockZ());
-			if (block.isHazardous() || !block.canPassThrough())
+			if (!block.isAir())
 				return false;
 		}
 		for (int x = -1; x < 2; ++x)
