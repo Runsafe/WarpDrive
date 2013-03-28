@@ -120,6 +120,12 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 				target = engine.findRandomSafeSpot(
 					new RunsafeLocation(world, randomX + originX + 0.5, 64.0D, randomZ + originZ + 0.5)
 				);
+			if (target != null)
+			{
+				target.setX(target.getBlockX() + 0.5);
+				target.setY(target.getY() - 1);
+				target.setZ(target.getBlockZ() + 0.5);
+			}
 			return target;
 		}
 
