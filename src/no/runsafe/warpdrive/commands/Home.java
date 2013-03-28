@@ -2,6 +2,7 @@ package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
+import no.runsafe.warpdrive.Engine;
 import no.runsafe.warpdrive.PlayerTeleportCommand;
 import no.runsafe.warpdrive.database.WarpRepository;
 import org.apache.commons.lang.StringUtils;
@@ -11,9 +12,9 @@ import java.util.List;
 
 public class Home extends PlayerTeleportCommand
 {
-	public Home(WarpRepository repository, IScheduler scheduler)
+	public Home(WarpRepository repository, IScheduler scheduler, Engine engine)
 	{
-		super("home", "Teleports you to a home location", "runsafe.home.use", scheduler);
+		super("home", "Teleports you to a home location", "runsafe.home.use", scheduler, engine);
 		warpRepository = repository;
 	}
 

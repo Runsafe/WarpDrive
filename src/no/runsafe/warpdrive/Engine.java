@@ -8,9 +8,9 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 
-public class StaticWarp
+public class Engine
 {
-	public static boolean safePlayerTeleport(RunsafeLocation originalLocation, RunsafePlayer player, boolean forceTop)
+	public boolean safePlayerTeleport(RunsafeLocation originalLocation, RunsafePlayer player, boolean forceTop)
 	{
 		RunsafeLocation target = findSafeSpot(originalLocation, forceTop);
 		if (target != null)
@@ -22,7 +22,7 @@ public class StaticWarp
 		return false;
 	}
 
-	public static RunsafeLocation findSafeSpot(RunsafeLocation originalLocation, boolean forceTop)
+	public RunsafeLocation findSafeSpot(RunsafeLocation originalLocation, boolean forceTop)
 	{
 		int maxScan = 100;
 		double x = originalLocation.getX();
@@ -57,7 +57,7 @@ public class StaticWarp
 		}
 	}
 
-	public static RunsafeLocation findTop(RunsafeLocation location)
+	public RunsafeLocation findTop(RunsafeLocation location)
 	{
 		RunsafeWorld world = location.getWorld();
 		if (location.getWorld().getRaw().getEnvironment() == World.Environment.NETHER)
@@ -83,7 +83,7 @@ public class StaticWarp
 			return new RunsafeLocation(world.getRaw().getHighestBlockAt(location.getRaw()).getLocation());
 	}
 
-	public static boolean targetFloorIsSafe(RunsafeLocation location, boolean playerLocation)
+	public boolean targetFloorIsSafe(RunsafeLocation location, boolean playerLocation)
 	{
 		Chunk chunk = location.getWorld().getRaw().getChunkAt(location.getRaw());
 		if (!chunk.isLoaded())

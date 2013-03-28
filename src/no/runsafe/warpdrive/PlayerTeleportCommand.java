@@ -7,9 +7,10 @@ import no.runsafe.framework.timer.IScheduler;
 
 public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<PlayerTeleportCommand.PlayerTeleport>
 {
-	protected PlayerTeleportCommand(String name, String description, String permission, IScheduler scheduler, String... args)
+	protected PlayerTeleportCommand(String name, String description, String permission, IScheduler scheduler, Engine engine, String... args)
 	{
 		super(name, description, permission, scheduler, args);
+		this.engine = engine;
 	}
 
 	@Override
@@ -20,11 +21,13 @@ public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<P
 			if (playerTeleport.force)
 				playerTeleport.player.teleport(playerTeleport.location);
 			else
-				StaticWarp.safePlayerTeleport(playerTeleport.location, playerTeleport.player, false);
+				engine.safePlayerTeleport(playerTeleport.location, playerTeleport.player, false);
 		}
 		if (playerTeleport.message != null)
 			playerTeleport.player.sendColouredMessage(playerTeleport.message);
 	}
+
+	protected final Engine engine;
 
 	public class PlayerTeleport
 	{

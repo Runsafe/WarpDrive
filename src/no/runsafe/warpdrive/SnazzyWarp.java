@@ -21,15 +21,13 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
-import static no.runsafe.warpdrive.StaticWarp.findSafeSpot;
-import static no.runsafe.warpdrive.StaticWarp.targetFloorIsSafe;
-
 public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
 	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged
 {
-	public SnazzyWarp(IScheduler scheduler, IOutput output)
+	public SnazzyWarp(IScheduler scheduler, Engine engine, IOutput output)
 	{
 		super(scheduler, 2);
+		this.engine = engine;
 		console = output;
 	}
 
@@ -68,6 +66,8 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		change_after = Duration.standardSeconds(configuration.getConfigValueAsInt("snazzy.timeout"));
 	}
 
+	private final Engine engine;
+
 	class WarpParameters
 	{
 		WarpParameters(RunsafeSign sign)
@@ -93,7 +93,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 
 		public RunsafeLocation getTarget()
 		{
-			if (target == null || expires.isBefore(DateTime.now()) || !targetFloorIsSafe(target, true))
+			if (target == null || expires.isBefore(DateTime.now()) || !engine.targetFloorIsSafe(target, true))
 			{
 				target = getNewTarget();
 				expires = DateTime.now().plus(change_after);
@@ -110,7 +110,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 			RunsafeLocation target = null;
 			int retries = 10;
 			while (target == null && retries-- > 0)
-				target = findSafeSpot(new RunsafeLocation(world, randomX + originX + 0.5, 64.0D, randomZ + originZ + 0.5), true);
+				target = engine.findSafeSpot(new RunsafeLocation(world, randomX + originX + 0.5, 64.0D, randomZ + originZ + 0.5), true);
 			return target;
 		}
 

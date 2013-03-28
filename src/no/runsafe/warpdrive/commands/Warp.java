@@ -8,8 +8,8 @@ import no.runsafe.framework.server.block.RunsafeSign;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
+import no.runsafe.warpdrive.Engine;
 import no.runsafe.warpdrive.PlayerTeleportCommand;
-import no.runsafe.warpdrive.StaticWarp;
 import no.runsafe.warpdrive.database.WarpRepository;
 import org.apache.commons.lang.StringUtils;
 
@@ -17,9 +17,9 @@ import java.util.HashMap;
 
 public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 {
-	public Warp(WarpRepository repository, IOutput output, IScheduler scheduler)
+	public Warp(WarpRepository repository, IOutput output, IScheduler scheduler, Engine engine)
 	{
-		super("warp", "Teleports you to a predefined warp location", "runsafe.warp.use.<destination>", scheduler, "destination");
+		super("warp", "Teleports you to a predefined warp location", "runsafe.warp.use.<destination>", scheduler, engine, "destination");
 		warpRepository = repository;
 		console = output;
 	}
@@ -58,7 +58,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 			&& !player.hasPermission(String.format("runsafe.warpsign.use.%s", name)))
 			return false;
 
-		StaticWarp.safePlayerTeleport(destination, player, false);
+		engine.safePlayerTeleport(destination, player, false);
 		return false;
 	}
 

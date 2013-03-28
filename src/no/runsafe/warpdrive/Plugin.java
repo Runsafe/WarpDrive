@@ -9,6 +9,7 @@ public class Plugin extends RunsafeConfigurablePlugin
 	@Override
 	protected void PluginSetup()
 	{
+		addComponent(Engine.class);
 		addComponent(WarpRepository.class);
 		addComponent(SnazzyWarp.class);
 		addComponent(SetWarp.class);
