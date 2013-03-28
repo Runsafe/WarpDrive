@@ -38,7 +38,8 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	{
 		if (theSign.getLine(0).equalsIgnoreCase(signHeader))
 		{
-			if (!snazzyWarps.containsKey(theSign.getLine(1)))
+			if (!snazzyWarps.containsKey(theSign.getLine(1))
+				|| snazzyWarps.get(theSign.getLine(1)).refresh(theSign))
 				snazzyWarps.put(theSign.getLine(1), new WarpParameters(theSign));
 			Push(thePlayer.getName(), snazzyWarps.get(theSign.getLine(1)));
 			console.outputDebugToConsole("Pushed player click..", Level.FINE);
@@ -121,6 +122,11 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		private final Random rng = new Random();
 		private DateTime expires = DateTime.now();
 		private RunsafeLocation target;
+
+		public boolean refresh(RunsafeSign sign)
+		{
+			return maxDistance != Integer.parseInt(sign.getLine(2)) || minDistance != Integer.parseInt(sign.getLine(3));
+		}
 	}
 
 	private final ConcurrentHashMap<String, WarpParameters> snazzyWarps = new ConcurrentHashMap<String, WarpParameters>();
