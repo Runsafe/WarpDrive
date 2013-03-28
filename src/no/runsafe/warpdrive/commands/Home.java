@@ -46,19 +46,9 @@ public class Home extends PlayerTeleportCommand
 		}
 		target.location = warpRepository.GetPrivate(player.getName(), home);
 		if (target.location == null)
-		{
 			target.message = String.format("You do not have a home named %s.", home);
-		}
-		else if (args.length > 1 && args[1].equals("-f"))
-		{
-			target.message = "Forced unsafe teleport.";
+		else
 			target.force = true;
-		}
-		else if (!engine.targetFloorIsSafe(target.location, true))
-		{
-			target.location = null;
-			target.message = String.format("That home may be unsafe! type \"/home %s -f\" to go there.", home);
-		}
 		return target;
 	}
 
