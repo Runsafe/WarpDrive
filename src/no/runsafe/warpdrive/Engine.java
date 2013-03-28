@@ -8,11 +8,14 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Engine
 {
-	public boolean safePlayerTeleport(RunsafeLocation originalLocation, RunsafePlayer player, boolean forceTop)
+	public boolean safePlayerTeleport(RunsafeLocation originalLocation, RunsafePlayer player)
 	{
-		RunsafeLocation target = findSafeSpot(originalLocation, forceTop);
+		RunsafeLocation target = findSafeSpot(originalLocation);
 		if (target != null)
 		{
 			player.setFallDistance(0.0F);
@@ -22,11 +25,13 @@ public class Engine
 		return false;
 	}
 
-	public RunsafeLocation findSafeSpot(RunsafeLocation originalLocation, boolean forceTop)
+	public RunsafeLocation findSafeSpot(RunsafeLocation originalLocation)
 	{
 		int maxScan = 100;
 		double x = originalLocation.getX();
 		double z = originalLocation.getZ();
+		int posX = (int) x;
+		int posZ = (int) z;
 		RunsafeLocation location = new RunsafeLocation(
 			originalLocation.getWorld(),
 			originalLocation.getX(),
@@ -35,15 +40,13 @@ public class Engine
 			originalLocation.getYaw(),
 			originalLocation.getPitch()
 		);
-		if (forceTop || !targetFloorIsSafe(location, false))
-			location = findTop(location);
 
 		while (true)
 		{
-			if (targetFloorIsSafe(location, false))
+			for (RunsafeLocation option : findSafePoints(originalLocation.getWorld(), posX, posZ))
 			{
-				location.setY(location.getY() + 1);
-				return location;
+				if (targetFloorIsSafe(option, false))
+					return option;
 			}
 			maxScan--;
 			if (maxScan < 0)
@@ -51,10 +54,42 @@ public class Engine
 
 			// Spiral out to find a safe location
 			double t = 100 - maxScan;
-			location.setX(5 * t * Math.cos(t) + x);
-			location.setZ(5 * t * Math.sin(t) + z);
-			location = findTop(location);
+			posX = (int) (5 * t * Math.cos(t) + x);
+			posZ = (int) (5 * t * Math.sin(t) + z);
 		}
+	}
+
+	private List<RunsafeLocation> findSafePoints(RunsafeWorld world, int x, int z)
+	{
+		ArrayList<RunsafeLocation> options = new ArrayList<RunsafeLocation>();
+		int safe = 0;
+		boolean safeFloor = false;
+		RunsafeLocation floor = null;
+		int maxy = world.getMaxHeight();
+		if (world.getRaw().getEnvironment() == World.Environment.NETHER)
+			maxy = 125;
+		for (int y = 0; y < maxy; ++y)
+		{
+			RunsafeBlock block = world.getBlockAt(x, 0, z);
+			if (!block.canPassThrough())
+			{
+				safeFloor = !block.isHazardous();
+				floor = block.getLocation();
+			}
+			if (block.isHazardous())
+			{
+				safe = 0;
+				continue;
+			}
+			if (!safeFloor)
+				continue;
+
+			if (block.canPassThrough())
+				safe++;
+			if (safe == 2)
+				options.add(floor);
+		}
+		return options;
 	}
 
 	public RunsafeLocation findTop(RunsafeLocation location)
@@ -68,7 +103,7 @@ public class Engine
 			int air = 0;
 			while (y > minHeight)
 			{
-				if (world.getBlockAt(location).isAir())
+				if (world.getBlockAt(location).canPassThrough())
 					air++;
 				else if (air > 1)
 					break;
@@ -95,10 +130,10 @@ public class Engine
 			floor = location.getWorld().getBlockAt(location);
 		if (
 			floor.isHazardous()
-			|| (
+				|| (
 				floor.canPassThrough()
-				&& floor.getTypeId() != Material.WATER.getId()
-				&& floor.getTypeId() != Material.STATIONARY_WATER.getId()
+					&& floor.getTypeId() != Material.WATER.getId()
+					&& floor.getTypeId() != Material.STATIONARY_WATER.getId()
 			))
 			return false;
 

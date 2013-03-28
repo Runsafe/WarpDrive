@@ -21,7 +21,7 @@ public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<P
 			if (playerTeleport.force)
 				playerTeleport.player.teleport(playerTeleport.location);
 			else
-				engine.safePlayerTeleport(playerTeleport.location, playerTeleport.player, false);
+				engine.safePlayerTeleport(playerTeleport.location, playerTeleport.player);
 		}
 		if (playerTeleport.message != null)
 			playerTeleport.player.sendColouredMessage(playerTeleport.message);

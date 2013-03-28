@@ -105,12 +105,19 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		{
 			boolean negX = rng.nextInt(100) > 50;
 			boolean negZ = rng.nextInt(100) > 50;
-			double randomX = (negX ? -1 : 1) * (rng.nextInt(maxDistance - minDistance) + minDistance);
-			double randomZ = (negZ ? -1 : 1) * (rng.nextInt(maxDistance - minDistance) + minDistance);
+			double randomX = (negX ? -1 : 1) * rng.nextInt(maxDistance);
+			double randomZ = (negZ ? -1 : 1) * rng.nextInt(maxDistance);
+			if (randomX < minDistance && randomZ < minDistance)
+			{
+				if (rng.nextBoolean())
+					randomX += (negX ? -1 : 1) * minDistance;
+				else
+					randomZ += (negZ ? -1 : 1) * minDistance;
+			}
 			RunsafeLocation target = null;
 			int retries = 10;
 			while (target == null && retries-- > 0)
-				target = engine.findSafeSpot(new RunsafeLocation(world, randomX + originX + 0.5, 64.0D, randomZ + originZ + 0.5), true);
+				target = engine.findSafeSpot(new RunsafeLocation(world, randomX + originX + 0.5, 64.0D, randomZ + originZ + 0.5));
 			return target;
 		}
 

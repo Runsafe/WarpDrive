@@ -58,7 +58,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 			&& !player.hasPermission(String.format("runsafe.warpsign.use.%s", name)))
 			return false;
 
-		engine.safePlayerTeleport(destination, player, false);
+		engine.safePlayerTeleport(destination, player);
 		return false;
 	}
 
