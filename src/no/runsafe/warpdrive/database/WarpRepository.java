@@ -1,7 +1,7 @@
 package no.runsafe.warpdrive.database;
 
 import no.runsafe.framework.database.IDatabase;
-import no.runsafe.framework.database.ISchemaChanges;
+import no.runsafe.framework.database.Repository;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
-public class WarpRepository implements ISchemaChanges
+public class WarpRepository extends Repository
 {
 	public WarpRepository(IDatabase db, IOutput output)
 	{
@@ -54,28 +54,23 @@ public class WarpRepository implements ISchemaChanges
 
 	public void Persist(String creator, String name, boolean publicWarp, RunsafeLocation location)
 	{
-		PreparedStatement query = database.prepare(
+		database.Update(
 			"INSERT INTO warpdrive_locations (creator, name, `public`, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)" +
-				"ON DUPLICATE KEY UPDATE world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z), yaw=VALUES(yaw), pitch=VALUES(pitch)"
+				"ON DUPLICATE KEY UPDATE world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z), yaw=VALUES(yaw), pitch=VALUES(pitch)",
+			creator,
+			name,
+			publicWarp,
+			location.getWorld().getName(),
+			location.getX(),
+			location.getY(),
+			location.getZ(),
+			location.getYaw(),
+			location.getPitch()
 		);
-		try
-		{
-			query.setString(1, creator);
-			query.setString(2, name);
-			query.setBoolean(3, publicWarp);
-			query.setString(4, location.getWorld().getName());
-			query.setDouble(5, location.getX());
-			query.setDouble(6, location.getY());
-			query.setDouble(7, location.getZ());
-			query.setFloat(8, location.getYaw());
-			query.setFloat(9, location.getPitch());
-			query.execute();
-			cache.put(cacheKey(creator, name, publicWarp), location);
-		}
-		catch (SQLException e)
-		{
-			console.write(e.getMessage());
-		}
+		String key = cacheKey(creator, name, publicWarp);
+		if (cache.containsKey(key))
+			cache.remove(key);
+		cache.put(key, location);
 	}
 
 	public List<String> GetPublicList()
@@ -110,19 +105,7 @@ public class WarpRepository implements ISchemaChanges
 
 	public void DelAllPrivate(String world)
 	{
-		PreparedStatement query = database.prepare(
-			"DELETE FROM warpdrive_locations WHERE world=? AND public=?"
-		);
-		try
-		{
-			query.setString(1, world);
-			query.setBoolean(2, true);
-			query.execute();
-		}
-		catch (Exception e)
-		{
-			console.write(e.getMessage());
-		}
+		database.Execute("DELETE FROM warpdrive_locations WHERE world=? AND public=?", world, false);
 	}
 
 	private String cacheKey(String creator, String name, boolean publicWarp)
@@ -135,28 +118,14 @@ public class WarpRepository implements ISchemaChanges
 	private List<String> GetWarps(String owner, boolean publicWarp)
 	{
 		ArrayList<String> names = new ArrayList<String>();
-		PreparedStatement query;
+		List<Object> result;
 		if (publicWarp)
-			query = database.prepare(
-				"SELECT name FROM warpdrive_locations WHERE `public`=?"
-			);
+			result = database.QueryColumn("SELECT name FROM warpdrive_locations WHERE `public`=?", publicWarp);
 		else
-			query = database.prepare(
-				"SELECT name FROM warpdrive_locations WHERE `public`=? AND creator=?"
-			);
-		try
-		{
-			query.setBoolean(1, publicWarp);
-			if (!publicWarp)
-				query.setString(2, owner);
-			ResultSet result = query.executeQuery();
-			while (result.next())
-				names.add(result.getString("name"));
-		}
-		catch (SQLException e)
-		{
-			console.write(e.getMessage());
-		}
+			result = database.QueryColumn("SELECT name FROM warpdrive_locations WHERE `public`=? AND creator=?", publicWarp, owner);
+		if (result != null)
+			for (Object entry : result)
+				names.add((String) entry);
 		return names;
 	}
 
