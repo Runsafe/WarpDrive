@@ -22,6 +22,10 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	@Override
 	public String getPermission(ICommandExecutor executor, HashMap<String, String> parameters, String[] args)
 	{
+		if (args.length > 0 && args[args.length - 1].equals("-f"))
+		{
+			args = Arrays.copyOfRange(args, 0, args.length - 1);
+		}
 		if (executor instanceof RunsafePlayer)
 		{
 			RunsafePlayer teleporter = (RunsafePlayer) executor;
