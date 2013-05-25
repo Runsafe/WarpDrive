@@ -2,6 +2,8 @@ package no.runsafe.warpdrive;
 
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.warpdrive.commands.*;
+import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
+import no.runsafe.warpdrive.database.SmartWarpRepository;
 import no.runsafe.warpdrive.database.WarpRepository;
 import no.runsafe.warpdrive.portals.PortalEngine;
 import no.runsafe.warpdrive.portals.PortalRepository;
@@ -12,8 +14,18 @@ public class Plugin extends RunsafeConfigurablePlugin
 	protected void PluginSetup()
 	{
 		addComponent(Engine.class);
+
+		// Database
 		addComponent(WarpRepository.class);
+		addComponent(SmartWarpChunkRepository.class);
+		addComponent(SmartWarpRepository.class);
+
+		// Warping
+		addComponent(SmartWarpScanner.class);
+		addComponent(SmartWarp.class);
 		addComponent(SnazzyWarp.class);
+
+		// Commands
 		addComponent(SetWarp.class);
 		addComponent(DelWarp.class);
 		addComponent(Warp.class);
@@ -25,6 +37,7 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(Teleport.class);
 		addComponent(WipeHomes.class);
 		addComponent(TeleportToEntityID.class);
+
 		addComponent(WarpSignCreator.class);
 
 		// Portals

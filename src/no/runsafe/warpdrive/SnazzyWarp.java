@@ -74,18 +74,14 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		{
 			maxDistance = Integer.parseInt(sign.getLine(2));
 			minDistance = Integer.parseInt(sign.getLine(3));
-			world = sign.getWorld();
-			originX = sign.getX();
-			originZ = sign.getZ();
+			world = RunsafeServer.Instance.getWorld(sign.getLine(1));
 			console.outputDebugToConsole(
 				String.format(
-					"Configured new warp sign %s in world %s [%d-%d] at (%d,%d).",
+					"Configured new warp sign %s in world %s [%d-%d].",
 					sign.getLine(1),
 					world.getName(),
 					minDistance,
-					maxDistance,
-					originX,
-					originZ
+					maxDistance
 				),
 				Level.FINE
 			);
@@ -118,7 +114,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 			int retries = 10;
 			while (target == null && retries-- > 0)
 				target = engine.findRandomSafeSpot(
-					new RunsafeLocation(world, randomX + originX + 0.5, 64.0D, randomZ + originZ + 0.5)
+					new RunsafeLocation(world, randomX + 0.5, 64.0D, randomZ + 0.5)
 				);
 			if (target != null)
 			{
@@ -130,8 +126,6 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		}
 
 		private final RunsafeWorld world;
-		private final int originX;
-		private final int originZ;
 		private final int maxDistance;
 		private final int minDistance;
 		private final Random rng = new Random();
