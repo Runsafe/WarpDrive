@@ -3,6 +3,8 @@ package no.runsafe.warpdrive;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.warpdrive.commands.*;
 import no.runsafe.warpdrive.database.WarpRepository;
+import no.runsafe.warpdrive.portals.PortalEngine;
+import no.runsafe.warpdrive.portals.PortalRepository;
 
 public class Plugin extends RunsafeConfigurablePlugin
 {
@@ -24,5 +26,9 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(WipeHomes.class);
 		addComponent(TeleportToEntityID.class);
 		addComponent(WarpSignCreator.class);
+
+		// Portals
+		addComponent(PortalRepository.class);
+		addComponent(PortalEngine.class);
 	}
 }
