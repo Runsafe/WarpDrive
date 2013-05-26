@@ -31,7 +31,7 @@ public class PortalRepository extends Repository
 		List<PortalWarp> warps = new ArrayList<PortalWarp>();
 
 		PreparedStatement query = this.database.prepare(
-			"SELECT" +
+			"SELECT " +
 					"ID," +
 					"permission," +
 					"type," +
