@@ -54,7 +54,7 @@ public class PortalWarp
 
 	public boolean isInPortal(RunsafePlayer player)
 	{
-		return (player.getLocation().distance(this.location)) < 2;
+		return player.getLocation().distance(this.location) < 2;
 	}
 
 	private String id;
