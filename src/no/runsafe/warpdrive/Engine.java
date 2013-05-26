@@ -150,7 +150,7 @@ public class Engine
 			floor = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
 		else
 			floor = location.getWorld().getBlockAt(location);
-		if (floor.isHazardous() || floor.canPassThrough())
+		if (floor.isHazardous() || floor.canPassThrough() || floor.isAbleToFall())
 			return false;
 
 		for (int y = playerLocation ? 0 : 1; y < (playerLocation ? 2 : 3); ++y)

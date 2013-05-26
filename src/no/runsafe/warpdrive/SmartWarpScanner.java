@@ -51,14 +51,25 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 	@Override
 	public void process(String world, RunsafeLocation location)
 	{
+		RunsafeWorld locWorld = location.getWorld();
 		location = engine.findTop(location);
 		if (engine.targetFloorIsSafe(location, true))
 			chunkRepository.saveTarget(location, true, false);
 		if (location.getWorld().getRaw().getEnvironment() != World.Environment.NETHER)
 		{
+			int air = 0;
 			while (location.getBlockY() > 10)
 			{
-				location.decrementY(1);
+				while (location.getBlockY() > 10)
+				{
+					location.decrementY(1);
+					if (locWorld.getBlockAt(location).isAir())
+						air++;
+					else if (air > 1)
+						break;
+					else
+						air = 0;
+				}
 				if (engine.targetFloorIsSafe(location, true))
 					chunkRepository.saveTarget(location, true, true);
 			}
