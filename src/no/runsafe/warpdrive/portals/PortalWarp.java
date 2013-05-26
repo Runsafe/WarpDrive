@@ -34,7 +34,7 @@ public class PortalWarp
 
 	public boolean canTeleport(RunsafePlayer player)
 	{
-		return (this.perm != null && player.hasPermission(this.perm));
+		return (this.perm == null || player.hasPermission(this.perm));
 	}
 
 	public PortalType getType()
