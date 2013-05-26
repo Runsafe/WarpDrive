@@ -22,6 +22,8 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 		this.warpRepository = warpRepository;
 		this.chunkRepository = chunkRepository;
 		this.engine = engine;
+
+		this.setInterval(10);
 	}
 
 	public void Setup(RunsafeWorld world, String radius)
