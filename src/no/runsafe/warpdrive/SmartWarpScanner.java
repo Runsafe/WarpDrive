@@ -68,7 +68,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 		{
 			int d = range.get(world) / 16;
 			console.writeColoured(
-				"Scanning location %d/%d in %s (%.2f%%)",
+				"Scanning location %.0f/%.0f in %s (%.2f%%)",
 				p, d * d, world, 100 * p / (d * d)
 			);
 		}
