@@ -73,7 +73,7 @@ public class SmartWarpRepository extends Repository
 		database.Update(
 			"INSERT INTO smartwarp_settings (`world`, `range`, `progress`) VALUES (?, ?, 0)" +
 				" ON DUPLICATE KEY UPDATE `range`=VALUES(`range`)",
-			range, world
+				world, range
 		);
 	}
 
