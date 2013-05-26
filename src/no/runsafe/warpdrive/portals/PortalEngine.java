@@ -2,16 +2,18 @@ package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IConfigurationChanged;
-import no.runsafe.framework.event.player.IPlayerPortalEvent;
+import no.runsafe.framework.event.player.IPlayerPortal;
 import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.event.player.RunsafePlayerPortalEvent;
+import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.warpdrive.SmartWarpDrive;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class PortalEngine implements IPlayerPortalEvent, IConfigurationChanged
+public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 {
 	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IOutput output)
 	{
@@ -24,7 +26,12 @@ public class PortalEngine implements IPlayerPortalEvent, IConfigurationChanged
 
 	public void reloadPortals()
 	{
-		this.portals = this.repository.getPortalWarps();
+		for (PortalWarp portal : this.repository.getPortalWarps())
+		{
+			if (!portals.containsKey(portal.getWorld().getName()))
+				portals.put(portal.getWorld().getName(), new ArrayList<PortalWarp>());
+			portals.get(portal.getWorld().getName()).add(portal);
+		}
 		this.output.write(this.portals.size() + " portals loaded.");
 	}
 
@@ -41,20 +48,21 @@ public class PortalEngine implements IPlayerPortalEvent, IConfigurationChanged
 	}
 
 	@Override
-	public void OnPlayerPortalEvent(RunsafePlayerPortalEvent event)
+	public boolean OnPlayerPortal(RunsafePlayer player, RunsafeLocation from, RunsafeLocation to)
 	{
-		RunsafePlayer player = event.getPlayer();
-		for (PortalWarp portal : this.portals)
-		{
-			if (portal.isInPortal(player))
+		if (portals.containsKey(player.getWorld().getName()))
+			for (PortalWarp portal : this.portals.get(player.getWorld().getName()))
 			{
-				event.setCancelled(true);
-				if (portal.canTeleport(player))
-					this.teleportPlayer(portal, player);
-				else
-					player.sendColouredMessage("&cYou do not have permission to use this portal.");
+				if (portal.isInPortal(player))
+				{
+					if (portal.canTeleport(player))
+						this.teleportPlayer(portal, player);
+					else
+						player.sendColouredMessage("&cYou do not have permission to use this portal.");
+					return false;
+				}
 			}
-		}
+		return true;
 	}
 
 	@Override
@@ -63,7 +71,7 @@ public class PortalEngine implements IPlayerPortalEvent, IConfigurationChanged
 		this.reloadPortals();
 	}
 
-	private List<PortalWarp> portals = new ArrayList<PortalWarp>();
+	private Map<String, List<PortalWarp>> portals = new HashMap<String, List<PortalWarp>>();
 	private PortalRepository repository;
 	private SmartWarpDrive smartWarpDrive;
 	private IOutput output;
