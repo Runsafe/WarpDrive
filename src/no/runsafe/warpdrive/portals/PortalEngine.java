@@ -42,15 +42,21 @@ public class PortalEngine implements IPlayerPortalEvent
 	public void OnPlayerPortalEvent(RunsafePlayerPortalEvent event)
 	{
 		RunsafePlayer player = event.getPlayer();
+		event.setCancelled(true);
 		for (PortalWarp portal : this.portals)
 		{
 			if (portal.isInPortal(player))
 			{
+				player.sendColouredMessage("You are in a portal, if you dont get a perm error we're porting you!");
 				event.setCancelled(true);
 				if (portal.canTeleport(player))
 					this.teleportPlayer(portal, player);
 				else
 					player.sendColouredMessage("&cYou do not have permission to use this portal.");
+			}
+			else
+			{
+				player.sendColouredMessage("You are not in a portal.");
 			}
 		}
 	}
