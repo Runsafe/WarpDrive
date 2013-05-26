@@ -29,7 +29,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 		int r = Integer.valueOf(radius);
 		warpRepository.setRange(world.getName(), r);
 		range.put(world.getName(), r);
-		if (!progress.containsKey(world))
+		if (!progress.containsKey(world.getName()))
 			progress.put(world.getName(), 0D);
 		if (!isQueued(world.getName()))
 			ScheduleNext(world.getName());
