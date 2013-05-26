@@ -17,16 +17,6 @@ public class PortalWarp
 			this.destination = new RunsafeLocation(destWorld, destX, destY, destZ, destYaw, destPitch);
 	}
 
-	public void setInnerRadius(int innerRadius)
-	{
-		this.innerRadius = innerRadius;
-	}
-
-	public void setOuterRadius(int outerRadius)
-	{
-		this.outerRadius = outerRadius;
-	}
-
 	public void setPermission(String perm)
 	{
 		this.perm = perm;
@@ -63,6 +53,4 @@ public class PortalWarp
 	private RunsafeLocation location;
 	private RunsafeLocation destination;
 	private RunsafeWorld destinationWorld;
-	private int innerRadius = 0;
-	private int outerRadius = 0;
 }
