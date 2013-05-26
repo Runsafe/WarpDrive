@@ -38,12 +38,11 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 	@Override
 	public void OnPluginEnabled()
 	{
-		for (Object world : warpRepository.getWorlds())
+		for (String world : warpRepository.getWorlds())
 		{
-			String k = (String) world;
-			progress.put(k, warpRepository.getProgress(k));
-			range.put(k, warpRepository.getRange(k));
-			ScheduleNext(k);
+			progress.put(world, warpRepository.getProgress(world));
+			range.put(world, warpRepository.getRange(world));
+			ScheduleNext(world);
 		}
 	}
 

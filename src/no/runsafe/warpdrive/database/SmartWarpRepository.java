@@ -79,8 +79,13 @@ public class SmartWarpRepository extends Repository
 
 	private IDatabase database;
 
-	public List<Object> getWorlds()
+	public List<String> getWorlds()
 	{
-		return database.QueryColumn("SELECT world FROM smartwarp_settings");
+		List<String> result = new ArrayList<String>();
+		List<Object> worlds = database.QueryColumn("SELECT world FROM smartwarp_settings");
+		if (worlds != null)
+			for (Object world : worlds)
+				result.add((String) world);
+		return result;
 	}
 }
