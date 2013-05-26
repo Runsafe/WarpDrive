@@ -41,7 +41,7 @@ public class SmartWarpRepository extends Repository
 	public int getRange(String world)
 	{
 		Map<String, Object> settings = database.QueryRow(
-			"SELECT range FROM smartwarp_settings WHERE world=?",
+			"SELECT `range` FROM smartwarp_settings WHERE world=?",
 			world
 		);
 		if (settings == null)
