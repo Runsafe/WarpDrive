@@ -91,7 +91,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 	{
 		if (!worlds.containsKey(world))
 			worlds.put(world, RunsafeServer.Instance.getWorld(world));
-		int r = range.get(world);
+		int r = range.get(world) / 16;
 		double offset = r / 2;
 		double x = progress.get(world) % r;
 		double z = progress.get(world) / r;
