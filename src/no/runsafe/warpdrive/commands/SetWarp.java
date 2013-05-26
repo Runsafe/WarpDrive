@@ -18,8 +18,9 @@ public class SetWarp extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
 	{
-		warpRepository.Persist(player.getName(), parameters.get("name"), true, player.getLocation());
-		return String.format("Current location saved as the warp %s.", parameters.get("name"));
+		String name = parameters.get("name").toLowerCase();
+		warpRepository.Persist(player.getName(), name, true, player.getLocation());
+		return String.format("Current location saved as the warp %s.", name);
 	}
 
 	private final WarpRepository warpRepository;

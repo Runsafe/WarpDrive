@@ -39,7 +39,8 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	public String OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
 	{
 		List<String> homes = warpRepository.GetPrivateList(player.getName());
-		if (!homes.contains(parameters.get("name")))
+		String name = parameters.get("name").toLowerCase();
+		if (!homes.contains(name))
 		{
 			int limit = 0;
 			for (String group : player.getGroups())
@@ -53,8 +54,8 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 				return String.format("You are only allowed %d homes on this server.", limit);
 		}
 
-		warpRepository.Persist(player.getName(), parameters.get("name"), false, player.getLocation());
-		return String.format("Current location saved as the home %s.", parameters.get("name"));
+		warpRepository.Persist(player.getName(), name, false, player.getLocation());
+		return String.format("Current location saved as the home %s.", name);
 	}
 
 	private final WarpRepository warpRepository;

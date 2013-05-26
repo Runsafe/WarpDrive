@@ -125,7 +125,7 @@ public class WarpRepository extends Repository
 			result = database.QueryColumn("SELECT name FROM warpdrive_locations WHERE `public`=? AND creator=?", publicWarp, owner);
 		if (result != null)
 			for (Object entry : result)
-				names.add((String) entry);
+				names.add(((String) entry).toLowerCase());
 		return names;
 	}
 

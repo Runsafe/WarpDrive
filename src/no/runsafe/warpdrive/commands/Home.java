@@ -42,7 +42,7 @@ public class Home extends PlayerTeleportCommand
 		}
 		else
 		{
-			home = args[0];
+			home = args[0].toLowerCase();
 		}
 		target.location = warpRepository.GetPrivate(player.getName(), home);
 		if (target.location == null)
