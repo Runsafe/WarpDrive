@@ -44,9 +44,7 @@ public class PortalRepository extends Repository
 					"destY," +
 					"destZ," +
 					"destYaw," +
-					"destPitch," +
-					"innerRadius," +
-					"outerRadius" +
+					"destPitch" +
 			"FROM warpdrive_portals"
 		);
 
@@ -63,14 +61,12 @@ public class PortalRepository extends Repository
 								result.getDouble("y"),
 								result.getDouble("z")
 						),
-						new RunsafeLocation(
-								RunsafeServer.Instance.getWorld(result.getString("destWorld")),
-								result.getDouble("destX"),
-								result.getDouble("destY"),
-								result.getDouble("destZ"),
-								result.getFloat("destYaw"),
-								result.getFloat("destPitch")
-						),
+						RunsafeServer.Instance.getWorld(result.getString("destWorld")),
+						result.getDouble("destX"),
+						result.getDouble("destY"),
+						result.getDouble("destZ"),
+						result.getFloat("destYaw"),
+						result.getFloat("destPitch"),
 						PortalType.getPortalType(result.getInt("type"))
 				));
 			}
@@ -97,13 +93,11 @@ public class PortalRepository extends Repository
 						"`y` DOUBLE NOT NULL," +
 						"`z` DOUBLE NOT NULL," +
 						"`destWorld` VARCHAR(255) NOT NULL," +
-						"`destX` DOUBLE NOT NULL," +
-						"`destY` DOUBLE NOT NULL," +
-						"`destZ` DOUBLE NOT NULL," +
-						"`destYaw` DOUBLE NOT NULL," +
-						"`destPitch` DOUBLE NOT NULL," +
-						"`innerRadius` INT NOT NULL," +
-						"`outerRadius` INT NOT NULL," +
+						"`destX` DOUBLE NULL," +
+						"`destY` DOUBLE NULL," +
+						"`destZ` DOUBLE NULL," +
+						"`destYaw` DOUBLE NULL," +
+						"`destPitch` DOUBLE NULL," +
 						"PRIMARY KEY (`ID`)" +
 					")"
 		);
