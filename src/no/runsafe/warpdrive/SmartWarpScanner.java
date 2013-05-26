@@ -66,10 +66,10 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 		warpRepository.setProgress(world, p);
 		if (progress.get(world) % 100 == 0)
 		{
-			int d = range.get(world) / 16;
+			double d = range.get(world) / 16;
 			console.writeColoured(
 				"Scanning location %.0f/%.0f in %s (%.2f%%)",
-				p, d * d, world, 100 * p / (d * d)
+				p, d * d, world, 100D * p / (d * d)
 			);
 		}
 		ScheduleNext(world);
