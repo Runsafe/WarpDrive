@@ -64,7 +64,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 		Double p = progress.get(world) + 1;
 		progress.put(world, p);
 		warpRepository.setProgress(world, p);
-		if (progress.get(world) % 100 == 0)
+		if (progress.get(world) % 1000 == 0)
 		{
 			double d = range.get(world) / 16;
 			console.writeColoured(
