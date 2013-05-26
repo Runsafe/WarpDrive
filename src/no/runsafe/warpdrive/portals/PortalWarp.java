@@ -10,8 +10,11 @@ public class PortalWarp
 	{
 		this.id = id;
 		this.location = location;
-		this.destination = destination;
 		this.type = type;
+		this.destinationWorld = destWorld;
+
+		if (this.type == PortalType.NORMAL)
+			this.destination = new RunsafeLocation(destWorld, destX, destY, destZ, destYaw, destPitch);
 	}
 
 	public void setInnerRadius(int innerRadius)
@@ -39,15 +42,19 @@ public class PortalWarp
 		return this.type;
 	}
 
+	public RunsafeWorld getWorld()
+	{
+		return this.destinationWorld;
+	}
+
+	public RunsafeLocation getLocation()
+	{
+		return this.destination;
+	}
+
 	public boolean isInPortal(RunsafePlayer player)
 	{
 		return (player.getLocation().distance(this.location)) < 2;
-	}
-
-	public void teleportPlayer(RunsafePlayer player)
-	{
-		if (this.type == PortalType.NORMAL)
-			player.teleport(this.destination);
 	}
 
 	private String id;
@@ -55,6 +62,7 @@ public class PortalWarp
 	private PortalType type;
 	private RunsafeLocation location;
 	private RunsafeLocation destination;
+	private RunsafeWorld destinationWorld;
 	private int innerRadius = 0;
 	private int outerRadius = 0;
 }

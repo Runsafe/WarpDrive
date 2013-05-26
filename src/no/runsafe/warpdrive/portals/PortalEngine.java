@@ -4,15 +4,17 @@ import no.runsafe.framework.event.player.IPlayerPortalEvent;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.event.player.RunsafePlayerPortalEvent;
 import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.warpdrive.SmartWarpDrive;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PortalEngine implements IPlayerPortalEvent
 {
-	public PortalEngine(PortalRepository repository, IOutput output)
+	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IOutput output)
 	{
 		this.repository = repository;
+		this.smartWarpDrive = smartWarpDrive;
 		this.output = output;
 
 		this.reloadPortals();
@@ -22,6 +24,18 @@ public class PortalEngine implements IPlayerPortalEvent
 	{
 		this.portals = this.repository.getPortalWarps();
 		this.output.write(this.portals.size() + " portals loaded.");
+	}
+
+	public void teleportPlayer(PortalWarp portal, RunsafePlayer player)
+	{
+		if (portal.getType() == PortalType.NORMAL)
+			player.teleport(portal.getLocation());
+
+		if (portal.getType() == PortalType.RANDOM_SURFACE)
+			this.smartWarpDrive.Engage(player, portal.getWorld(), false);
+
+		if (portal.getType() == PortalType.RANDOM_CAVE)
+			this.smartWarpDrive.Engage(player, portal.getWorld(), true);
 	}
 
 	@Override
@@ -34,7 +48,7 @@ public class PortalEngine implements IPlayerPortalEvent
 			{
 				event.setCancelled(true);
 				if (portal.canTeleport(player))
-					portal.teleportPlayer(player);
+					this.teleportPlayer(portal, player);
 				else
 					player.sendColouredMessage("&cYou do not have permission to use this portal.");
 			}
@@ -43,5 +57,6 @@ public class PortalEngine implements IPlayerPortalEvent
 
 	private List<PortalWarp> portals = new ArrayList<PortalWarp>();
 	private PortalRepository repository;
+	private SmartWarpDrive smartWarpDrive;
 	private IOutput output;
 }
