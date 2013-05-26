@@ -41,6 +41,8 @@ public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 		RunsafePlayer player = RunsafeServer.Instance.getPlayerExact(playerName);
 		if (player == null)
 			return;
+		target.incrementX(0.5);
+		target.incrementZ(0.5);
 		player.teleport(target);
 	}
 
