@@ -1,5 +1,7 @@
 package no.runsafe.warpdrive.portals;
 
+import no.runsafe.framework.configuration.IConfiguration;
+import no.runsafe.framework.event.IConfigurationChanged;
 import no.runsafe.framework.event.player.IPlayerPortalEvent;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.event.player.RunsafePlayerPortalEvent;
@@ -9,7 +11,7 @@ import no.runsafe.warpdrive.SmartWarpDrive;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PortalEngine implements IPlayerPortalEvent
+public class PortalEngine implements IPlayerPortalEvent, IConfigurationChanged
 {
 	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IOutput output)
 	{
@@ -59,6 +61,12 @@ public class PortalEngine implements IPlayerPortalEvent
 				player.sendColouredMessage("You are not in a portal.");
 			}
 		}
+	}
+
+	@Override
+	public void OnConfigurationChanged(IConfiguration iConfiguration)
+	{
+		this.reloadPortals();
 	}
 
 	private List<PortalWarp> portals = new ArrayList<PortalWarp>();
