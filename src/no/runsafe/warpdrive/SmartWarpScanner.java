@@ -108,7 +108,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 		double offset = r / 2;
 		double x = progress.get(world) % r;
 		double z = progress.get(world) / r;
-		return new RunsafeLocation(worlds.get(world), x * 16 - offset, 255, z * 16 - offset);
+		return new RunsafeLocation(worlds.get(world), x * 16 - offset + 0.5, 255, z * 16 - offset + 0.5);
 	}
 
 	private HashMap<String, Double> progress = new HashMap<String, Double>();
