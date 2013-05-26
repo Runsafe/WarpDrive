@@ -9,14 +9,15 @@ import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.framework.timer.IScheduler;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 
-public class SmartWarp extends ForegroundWorker<String, RunsafeLocation>
+public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 {
-	public SmartWarp(IScheduler scheduler, IOutput console, SmartWarpChunkRepository smartWarpChunks, Engine engine)
+	public SmartWarpDrive(IScheduler scheduler, IOutput console, SmartWarpChunkRepository smartWarpChunks, Engine engine)
 	{
 		super(scheduler);
 		this.console = console;
 		this.smartWarpChunks = smartWarpChunks;
 		this.engine = engine;
+		setInterval(10);
 	}
 
 	public void Engage(RunsafePlayer player, RunsafeWorld target, boolean cave)

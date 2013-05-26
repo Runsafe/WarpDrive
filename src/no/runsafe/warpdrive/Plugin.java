@@ -22,7 +22,7 @@ public class Plugin extends RunsafeConfigurablePlugin
 
 		// Warping
 		addComponent(SmartWarpScanner.class);
-		addComponent(SmartWarp.class);
+		addComponent(SmartWarpDrive.class);
 		addComponent(SnazzyWarp.class);
 
 		// Commands
@@ -37,6 +37,7 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(Teleport.class);
 		addComponent(WipeHomes.class);
 		addComponent(TeleportToEntityID.class);
+		addComponent(SmartWarp.class);
 
 		addComponent(WarpSignCreator.class);
 
