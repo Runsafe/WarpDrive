@@ -32,19 +32,19 @@ public class PortalRepository extends Repository
 
 		PreparedStatement query = this.database.prepare(
 			"SELECT " +
-					"ID," +
-					"permission," +
-					"type," +
-					"world," +
-					"x," +
-					"y," +
-					"z," +
-					"destWorld," +
-					"destX," +
-					"destY," +
-					"destZ," +
-					"destYaw," +
-					"destPitch" +
+					"`ID`," +
+					"`permission`," +
+					"`type`," +
+					"`world`," +
+					"`x`," +
+					"`y`," +
+					"`z`," +
+					"`destWorld`," +
+					"`destX`," +
+					"`destY`," +
+					"`destZ`," +
+					"`destYaw`," +
+					"`destPitch`" +
 			"FROM warpdrive_portals"
 		);
 
