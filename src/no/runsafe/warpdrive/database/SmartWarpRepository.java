@@ -71,13 +71,11 @@ public class SmartWarpRepository extends Repository
 	public void setRange(String world, int range)
 	{
 		database.Update(
-			"INSERT INTO smartwarp_settings (world, range, progress) VALUES (?, ?, 0)" +
-				" ON DUPLICATE KEY UPDATE range=VALUES(range)",
+			"INSERT INTO smartwarp_settings (`world`, `range`, `progress`) VALUES (?, ?, 0)" +
+				" ON DUPLICATE KEY UPDATE `range`=VALUES(`range`)",
 			range, world
 		);
 	}
-
-	private IDatabase database;
 
 	public List<String> getWorlds()
 	{
@@ -88,4 +86,6 @@ public class SmartWarpRepository extends Repository
 				result.add((String) world);
 		return result;
 	}
+
+	private IDatabase database;
 }
