@@ -47,7 +47,7 @@ public class SmartWarpChunkRepository extends Repository
 	{
 		Map<String, Object> target = database.QueryRow(
 			"SELECT x, y, z FROM smartwarp_targets WHERE world=? AND safe=true AND cave=? ORDER BY RAND() LIMIT 1",
-			world, cave
+			world.getName(), cave
 		);
 		if (target == null)
 			return null;
