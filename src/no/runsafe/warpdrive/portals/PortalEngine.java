@@ -26,13 +26,16 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 
 	public void reloadPortals()
 	{
+		int portalCount = 0;
 		for (PortalWarp portal : this.repository.getPortalWarps())
 		{
 			if (!portals.containsKey(portal.getWorld().getName()))
 				portals.put(portal.getWorld().getName(), new ArrayList<PortalWarp>());
+
+			portalCount += 1;
 			portals.get(portal.getWorld().getName()).add(portal);
 		}
-		this.output.write(this.portals.size() + " portals loaded.");
+		this.output.write(portalCount + " portals loaded.");
 	}
 
 	public void teleportPlayer(PortalWarp portal, RunsafePlayer player)
@@ -51,6 +54,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 	public boolean OnPlayerPortal(RunsafePlayer player, RunsafeLocation from, RunsafeLocation to)
 	{
 		if (portals.containsKey(player.getWorld().getName()))
+		{
 			for (PortalWarp portal : this.portals.get(player.getWorld().getName()))
 			{
 				if (portal.isInPortal(player))
@@ -62,6 +66,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 					return false;
 				}
 			}
+		}
 		return true;
 	}
 
