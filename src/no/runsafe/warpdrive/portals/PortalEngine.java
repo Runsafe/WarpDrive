@@ -29,11 +29,12 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 		int portalCount = 0;
 		for (PortalWarp portal : this.repository.getPortalWarps())
 		{
-			if (!portals.containsKey(portal.getWorld().getName()))
-				portals.put(portal.getWorld().getName(), new ArrayList<PortalWarp>());
+			String portalWorldName = portal.getPortalWorld().getName();
+			if (!portals.containsKey(portalWorldName))
+				portals.put(portalWorldName, new ArrayList<PortalWarp>());
 
 			portalCount += 1;
-			portals.get(portal.getWorld().getName()).add(portal);
+			portals.get(portalWorldName).add(portal);
 		}
 		this.output.write(portalCount + " portals loaded.");
 	}
