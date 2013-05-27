@@ -32,6 +32,11 @@ public class PortalWarp
 		return this.type;
 	}
 
+	public RunsafeWorld getPortalWorld()
+	{
+		return this.location.getWorld();
+	}
+
 	public RunsafeWorld getWorld()
 	{
 		return this.destinationWorld;
