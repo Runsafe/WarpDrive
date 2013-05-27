@@ -1,13 +1,13 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.command.player.PlayerCommand;
+import no.runsafe.framework.command.ExecutableCommand;
+import no.runsafe.framework.server.ICommandExecutor;
 import no.runsafe.framework.server.RunsafeServer;
-import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.warpdrive.SmartWarpScanner;
 
 import java.util.HashMap;
 
-public class SmartWarp extends PlayerCommand
+public class SmartWarp extends ExecutableCommand
 {
 	public SmartWarp(SmartWarpScanner scanner)
 	{
@@ -16,10 +16,10 @@ public class SmartWarp extends PlayerCommand
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer player, HashMap<String, String> param)
+	public String OnExecute(ICommandExecutor iCommandExecutor, HashMap<String, String> param)
 	{
 		scanner.Setup(RunsafeServer.Instance.getWorld(param.get("world")), param.get("radius"));
-		return null;
+		return "&2Smart-warp scan started";
 	}
 
 	private SmartWarpScanner scanner;
