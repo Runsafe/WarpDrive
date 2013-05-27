@@ -40,6 +40,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 
 	public void teleportPlayer(PortalWarp portal, RunsafePlayer player)
 	{
+		this.output.fine("Teleporting player in portal: " + player.getName());
 		if (portal.getType() == PortalType.NORMAL)
 			player.teleport(portal.getLocation());
 
@@ -53,9 +54,11 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 	@Override
 	public boolean OnPlayerPortal(RunsafePlayer player, RunsafeLocation from, RunsafeLocation to)
 	{
-		if (portals.containsKey(player.getWorld().getName()))
+		this.output.fine("Portal event detected: " + player.getName());
+		String worldName = player.getWorld().getName();
+		if (portals.containsKey(worldName))
 		{
-			for (PortalWarp portal : this.portals.get(player.getWorld().getName()))
+			for (PortalWarp portal : this.portals.get(worldName))
 			{
 				if (portal.isInPortal(player))
 				{
