@@ -61,7 +61,7 @@ public class SummoningEngine implements IConfigurationChanged
 		{
 			RunsafeLocation stoneLocation = stone.getValue().getLocation();
 			if (stoneLocation.getWorld().getName().equals(location.getWorld().getName()))
-				if (stoneLocation.distance(location) == 0)
+				if (stoneLocation.distance(location) < 1)
 					return stone.getKey();
 		}
 		return -1;
