@@ -1,6 +1,7 @@
 package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.event.player.IPlayerRightClickBlock;
+import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
@@ -14,9 +15,11 @@ public class SummoningEngine implements IPlayerRightClickBlock
 		// Player has set fire to emerald block?
 		if (itemStack.getType() == Material.FLINT_AND_STEEL && runsafeBlock.getTypeId() == Material.EMERALD_BLOCK.getId())
 		{
-			if (SummoningStone.isSummoningStone(runsafeBlock.getLocation()))
+			RunsafeLocation stoneLocation = runsafeBlock.getLocation();
+			if (SummoningStone.isSummoningStone(stoneLocation))
 			{
-				runsafePlayer.sendColouredMessage("You just set up a portal.");
+				SummoningStone summoningStone = new SummoningStone(stoneLocation);
+				summoningStone.activate();
 				return false;
 			}
 		}
