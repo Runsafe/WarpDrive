@@ -38,7 +38,7 @@ public class SummoningStone
 
 	public void teleportPlayer(RunsafePlayer player)
 	{
-		player.teleport(this.location);
+		player.teleport(this.location.getWorld(), this.location.getX(), this.location.getY() + 1, this.location.getZ());
 	}
 
 	private void transformPortal(int[][] data)
