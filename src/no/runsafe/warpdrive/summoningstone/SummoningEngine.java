@@ -45,6 +45,7 @@ public class SummoningEngine implements IConfigurationChanged
 		SummoningStone stone = this.stones.get(stoneID);
 
 		stone.setComplete();
+		stone.teleportPlayer(player);
 
 		if (stone.hasTimer())
 			this.scheduler.cancelTask(stone.getTimerID());

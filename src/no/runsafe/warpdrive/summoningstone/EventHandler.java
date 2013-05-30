@@ -78,6 +78,9 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 	@Override
 	public boolean OnPlayerRightClick(RunsafePlayer runsafePlayer, RunsafeItemStack itemStack, RunsafeBlock runsafeBlock)
 	{
+		if (itemStack == null)
+			return true;
+
 		if (itemStack.getType() == Material.FLINT_AND_STEEL && runsafeBlock.getTypeId() == Material.EMERALD_BLOCK.getId())
 		{
 			RunsafeLocation stoneLocation = runsafeBlock.getLocation();

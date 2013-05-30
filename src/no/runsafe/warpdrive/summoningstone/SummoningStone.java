@@ -1,6 +1,7 @@
 package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.server.RunsafeLocation;
+import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.Chunk;
 
 public class SummoningStone
@@ -33,6 +34,11 @@ public class SummoningStone
 	public void reset()
 	{
 		this.transformPortal(SummoningStone.constructedPortal);
+	}
+
+	public void teleportPlayer(RunsafePlayer player)
+	{
+		player.teleport(this.location);
 	}
 
 	private void transformPortal(int[][] data)
