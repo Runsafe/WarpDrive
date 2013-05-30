@@ -5,6 +5,7 @@ import no.runsafe.framework.database.Repository;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +67,7 @@ public class SummoningStoneRepository extends Repository
 
 		Map<String, Object> data = this.database.QueryRow("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
 		if (data != null)
-			return (Integer) data.get("ID");
+			return ((BigInteger) data.get("ID")).intValue();
 
 		return 0;
 	}
