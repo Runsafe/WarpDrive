@@ -7,9 +7,7 @@ import no.runsafe.framework.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
-import no.runsafe.framework.server.entity.PassiveEntity;
-import no.runsafe.framework.server.entity.RunsafeEntity;
-import no.runsafe.framework.server.entity.RunsafeItem;
+import no.runsafe.framework.server.entity.*;
 import no.runsafe.framework.server.event.entity.RunsafeEntityPortalEnterEvent;
 import no.runsafe.framework.server.event.player.RunsafePlayerJoinEvent;
 import no.runsafe.framework.server.event.player.RunsafePlayerPortalEvent;
@@ -36,12 +34,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 		if (from != null)
 		{
 			int stoneID = this.engine.getStoneAtLocation(from);
-			if (stoneID > -1)
-			{
-				RunsafePlayer player = event.getPlayer();
-				player.teleport(from.getWorld(), from.getX() + 1, from.getY() + 1, from.getZ() + 1);
-				event.setCancelled(true);
-			}
+			if (stoneID > -1) event.setCancelled(true);
 		}
 	}
 
@@ -56,7 +49,8 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 			if (stoneID > -1)
 			{
 				RunsafeEntity entity = event.getEntity();
-				if (entity.getEntityType() == PassiveEntity.DroppedItem)
+				RunsafeEntityType type = entity.getEntityType();
+				if (type == PassiveEntity.DroppedItem)
 				{
 					RunsafeItemStack item = ((RunsafeItem) entity).getItemStack();
 					if (item.getItemId() == Material.WRITTEN_BOOK.getId())
@@ -75,7 +69,9 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 						}
 					}
 				}
-				entity.remove();
+
+				if (type != LivingEntity.Player)
+					entity.remove();
 			}
 		}
 	}
