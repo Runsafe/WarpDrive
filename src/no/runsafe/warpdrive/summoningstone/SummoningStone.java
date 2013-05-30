@@ -123,7 +123,8 @@ public class SummoningStone
 			{-1, 0, -1, 42},
 			{-1, 0, 1, 42},
 			{1, 0, -1, 42},
-			{1, 0, 1, 42}
+			{1, 0, 1, 42},
+			{0, 2, 0, 152}
 	};
 
 	public static int[][] activatedPortal = {
