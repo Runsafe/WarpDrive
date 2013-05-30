@@ -12,13 +12,13 @@ import no.runsafe.framework.server.entity.RunsafeEntity;
 import no.runsafe.framework.server.entity.RunsafeItem;
 import no.runsafe.framework.server.event.entity.RunsafeEntityPortalEnterEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
+import no.runsafe.framework.server.item.meta.RunsafeBookMeta;
 import no.runsafe.framework.server.item.meta.RunsafeItemMeta;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
 import org.bukkit.Material;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class SummoningEngine implements IPlayerRightClickBlock, IConfigurationChanged, IEntityPortalEnterEvent
 {
@@ -67,11 +67,8 @@ public class SummoningEngine implements IPlayerRightClickBlock, IConfigurationCh
 				RunsafeItemMeta meta = item.getItemMeta();
 
 				if (meta != null)
-				{
-					List<String> lore = meta.getLore();
-					if (!lore.isEmpty())
-						RunsafeServer.Instance.broadcastMessage(lore.get(0));
-				}
+					if (meta instanceof RunsafeBookMeta)
+						RunsafeServer.Instance.broadcastMessage(((RunsafeBookMeta) meta).getAuthor());
 			}
 		}
 	}
