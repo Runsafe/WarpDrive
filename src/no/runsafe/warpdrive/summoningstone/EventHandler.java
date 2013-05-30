@@ -100,9 +100,15 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 			if (this.engine.isRitualWorld(runsafePlayer.getWorld()))
 			{
 				if (this.engine.playerHasPendingSummon(runsafePlayer))
+				{
 					this.engine.acceptPlayerSummon(runsafePlayer);
+					runsafePlayer.getInventory().remove(Material.EYE_OF_ENDER.getId(), 1);
+					runsafePlayer.updateInventory();
+				}
 				else
+				{
 					runsafePlayer.sendColouredMessage("&cYou have no pending summons to accept.");
+				}
 				return false;
 			}
 		}
