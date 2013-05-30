@@ -36,7 +36,12 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 		if (from != null)
 		{
 			int stoneID = this.engine.getStoneAtLocation(from);
-			if (stoneID > -1) event.setCancelled(true);
+			if (stoneID > -1)
+			{
+				RunsafePlayer player = event.getPlayer();
+				player.teleport(from.getWorld(), from.getX() + 1, from.getY() + 1, from.getZ() + 1);
+				event.setCancelled(true);
+			}
 		}
 	}
 
