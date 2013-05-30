@@ -15,6 +15,16 @@ public class SummoningStone
 		this.transformPortal(SummoningStone.activatedPortal);
 	}
 
+	public void remove()
+	{
+		this.transformPortal(SummoningStone.removedPortal);
+	}
+
+	public void reset()
+	{
+		this.transformPortal(SummoningStone.constructedPortal);
+	}
+
 	private void transformPortal(int[][] data)
 	{
 		this.preparePortalForEditing();
@@ -89,5 +99,17 @@ public class SummoningStone
 			{-1, 1, 7},
 			{1, -1, 7},
 			{1, 1, 7}
+	};
+
+	public static int[][] removedPortal = {
+			{0, 0, 0},
+			{1, 0, 0},
+			{0, 1, 0},
+			{-1, 0, 0},
+			{0, -1, 0},
+			{-1, -1, 0},
+			{-1, 1, 0},
+			{1, -1, 0},
+			{1, 1, 0}
 	};
 }

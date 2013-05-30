@@ -7,8 +7,15 @@ import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.Material;
 
+import java.util.HashMap;
+
 public class SummoningEngine implements IPlayerRightClickBlock
 {
+	public SummoningEngine(SummoningStoneRepository summoningStoneRepository)
+	{
+		this.summoningStoneRepository = summoningStoneRepository;
+	}
+
 	@Override
 	public boolean OnPlayerRightClick(RunsafePlayer runsafePlayer, RunsafeItemStack itemStack, RunsafeBlock runsafeBlock)
 	{
@@ -18,11 +25,22 @@ public class SummoningEngine implements IPlayerRightClickBlock
 			RunsafeLocation stoneLocation = runsafeBlock.getLocation();
 			if (SummoningStone.isSummoningStone(stoneLocation))
 			{
+				int stoneID = this.summoningStoneRepository.addSummoningStone(stoneLocation);
 				SummoningStone summoningStone = new SummoningStone(stoneLocation);
 				summoningStone.activate();
+
+				this.stones.put(stoneID, summoningStone);
 				return false;
 			}
 		}
 		return true;
 	}
+
+	public HashMap<Integer, SummoningStone> getLoadedStones()
+	{
+		return this.stones;
+	}
+
+	private HashMap<Integer, SummoningStone> stones = new HashMap<Integer, SummoningStone>();
+	private SummoningStoneRepository summoningStoneRepository;
 }
