@@ -7,6 +7,7 @@ import no.runsafe.warpdrive.database.SmartWarpRepository;
 import no.runsafe.warpdrive.database.WarpRepository;
 import no.runsafe.warpdrive.portals.PortalEngine;
 import no.runsafe.warpdrive.portals.PortalRepository;
+import no.runsafe.warpdrive.summoningstone.EventHandler;
 import no.runsafe.warpdrive.summoningstone.SummoningEngine;
 import no.runsafe.warpdrive.summoningstone.SummoningStoneCleaner;
 import no.runsafe.warpdrive.summoningstone.SummoningStoneRepository;
@@ -52,5 +53,6 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(SummoningStoneRepository.class);
 		addComponent(SummoningEngine.class);
 		addComponent(SummoningStoneCleaner.class);
+		addComponent(EventHandler.class);
 	}
 }

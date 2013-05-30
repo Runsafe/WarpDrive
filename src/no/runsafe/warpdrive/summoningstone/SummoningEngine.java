@@ -2,25 +2,13 @@ package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IConfigurationChanged;
-import no.runsafe.framework.event.entity.IEntityPortalEnterEvent;
-import no.runsafe.framework.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeServer;
-import no.runsafe.framework.server.block.RunsafeBlock;
-import no.runsafe.framework.server.entity.PassiveEntity;
-import no.runsafe.framework.server.entity.RunsafeEntity;
-import no.runsafe.framework.server.entity.RunsafeItem;
-import no.runsafe.framework.server.event.entity.RunsafeEntityPortalEnterEvent;
-import no.runsafe.framework.server.item.RunsafeItemStack;
-import no.runsafe.framework.server.item.meta.RunsafeBookMeta;
-import no.runsafe.framework.server.item.meta.RunsafeItemMeta;
-import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
-import org.bukkit.Material;
 
 import java.util.HashMap;
+import java.util.Map;
 
-public class SummoningEngine implements IPlayerRightClickBlock, IConfigurationChanged, IEntityPortalEnterEvent
+public class SummoningEngine implements IConfigurationChanged
 {
 	public SummoningEngine(SummoningStoneRepository summoningStoneRepository, IScheduler scheduler)
 	{
@@ -28,49 +16,29 @@ public class SummoningEngine implements IPlayerRightClickBlock, IConfigurationCh
 		this.scheduler = scheduler;
 	}
 
-	@Override
-	public boolean OnPlayerRightClick(RunsafePlayer runsafePlayer, RunsafeItemStack itemStack, RunsafeBlock runsafeBlock)
+	public int getStoneAtLocation(RunsafeLocation location)
 	{
-		// Player has set fire to emerald block?
-		if (itemStack.getType() == Material.FLINT_AND_STEEL && runsafeBlock.getTypeId() == Material.EMERALD_BLOCK.getId())
+		for (Map.Entry<Integer, SummoningStone> stone : this.stones.entrySet())
 		{
-			RunsafeLocation stoneLocation = runsafeBlock.getLocation();
-			if (SummoningStone.isSummoningStone(stoneLocation))
-			{
-				final int stoneID = this.summoningStoneRepository.addSummoningStone(stoneLocation);
-				SummoningStone summoningStone = new SummoningStone(stoneLocation);
-				summoningStone.activate();
-
-				summoningStone.setTimerID(this.scheduler.startSyncTask(new Runnable() {
-					@Override
-					public void run() {
-						summoningStoneExpire(stoneID);
-					}
-				}, this.stoneExpireTime));
-
-				this.stones.put(stoneID, summoningStone);
-				return false;
-			}
+			if (stone.getValue().getLocation().equals(location))
+				return stone.getKey();
 		}
-		return true;
+		return -1;
 	}
 
-	@Override
-	public void OnEntityPortalEnter(RunsafeEntityPortalEnterEvent event)
+	public int registerExpireTimer(final int stoneID)
 	{
-		RunsafeEntity entity = event.getEntity();
-		if (entity.getEntityType() == PassiveEntity.DroppedItem)
-		{
-			RunsafeItemStack item = ((RunsafeItem) entity).getItemStack();
-			if (item.getItemId() == Material.WRITTEN_BOOK.getId())
-			{
-				RunsafeItemMeta meta = item.getItemMeta();
-
-				if (meta != null)
-					if (meta instanceof RunsafeBookMeta)
-						RunsafeServer.Instance.broadcastMessage(((RunsafeBookMeta) meta).getAuthor());
+		return this.scheduler.startSyncTask(new Runnable() {
+			@Override
+			public void run() {
+				summoningStoneExpire(stoneID);
 			}
-		}
+		}, this.stoneExpireTime);
+	}
+
+	public void registerStone(int stoneID, SummoningStone stone)
+	{
+		this.stones.put(stoneID, stone);
 	}
 
 	public void summoningStoneExpire(int stoneID)
@@ -99,6 +67,7 @@ public class SummoningEngine implements IPlayerRightClickBlock, IConfigurationCh
 
 	private int stoneExpireTime = 36000;
 	private HashMap<Integer, SummoningStone> stones = new HashMap<Integer, SummoningStone>();
+	private HashMap<String, Integer> pendingSummons = new HashMap<String, Integer>();
 	private SummoningStoneRepository summoningStoneRepository;
 	private IScheduler scheduler;
 }
