@@ -9,6 +9,7 @@ import no.runsafe.warpdrive.portals.PortalEngine;
 import no.runsafe.warpdrive.portals.PortalRepository;
 import no.runsafe.warpdrive.summoningstone.SummoningEngine;
 import no.runsafe.warpdrive.summoningstone.SummoningStoneCleaner;
+import no.runsafe.warpdrive.summoningstone.SummoningStoneRepository;
 
 public class Plugin extends RunsafeConfigurablePlugin
 {
@@ -48,6 +49,7 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(PortalEngine.class);
 
 		// Summoning Stones
+		addComponent(SummoningStoneRepository.class);
 		addComponent(SummoningEngine.class);
 		addComponent(SummoningStoneCleaner.class);
 	}
