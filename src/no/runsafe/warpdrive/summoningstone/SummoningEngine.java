@@ -25,8 +25,10 @@ public class SummoningEngine implements IConfigurationChanged
 	{
 		for (Map.Entry<Integer, SummoningStone> stone : this.stones.entrySet())
 		{
-			if (stone.getValue().getLocation().distance(location) == 0)
-				return stone.getKey();
+			RunsafeLocation stoneLocation = stone.getValue().getLocation();
+			if (stoneLocation.getWorld().getName().equals(location.getWorld().getName()))
+				if (stoneLocation.distance(location) == 0)
+					return stone.getKey();
 		}
 		return -1;
 	}
