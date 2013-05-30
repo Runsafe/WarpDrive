@@ -64,7 +64,23 @@ public class SummoningStone
 		return this.location;
 	}
 
+	public void setTimerID(int timerID)
+	{
+		this.timerID = timerID;
+	}
+
+	public boolean hasTimer()
+	{
+		return this.timerID != -1;
+	}
+
+	public int getTimerID()
+	{
+		return this.timerID;
+	}
+
 	private RunsafeLocation location;
+	private int timerID = -1;
 
 	public static boolean isSummoningStone(RunsafeLocation location)
 	{

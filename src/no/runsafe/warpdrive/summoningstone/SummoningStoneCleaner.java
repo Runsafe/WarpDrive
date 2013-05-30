@@ -4,16 +4,18 @@ import no.runsafe.framework.event.IPluginDisabled;
 import no.runsafe.framework.event.IPluginEnabled;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
+import no.runsafe.framework.timer.IScheduler;
 
 import java.util.Map;
 
 public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 {
-	public SummoningStoneCleaner(SummoningEngine summoningEngine, SummoningStoneRepository summoningStoneRepository, IOutput output)
+	public SummoningStoneCleaner(SummoningEngine summoningEngine, SummoningStoneRepository summoningStoneRepository, IOutput output, IScheduler scheduler)
 	{
 		this.summoningEngine = summoningEngine;
 		this.summoningStoneRepository = summoningStoneRepository;
 		this.output = output;
+		this.scheduler = scheduler;
 	}
 
 	@Override
@@ -24,6 +26,10 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 		{
 			SummoningStone stone = node.getValue();
 			stone.remove();
+
+			if (stone.hasTimer())
+				this.scheduler.cancelTask(stone.getTimerID());
+
 			this.summoningStoneRepository.deleteSummoningStone(node.getKey());
 			this.output.write("Removing summoning portal: " + stone.getLocation().toString());
 		}
@@ -47,4 +53,5 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 	private SummoningEngine summoningEngine;
 	private SummoningStoneRepository summoningStoneRepository;
 	private IOutput output;
+	private IScheduler scheduler;
 }
