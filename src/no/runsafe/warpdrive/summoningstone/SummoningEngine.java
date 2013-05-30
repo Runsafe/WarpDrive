@@ -3,9 +3,14 @@ package no.runsafe.warpdrive.summoningstone;
 import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IConfigurationChanged;
 import no.runsafe.framework.server.RunsafeLocation;
+import no.runsafe.framework.server.RunsafeServer;
+import no.runsafe.framework.server.RunsafeWorld;
+import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SummoningEngine implements IConfigurationChanged
@@ -18,7 +23,35 @@ public class SummoningEngine implements IConfigurationChanged
 
 	public void registerPendingSummon(String playerName, int stoneID)
 	{
+		SummoningStone stone = this.stones.get(stoneID);
+		stone.setAwaitingPlayer();
 		this.pendingSummons.put(playerName, stoneID);
+
+		RunsafePlayer player = RunsafeServer.Instance.getPlayerExact(playerName);
+		if (player != null)
+			if (player.isOnline())
+				player.sendColouredMessage("&3You have a pending summon, head to the ritual stone to accept.");
+	}
+
+	public boolean playerHasPendingSummon(RunsafePlayer player)
+	{
+		return this.pendingSummons.containsKey(player.getName());
+	}
+
+	public void acceptPlayerSummon(RunsafePlayer player)
+	{
+		String playerName = player.getName();
+		int stoneID = this.pendingSummons.get(playerName);
+		SummoningStone stone = this.stones.get(stoneID);
+
+		stone.setComplete();
+
+		if (stone.hasTimer())
+			this.scheduler.cancelTask(stone.getTimerID());
+
+		this.summoningStoneRepository.deleteSummoningStone(stoneID);
+		this.stones.remove(stoneID);
+		this.pendingSummons.remove(playerName);
 	}
 
 	public int getStoneAtLocation(RunsafeLocation location)
@@ -66,15 +99,22 @@ public class SummoningEngine implements IConfigurationChanged
 		return this.stones;
 	}
 
+	public boolean isRitualWorld(RunsafeWorld world)
+	{
+		return this.ritualWorlds.contains(world.getName());
+	}
+
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
 		this.stoneExpireTime = config.getConfigValueAsInt("summoningStone.expire") * 60;
+		this.ritualWorlds = config.getConfigValueAsList("summoningStone.ritualWorlds");
 	}
 
 	private int stoneExpireTime = 600;
 	private HashMap<Integer, SummoningStone> stones = new HashMap<Integer, SummoningStone>();
 	private HashMap<String, Integer> pendingSummons = new HashMap<String, Integer>();
+	private List<String> ritualWorlds = new ArrayList<String>();
 	private SummoningStoneRepository summoningStoneRepository;
 	private IScheduler scheduler;
 }

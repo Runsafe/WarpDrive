@@ -1,6 +1,7 @@
 package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.event.entity.IEntityPortalEnterEvent;
+import no.runsafe.framework.event.player.IPlayerJoinEvent;
 import no.runsafe.framework.event.player.IPlayerPortalEvent;
 import no.runsafe.framework.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.server.RunsafeLocation;
@@ -10,6 +11,7 @@ import no.runsafe.framework.server.entity.PassiveEntity;
 import no.runsafe.framework.server.entity.RunsafeEntity;
 import no.runsafe.framework.server.entity.RunsafeItem;
 import no.runsafe.framework.server.event.entity.RunsafeEntityPortalEnterEvent;
+import no.runsafe.framework.server.event.player.RunsafePlayerJoinEvent;
 import no.runsafe.framework.server.event.player.RunsafePlayerPortalEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.item.meta.RunsafeBookMeta;
@@ -18,7 +20,7 @@ import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 
-public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent, IPlayerRightClickBlock
+public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent, IPlayerRightClickBlock, IPlayerJoinEvent
 {
 	public EventHandler(SummoningEngine engine, SummoningStoneRepository repository)
 	{
@@ -76,7 +78,6 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 	@Override
 	public boolean OnPlayerRightClick(RunsafePlayer runsafePlayer, RunsafeItemStack itemStack, RunsafeBlock runsafeBlock)
 	{
-		// Player has set fire to emerald block?
 		if (itemStack.getType() == Material.FLINT_AND_STEEL && runsafeBlock.getTypeId() == Material.EMERALD_BLOCK.getId())
 		{
 			RunsafeLocation stoneLocation = runsafeBlock.getLocation();
@@ -91,7 +92,27 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 				return false;
 			}
 		}
+		else if (itemStack.getType() == Material.EYE_OF_ENDER && runsafeBlock.getTypeId() == Material.ENDER_PORTAL_FRAME.getId())
+		{
+			if (this.engine.isRitualWorld(runsafePlayer.getWorld()))
+			{
+				if (this.engine.playerHasPendingSummon(runsafePlayer))
+					this.engine.acceptPlayerSummon(runsafePlayer);
+				else
+					runsafePlayer.sendColouredMessage("&cYou have no pending summons to accept.");
+				return false;
+			}
+		}
+
 		return true;
+	}
+
+	@Override
+	public void OnPlayerJoinEvent(RunsafePlayerJoinEvent event)
+	{
+		RunsafePlayer player = event.getPlayer();
+		if (this.engine.playerHasPendingSummon(player))
+			player.sendColouredMessage("&3You have a pending summon, head to the ritual stone to accept.");
 	}
 
 	private SummoningEngine engine;

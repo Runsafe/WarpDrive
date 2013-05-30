@@ -20,6 +20,16 @@ public class SummoningStone
 		this.transformPortal(SummoningStone.removedPortal);
 	}
 
+	public void setAwaitingPlayer()
+	{
+		this.transformPortal(SummoningStone.awaitingPortal);
+	}
+
+	public void setComplete()
+	{
+		this.transformPortal(SummoningStone.completePortal);
+	}
+
 	public void reset()
 	{
 		this.transformPortal(SummoningStone.constructedPortal);
@@ -111,7 +121,19 @@ public class SummoningStone
 	};
 
 	public static int[][] activatedPortal = {
-			{0, 0, 119},
+		{0, 0, 119},
+		{1, 0, 7},
+		{0, 1, 7},
+		{-1, 0, 7},
+		{0, -1, 7},
+		{-1, -1, 7},
+		{-1, 1, 7},
+		{1, -1, 7},
+		{1, 1, 7}
+	};
+
+	public static int[][] awaitingPortal = {
+			{0, 0, 49},
 			{1, 0, 7},
 			{0, 1, 7},
 			{-1, 0, 7},
@@ -120,6 +142,18 @@ public class SummoningStone
 			{-1, 1, 7},
 			{1, -1, 7},
 			{1, 1, 7}
+	};
+
+	public static int[][] completePortal = {
+			{0, 0, 49},
+			{1, 0, 155},
+			{0, 1, 155},
+			{-1, 0, 155},
+			{0, -1, 155},
+			{-1, -1, 155},
+			{-1, 1, 155},
+			{1, -1, 155},
+			{1, 1, 155}
 	};
 
 	public static int[][] removedPortal = {
