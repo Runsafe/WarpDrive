@@ -57,7 +57,7 @@ public class SummoningStoneRepository extends Repository
 	public int addSummoningStone(RunsafeLocation location)
 	{
 		this.database.Execute(
-				"INSERT INTO summoningStones (world, x, y, z) VALUES(?, ?, ?)",
+				"INSERT INTO summoningStones (world, x, y, z) VALUES(?, ?, ?, ?)",
 				location.getWorld().getName(),
 				location.getX(),
 				location.getY(),
