@@ -59,6 +59,11 @@ public class SummoningStone
 		}
 	}
 
+	public RunsafeLocation getLocation()
+	{
+		return this.location;
+	}
+
 	private RunsafeLocation location;
 
 	public static boolean isSummoningStone(RunsafeLocation location)

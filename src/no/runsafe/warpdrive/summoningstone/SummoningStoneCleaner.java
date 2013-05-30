@@ -2,16 +2,18 @@ package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.event.IPluginDisabled;
 import no.runsafe.framework.event.IPluginEnabled;
+import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 
 import java.util.Map;
 
 public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 {
-	public SummoningStoneCleaner(SummoningEngine summoningEngine, SummoningStoneRepository summoningStoneRepository)
+	public SummoningStoneCleaner(SummoningEngine summoningEngine, SummoningStoneRepository summoningStoneRepository, IOutput output)
 	{
 		this.summoningEngine = summoningEngine;
 		this.summoningStoneRepository = summoningStoneRepository;
+		this.output = output;
 	}
 
 	@Override
@@ -20,8 +22,10 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 		// Server shutting down, clean up any stones in the world.
 		for (Map.Entry<Integer, SummoningStone> node : this.summoningEngine.getLoadedStones().entrySet())
 		{
-			node.getValue().remove();
+			SummoningStone stone = node.getValue();
+			stone.remove();
 			this.summoningStoneRepository.deleteSummoningStone(node.getKey());
+			this.output.write("Removing summoning portal: " + stone.getLocation().toString());
 		}
 	}
 
@@ -33,6 +37,7 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 		{
 			SummoningStone stone = new SummoningStone(stoneLocation);
 			stone.reset();
+			this.output.write("Reset leftover portal: " + stoneLocation.toString());
 		}
 
 		// Wipe any stones we had remembered
@@ -41,4 +46,5 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 
 	private SummoningEngine summoningEngine;
 	private SummoningStoneRepository summoningStoneRepository;
+	private IOutput output;
 }
