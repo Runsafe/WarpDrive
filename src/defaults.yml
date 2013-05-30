@@ -4,3 +4,7 @@ snazzy.timeout: 60
 summoningStone.expire: 10
 summoningStone.ritualWorlds:
   - world
+summoningStone.stoneWorlds:
+  - world
+  - world_the_end
+  - world_nether

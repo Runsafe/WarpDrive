@@ -105,17 +105,24 @@ public class SummoningEngine implements IConfigurationChanged
 		return this.ritualWorlds.contains(world.getName());
 	}
 
+	public boolean canCreateStone(RunsafeWorld world)
+	{
+		return this.stoneWorlds.contains(world.getName());
+	}
+
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
 		this.stoneExpireTime = config.getConfigValueAsInt("summoningStone.expire") * 60;
 		this.ritualWorlds = config.getConfigValueAsList("summoningStone.ritualWorlds");
+		this.stoneWorlds = config.getConfigValueAsList("summoningStone.stoneWorlds");
 	}
 
 	private int stoneExpireTime = 600;
 	private HashMap<Integer, SummoningStone> stones = new HashMap<Integer, SummoningStone>();
 	private HashMap<String, Integer> pendingSummons = new HashMap<String, Integer>();
 	private List<String> ritualWorlds = new ArrayList<String>();
+	private List<String> stoneWorlds = new ArrayList<String>();
 	private SummoningStoneRepository summoningStoneRepository;
 	private IScheduler scheduler;
 }

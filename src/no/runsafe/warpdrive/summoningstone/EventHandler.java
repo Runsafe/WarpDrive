@@ -84,15 +84,18 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 		if (itemStack.getType() == Material.FLINT_AND_STEEL && runsafeBlock.getTypeId() == Material.EMERALD_BLOCK.getId())
 		{
 			RunsafeLocation stoneLocation = runsafeBlock.getLocation();
-			if (SummoningStone.isSummoningStone(stoneLocation))
+			if (this.engine.canCreateStone(stoneLocation.getWorld()))
 			{
-				int stoneID = this.repository.addSummoningStone(stoneLocation);
-				SummoningStone summoningStone = new SummoningStone(stoneLocation);
-				summoningStone.activate();
-				summoningStone.setTimerID(this.engine.registerExpireTimer(stoneID));
+				if (SummoningStone.isSummoningStone(stoneLocation))
+				{
+					int stoneID = this.repository.addSummoningStone(stoneLocation);
+					SummoningStone summoningStone = new SummoningStone(stoneLocation);
+					summoningStone.activate();
+					summoningStone.setTimerID(this.engine.registerExpireTimer(stoneID));
 
-				this.engine.registerStone(stoneID, summoningStone);
-				return false;
+					this.engine.registerStone(stoneID, summoningStone);
+					return false;
+				}
 			}
 		}
 		else if (itemStack.getType() == Material.EYE_OF_ENDER && runsafeBlock.getTypeId() == Material.ENDER_PORTAL_FRAME.getId())
