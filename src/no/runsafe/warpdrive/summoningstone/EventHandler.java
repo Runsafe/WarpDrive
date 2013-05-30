@@ -5,7 +5,6 @@ import no.runsafe.framework.event.player.IPlayerJoinEvent;
 import no.runsafe.framework.event.player.IPlayerPortalEvent;
 import no.runsafe.framework.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.entity.PassiveEntity;
@@ -36,7 +35,6 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 
 		if (from != null)
 		{
-			RunsafeServer.Instance.broadcastMessage(from.toString());
 			int stoneID = this.engine.getStoneAtLocation(from);
 			if (stoneID > -1) event.setCancelled(true);
 		}
