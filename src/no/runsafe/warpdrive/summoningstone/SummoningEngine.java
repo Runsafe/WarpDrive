@@ -92,6 +92,10 @@ public class SummoningEngine implements IConfigurationChanged
 			stone.remove();
 			this.summoningStoneRepository.deleteSummoningStone(stoneID);
 			this.stones.remove(stoneID);
+
+			for (Map.Entry<String, Integer> pendingSummon : this.pendingSummons.entrySet())
+				if (pendingSummon.getValue() == stoneID)
+					this.pendingSummons.remove(pendingSummon.getKey());
 		}
 	}
 
