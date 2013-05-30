@@ -16,6 +16,11 @@ public class SummoningEngine implements IConfigurationChanged
 		this.scheduler = scheduler;
 	}
 
+	public void registerPendingSummon(String playerName, int stoneID)
+	{
+		this.pendingSummons.put(playerName, stoneID);
+	}
+
 	public int getStoneAtLocation(RunsafeLocation location)
 	{
 		for (Map.Entry<Integer, SummoningStone> stone : this.stones.entrySet())
@@ -62,10 +67,10 @@ public class SummoningEngine implements IConfigurationChanged
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
-		this.stoneExpireTime = config.getConfigValueAsInt("summoningStone.expire") * 3600;
+		this.stoneExpireTime = config.getConfigValueAsInt("summoningStone.expire") * 60;
 	}
 
-	private int stoneExpireTime = 36000;
+	private int stoneExpireTime = 600;
 	private HashMap<Integer, SummoningStone> stones = new HashMap<Integer, SummoningStone>();
 	private HashMap<String, Integer> pendingSummons = new HashMap<String, Integer>();
 	private SummoningStoneRepository summoningStoneRepository;

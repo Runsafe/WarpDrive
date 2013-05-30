@@ -4,7 +4,7 @@ import no.runsafe.framework.event.entity.IEntityPortalEnterEvent;
 import no.runsafe.framework.event.player.IPlayerPortalEvent;
 import no.runsafe.framework.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeServer;
+import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.entity.PassiveEntity;
 import no.runsafe.framework.server.entity.RunsafeEntity;
@@ -15,6 +15,7 @@ import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.item.meta.RunsafeBookMeta;
 import no.runsafe.framework.server.item.meta.RunsafeItemMeta;
 import no.runsafe.framework.server.player.RunsafePlayer;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 
 public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent, IPlayerRightClickBlock
@@ -42,7 +43,8 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 	{
 		if (event.getBlock().getTypeId() == Material.ENDER_PORTAL.getId())
 		{
-			int stoneID = this.engine.getStoneAtLocation(event.getLocation());
+			RunsafeLocation location = event.getLocation();
+			int stoneID = this.engine.getStoneAtLocation(location);
 
 			if (stoneID > -1)
 			{
@@ -55,8 +57,15 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 						RunsafeItemMeta meta = item.getItemMeta();
 
 						if (meta != null)
+						{
 							if (meta instanceof RunsafeBookMeta)
-								RunsafeServer.Instance.broadcastMessage(((RunsafeBookMeta) meta).getAuthor());
+							{
+								RunsafeWorld world = location.getWorld();
+								this.engine.registerPendingSummon(((RunsafeBookMeta) meta).getAuthor(), stoneID);
+								world.playEffect(location, Effect.GHAST_SHRIEK, 0);
+								world.createExplosion(location.getX() + 0.5, location.getY(), location.getZ() + 0.5, 0, false, false);
+							}
+						}
 					}
 				}
 				entity.remove();
