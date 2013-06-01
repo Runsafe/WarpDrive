@@ -28,9 +28,8 @@ public class SummoningEngine implements IConfigurationChanged
 		this.pendingSummons.put(playerName, stoneID);
 
 		RunsafePlayer player = RunsafeServer.Instance.getPlayerExact(playerName);
-		if (player != null)
-			if (player.isOnline())
-				player.sendColouredMessage("&3You have a pending summon, head to the ritual stone to accept.");
+		if (player != null && player.isOnline())
+			player.sendColouredMessage("&3You have a pending summon, head to the ritual stone to accept.");
 	}
 
 	public boolean playerHasPendingSummon(RunsafePlayer player)
@@ -60,9 +59,8 @@ public class SummoningEngine implements IConfigurationChanged
 		for (Map.Entry<Integer, SummoningStone> stone : this.stones.entrySet())
 		{
 			RunsafeLocation stoneLocation = stone.getValue().getLocation();
-			if (stoneLocation.getWorld().getName().equals(location.getWorld().getName()))
-				if (stoneLocation.distance(location) < 2)
-					return stone.getKey();
+			if (stoneLocation.getWorld().equals(location.getWorld()) && stoneLocation.distance(location) < 2)
+				return stone.getKey();
 		}
 		return -1;
 	}
