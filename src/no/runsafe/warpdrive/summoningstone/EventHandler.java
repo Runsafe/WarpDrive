@@ -57,15 +57,12 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 					{
 						RunsafeItemMeta meta = item.getItemMeta();
 
-						if (meta != null)
+						if (meta != null && meta instanceof RunsafeBookMeta)
 						{
-							if (meta instanceof RunsafeBookMeta)
-							{
-								RunsafeWorld world = location.getWorld();
-								this.engine.registerPendingSummon(((RunsafeBookMeta) meta).getAuthor(), stoneID);
-								world.playEffect(location, Effect.GHAST_SHRIEK, 0);
-								world.createExplosion(location.getX() + 0.5, location.getY(), location.getZ() + 0.5, 0, false, false);
-							}
+							RunsafeWorld world = location.getWorld();
+							this.engine.registerPendingSummon(((RunsafeBookMeta) meta).getAuthor(), stoneID);
+							world.playEffect(location, Effect.GHAST_SHRIEK, 0);
+							world.createExplosion(location.getX() + 0.5, location.getY(), location.getZ() + 0.5, 0, false, false);
 						}
 					}
 				}
@@ -85,18 +82,15 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 		if (itemStack.getType() == Material.FLINT_AND_STEEL && runsafeBlock.getTypeId() == Material.EMERALD_BLOCK.getId())
 		{
 			RunsafeLocation stoneLocation = runsafeBlock.getLocation();
-			if (this.engine.canCreateStone(stoneLocation.getWorld()))
+			if (this.engine.canCreateStone(stoneLocation.getWorld()) && SummoningStone.isSummoningStone(stoneLocation))
 			{
-				if (SummoningStone.isSummoningStone(stoneLocation))
-				{
-					int stoneID = this.repository.addSummoningStone(stoneLocation);
-					SummoningStone summoningStone = new SummoningStone(stoneLocation);
-					summoningStone.activate();
-					summoningStone.setTimerID(this.engine.registerExpireTimer(stoneID));
+				int stoneID = this.repository.addSummoningStone(stoneLocation);
+				SummoningStone summoningStone = new SummoningStone(stoneLocation);
+				summoningStone.activate();
+				summoningStone.setTimerID(this.engine.registerExpireTimer(stoneID));
 
-					this.engine.registerStone(stoneID, summoningStone);
-					return false;
-				}
+				this.engine.registerStone(stoneID, summoningStone);
+				return false;
 			}
 		}
 		else if (itemStack.getType() == Material.EYE_OF_ENDER && runsafeBlock.getTypeId() == Material.ENDER_PORTAL_FRAME.getId())
