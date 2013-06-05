@@ -71,7 +71,8 @@ public class SmartWarpChunkRepository extends Repository
 	public void saveTarget(RunsafeLocation target, boolean safe, boolean cave)
 	{
 		database.Update(
-			"INSERT INTO smartwarp_targets (world, x, y, z, safe, cave) VALUES (?, ?, ?, ?, ?, ?)",
+			"INSERT INTO smartwarp_targets (world, x, y, z, safe, cave) VALUES (?, ?, ?, ?, ?, ?)" +
+				" ON DUPLICATE KEY UPDATE safe=VALUES(safe), cave=VALUES(cave)",
 			target.getWorld().getName(),
 			target.getBlockX(), target.getBlockY(), target.getBlockZ(),
 			safe, cave
