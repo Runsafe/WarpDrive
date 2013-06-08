@@ -4,6 +4,7 @@ import no.runsafe.framework.event.entity.IEntityPortalEnterEvent;
 import no.runsafe.framework.event.player.IPlayerJoinEvent;
 import no.runsafe.framework.event.player.IPlayerPortalEvent;
 import no.runsafe.framework.event.player.IPlayerRightClickBlock;
+import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
@@ -11,9 +12,8 @@ import no.runsafe.framework.server.entity.*;
 import no.runsafe.framework.server.event.entity.RunsafeEntityPortalEnterEvent;
 import no.runsafe.framework.server.event.player.RunsafePlayerJoinEvent;
 import no.runsafe.framework.server.event.player.RunsafePlayerPortalEvent;
+import no.runsafe.framework.server.item.RunsafeBook;
 import no.runsafe.framework.server.item.RunsafeItemStack;
-import no.runsafe.framework.server.item.meta.RunsafeBookMeta;
-import no.runsafe.framework.server.item.meta.RunsafeItemMeta;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -41,7 +41,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 	@Override
 	public void OnEntityPortalEnter(RunsafeEntityPortalEnterEvent event)
 	{
-		if (event.getBlock().getTypeId() == Material.ENDER_PORTAL.getId())
+		if (event.getBlock().is(Item.Unavailable.EnderPortal))
 		{
 			RunsafeLocation location = event.getLocation();
 			int stoneID = this.engine.getStoneAtLocation(location);
@@ -53,17 +53,13 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 				if (type == PassiveEntity.DroppedItem)
 				{
 					RunsafeItemStack item = ((RunsafeItem) entity).getItemStack();
-					if (item.getItemId() == Material.WRITTEN_BOOK.getId())
+					if (item.is(Item.Special.Crafted.WrittenBook))
 					{
-						RunsafeItemMeta meta = item.getItemMeta();
-
-						if (meta != null && meta instanceof RunsafeBookMeta)
-						{
-							RunsafeWorld world = location.getWorld();
-							this.engine.registerPendingSummon(((RunsafeBookMeta) meta).getAuthor(), stoneID);
-							world.playEffect(location, Effect.GHAST_SHRIEK, 0);
-							world.createExplosion(location.getX() + 0.5, location.getY(), location.getZ() + 0.5, 0, false, false);
-						}
+						RunsafeBook book = (RunsafeBook) item;
+						RunsafeWorld world = location.getWorld();
+						this.engine.registerPendingSummon(book.getAuthor(), stoneID);
+						world.playEffect(location, Effect.GHAST_SHRIEK, 0);
+						world.createExplosion(location.getX() + 0.5, location.getY(), location.getZ() + 0.5, 0, false, false);
 					}
 				}
 
