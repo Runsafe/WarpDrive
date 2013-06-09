@@ -7,11 +7,11 @@ import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -136,79 +136,50 @@ public class WarpRepository extends Repository
 			return cache.get(key);
 
 		PreparedStatement query;
+		Map<String, Object> data;
 		if (publicWarp)
-			query = database.prepare(
-				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=?"
+			data = database.QueryRow(
+				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=?",
+				name, publicWarp
 			);
 		else
-			query = database.prepare(
-				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=? AND creator=?"
+			data = database.QueryRow(
+				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=? AND creator=?",
+				name, publicWarp, owner
 			);
-		try
-		{
-			query.setString(1, name);
-			query.setBoolean(2, publicWarp);
-			if (!publicWarp)
-				query.setString(3, owner);
-			ResultSet result = query.executeQuery();
-			if (result.next())
-			{
-				RunsafeLocation location = new RunsafeLocation(
-					RunsafeServer.Instance.getWorld(result.getString("world")),
-					result.getDouble("x"),
-					result.getDouble("y"),
-					result.getDouble("z"),
-					result.getFloat("yaw"),
-					result.getFloat("pitch")
-				);
-				console.outputDebugToConsole(
-					String.format(
-						"[%.2f,%.2f,%.2f y:%.2f p:%.2f]",
-						result.getDouble("x"),
-						result.getDouble("y"),
-						result.getDouble("z"),
-						result.getFloat("yaw"),
-						result.getFloat("pitch")
-					),
-					Level.FINER
-				);
-				cache.put(key, location);
-				return location;
-			}
-		}
-		catch (SQLException e)
-		{
-			console.write(e.getMessage());
-		}
-		return null;
+
+		RunsafeLocation location = new RunsafeLocation(
+			RunsafeServer.Instance.getWorld((String) data.get("world")),
+			(Double) data.get("x"),
+			(Double) data.get("y"),
+			(Double) data.get("z"),
+			(Float) data.get("yaw"),
+			(Float) data.get("pitch")
+		);
+
+		console.finer(
+			"[%.2f,%.2f,%.2f y:%.2f p:%.2f]",
+			location.getX(),
+			location.getY(),
+			location.getZ(),
+			location.getYaw(),
+			location.getPitch()
+		);
+
+		cache.put(key, location);
+		return location;
 	}
 
 	private void DelWarp(String owner, String name, boolean publicWarp)
 	{
 		PreparedStatement query;
 		if (publicWarp)
-			query = database.prepare(
-				"DELETE FROM warpdrive_locations WHERE name=? AND public=?"
-			);
+			database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=?", name, publicWarp);
 		else
-			query = database.prepare(
-				"DELETE FROM warpdrive_locations WHERE name=? AND public=? AND creator=?"
-			);
-		try
-		{
-			query.setString(1, name);
-			query.setBoolean(2, publicWarp);
-			if (!publicWarp)
-				query.setString(3, owner);
-			query.execute();
-			String key = cacheKey(owner, name, publicWarp);
-			if (cache.containsKey(key))
-				cache.remove(key);
-		}
-		catch (SQLException e)
-		{
-			console.write(e.getMessage());
-		}
+			database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=? AND creator=?", name, publicWarp, owner);
+		String key = cacheKey(owner, name, publicWarp);
+		if (cache.containsKey(key))
+			cache.remove(key);
 	}
 
 	private final IDatabase database;
