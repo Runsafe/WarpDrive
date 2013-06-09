@@ -14,6 +14,7 @@ import no.runsafe.framework.server.event.player.RunsafePlayerJoinEvent;
 import no.runsafe.framework.server.event.player.RunsafePlayerPortalEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.item.meta.RunsafeBook;
+import no.runsafe.framework.server.item.meta.RunsafeMeta;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -70,7 +71,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 	}
 
 	@Override
-	public boolean OnPlayerRightClick(RunsafePlayer runsafePlayer, RunsafeItemStack itemStack, RunsafeBlock runsafeBlock)
+	public boolean OnPlayerRightClick(RunsafePlayer runsafePlayer, RunsafeMeta itemStack, RunsafeBlock runsafeBlock)
 	{
 		if (itemStack == null)
 			return true;
