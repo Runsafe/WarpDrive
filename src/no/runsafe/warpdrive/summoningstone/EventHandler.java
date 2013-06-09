@@ -6,15 +6,14 @@ import no.runsafe.framework.event.player.IPlayerPortalEvent;
 import no.runsafe.framework.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.entity.*;
 import no.runsafe.framework.server.event.entity.RunsafeEntityPortalEnterEvent;
 import no.runsafe.framework.server.event.player.RunsafePlayerJoinEvent;
 import no.runsafe.framework.server.event.player.RunsafePlayerPortalEvent;
-import no.runsafe.framework.server.item.meta.RunsafeBook;
 import no.runsafe.framework.server.item.RunsafeItemStack;
+import no.runsafe.framework.server.item.meta.RunsafeBook;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -56,7 +55,6 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 					RunsafeItemStack item = ((RunsafeItem) entity).getItemStack();
 					if (item.is(Item.Special.Crafted.WrittenBook))
 					{
-						RunsafeServer.Instance.getLogger().info(item.getClass().getCanonicalName());
 						RunsafeBook book = (RunsafeBook) item;
 						RunsafeWorld world = location.getWorld();
 						this.engine.registerPendingSummon(book.getAuthor(), stoneID);
