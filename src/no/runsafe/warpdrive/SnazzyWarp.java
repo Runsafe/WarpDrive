@@ -10,7 +10,7 @@ import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeSign;
-import no.runsafe.framework.server.item.RunsafeItemStack;
+import no.runsafe.framework.server.item.meta.RunsafeMeta;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.framework.timer.IScheduler;
@@ -32,7 +32,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	}
 
 	@Override
-	public boolean OnPlayerRightClickSign(RunsafePlayer thePlayer, RunsafeItemStack runsafeItemStack, RunsafeSign theSign)
+	public boolean OnPlayerRightClickSign(RunsafePlayer thePlayer, RunsafeMeta runsafeItemStack, RunsafeSign theSign)
 	{
 		if (theSign.getLine(0).equalsIgnoreCase(signHeader))
 		{

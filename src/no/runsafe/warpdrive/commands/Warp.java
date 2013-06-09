@@ -5,7 +5,7 @@ import no.runsafe.framework.output.ChatColour;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.block.RunsafeSign;
-import no.runsafe.framework.server.item.RunsafeItemStack;
+import no.runsafe.framework.server.item.meta.RunsafeMeta;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
 import no.runsafe.warpdrive.Engine;
@@ -43,7 +43,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	}
 
 	@Override
-	public boolean OnPlayerRightClickSign(RunsafePlayer player, RunsafeItemStack itemStack, RunsafeSign sign)
+	public boolean OnPlayerRightClickSign(RunsafePlayer player, RunsafeMeta itemStack, RunsafeSign sign)
 	{
 		if (!sign.getLine(0).contains(signHeader))
 			return true;
