@@ -2,13 +2,13 @@ package no.runsafe.warpdrive.database;
 
 import no.runsafe.framework.database.IDatabase;
 import no.runsafe.framework.database.Repository;
+import no.runsafe.framework.database.Row;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SmartWarpChunkRepository extends Repository
 {
@@ -45,7 +45,7 @@ public class SmartWarpChunkRepository extends Repository
 
 	public RunsafeLocation getTarget(RunsafeWorld world, boolean cave)
 	{
-		Map<String, Object> target = database.QueryRow(
+		Row target = database.QueryRow(
 			"SELECT x, y, z FROM smartwarp_targets WHERE world=? AND safe=true AND cave=? ORDER BY RAND() LIMIT 1",
 			world.getName(), cave
 		);
@@ -53,9 +53,9 @@ public class SmartWarpChunkRepository extends Repository
 			return null;
 		return new RunsafeLocation(
 			world,
-			(Integer) target.get("x"),
-			(Integer) target.get("y"),
-			(Integer) target.get("z")
+				target.Integer("x"),
+				target.Integer("y"),
+				target.Integer("z")
 		);
 	}
 

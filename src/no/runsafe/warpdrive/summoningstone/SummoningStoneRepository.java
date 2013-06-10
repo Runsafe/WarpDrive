@@ -2,14 +2,14 @@ package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.database.IDatabase;
 import no.runsafe.framework.database.Repository;
+import no.runsafe.framework.database.Row;
+import no.runsafe.framework.database.Set;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SummoningStoneRepository extends Repository
 {
@@ -27,17 +27,17 @@ public class SummoningStoneRepository extends Repository
 	{
 		List<RunsafeLocation> stones = new ArrayList<RunsafeLocation>();
 
-		List<Map<String, Object>> data = this.database.Query("SELECT ID, world, x, y, z FROM summoningStones");
+		Set data = this.database.Query("SELECT ID, world, x, y, z FROM summoningStones");
 
 		if (data != null)
 		{
-			for (Map<String, Object> node : data)
+			for (Row node : data)
 			{
 				stones.add(new RunsafeLocation(
-						RunsafeServer.Instance.getWorld((String) node.get("world")),
-						getDoubleValue(node, "x"),
-						getDoubleValue(node, "y"),
-						getDoubleValue(node, "z")
+						RunsafeServer.Instance.getWorld(node.String("world")),
+						node.Double("x"),
+						node.Double("y"),
+						node.Double("z")
 				));
 			}
 		}
@@ -65,9 +65,9 @@ public class SummoningStoneRepository extends Repository
 				location.getZ()
 		);
 
-		Map<String, Object> data = this.database.QueryRow("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
+		Row data = this.database.QueryRow("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
 		if (data != null)
-			return ((BigInteger) data.get("ID")).intValue();
+			return data.Integer("ID");
 
 		return 0;
 	}

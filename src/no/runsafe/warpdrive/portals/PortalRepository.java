@@ -2,13 +2,14 @@ package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.database.IDatabase;
 import no.runsafe.framework.database.Repository;
+import no.runsafe.framework.database.Row;
+import no.runsafe.framework.database.Set;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PortalRepository extends Repository
 {
@@ -26,28 +27,28 @@ public class PortalRepository extends Repository
 	{
 		List<PortalWarp> warps = new ArrayList<PortalWarp>();
 
-		List<Map<String, Object>> data = this.database.Query(
+		Set data = this.database.Query(
 			"SELECT `ID`,`permission`,`type`,`world`,`x`,`y`,`z`,`destWorld`,`destX`,`destY`,`destZ`,`destYaw`,`destPitch` " +
 				"FROM warpdrive_portals"
 		);
 
-		for (Map<String, Object> row : data)
+		for (Row row : data)
 		{
 			warps.add(new PortalWarp(
-				(String)row.get("ID"),
+				row.String("ID"),
 				new RunsafeLocation(
-					RunsafeServer.Instance.getWorld((String) row.get("world")),
-					getDoubleValue(row, "x"),
-					getDoubleValue(row, "y"),
-					getDoubleValue(row, "z")
+					RunsafeServer.Instance.getWorld(row.String("world")),
+					row.Double("x"),
+					row.Double("y"),
+					row.Double("z")
 				),
-				RunsafeServer.Instance.getWorld((String)row.get("destWorld")),
-				getDoubleValue(row, "destX"),
-				getDoubleValue(row, "destY"),
-				getDoubleValue(row, "destZ"),
-				getFloatValue(row, "destYaw"),
-				getFloatValue(row, "destPitch"),
-				PortalType.getPortalType((Integer) row.get("type"))
+				RunsafeServer.Instance.getWorld(row.String("destWorld")),
+				row.Double("destX"),
+				row.Double("destY"),
+				row.Double("destZ"),
+				row.Float("destYaw"),
+				row.Float("destPitch"),
+				PortalType.getPortalType(row.Integer("type"))
 			));
 		}
 		return warps;

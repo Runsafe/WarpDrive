@@ -2,11 +2,12 @@ package no.runsafe.warpdrive.database;
 
 import no.runsafe.framework.database.IDatabase;
 import no.runsafe.framework.database.Repository;
+import no.runsafe.framework.database.Row;
+import no.runsafe.framework.database.Value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SmartWarpRepository extends Repository
 {
@@ -40,13 +41,14 @@ public class SmartWarpRepository extends Repository
 
 	public int getRange(String world)
 	{
-		Map<String, Object> settings = database.QueryRow(
+		Row settings = database.QueryRow(
 			"SELECT `range` FROM smartwarp_settings WHERE world=?",
 			world
 		);
 		if (settings == null)
 			return -1;
-		return (Integer) settings.get("range");
+
+		return settings.Integer("range");
 	}
 
 	public void setProgress(String world, double progress)
@@ -59,13 +61,14 @@ public class SmartWarpRepository extends Repository
 
 	public double getProgress(String world)
 	{
-		Map<String, Object> progress = database.QueryRow(
+		Row progress = database.QueryRow(
 			"SELECT progress FROM smartwarp_settings WHERE world=?",
 			world
 		);
 		if (progress == null)
 			return -1;
-		return getDoubleValue(progress, "progress");
+
+		return progress.Double("progress");
 	}
 
 	public void setRange(String world, int range)
@@ -80,10 +83,12 @@ public class SmartWarpRepository extends Repository
 	public List<String> getWorlds()
 	{
 		List<String> result = new ArrayList<String>();
-		List<Object> worlds = database.QueryColumn("SELECT world FROM smartwarp_settings");
+		List<Value> worlds = database.QueryColumn("SELECT world FROM smartwarp_settings");
+
 		if (worlds != null)
-			for (Object world : worlds)
-				result.add((String) world);
+			for (Value world : worlds)
+				result.add(world.String());
+
 		return result;
 	}
 

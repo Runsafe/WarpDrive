@@ -2,6 +2,8 @@ package no.runsafe.warpdrive.database;
 
 import no.runsafe.framework.database.IDatabase;
 import no.runsafe.framework.database.Repository;
+import no.runsafe.framework.database.Row;
+import no.runsafe.framework.database.Value;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
@@ -9,7 +11,6 @@ import no.runsafe.framework.server.RunsafeServer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class WarpRepository extends Repository
@@ -115,14 +116,15 @@ public class WarpRepository extends Repository
 	private List<String> GetWarps(String owner, boolean publicWarp)
 	{
 		ArrayList<String> names = new ArrayList<String>();
-		List<Object> result;
+		List<Value> result;
 		if (publicWarp)
 			result = database.QueryColumn("SELECT name FROM warpdrive_locations WHERE `public`=?", publicWarp);
 		else
 			result = database.QueryColumn("SELECT name FROM warpdrive_locations WHERE `public`=? AND creator=?", publicWarp, owner);
+
 		if (result != null)
-			for (Object entry : result)
-				names.add(((String) entry).toLowerCase());
+			for (Value entry : result)
+				names.add(entry.String().toLowerCase());
 		return names;
 	}
 
@@ -132,7 +134,7 @@ public class WarpRepository extends Repository
 		if (cache.containsKey(key))
 			return cache.get(key);
 
-		Map<String, Object> data;
+		Row data;
 		if (publicWarp)
 			data = database.QueryRow(
 				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=?",
@@ -145,12 +147,12 @@ public class WarpRepository extends Repository
 			);
 
 		RunsafeLocation location = new RunsafeLocation(
-			RunsafeServer.Instance.getWorld((String) data.get("world")),
-			getDoubleValue(data, "x"),
-			getDoubleValue(data, "y"),
-			getDoubleValue(data, "z"),
-			getFloatValue(data, "yaw"),
-			getFloatValue(data, "pitch")
+			RunsafeServer.Instance.getWorld(data.String("world")),
+			data.Double("x"),
+			data.Double("y"),
+			data.Double("z"),
+			data.Float("yaw"),
+			data.Float("pitch")
 		);
 
 		console.finer(
