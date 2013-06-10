@@ -35,28 +35,33 @@ public class PortalRepository extends Repository
 
 		for (Row row : data)
 		{
-			RunsafeLocation location = new RunsafeLocation(
-				RunsafeServer.Instance.getWorld(row.String("world")),
-				row.Double("x"),
-				row.Double("y"),
-				row.Double("z")
-			);
-
 			RunsafeWorld world = RunsafeServer.Instance.getWorld(row.String("destWorld"));
 
-			if (world != null)
+			try
 			{
-				warps.add(new PortalWarp(
-					row.String("ID"),
-					location,
-					world,
-					row.Double("destX"),
-					row.Double("destY"),
-					row.Double("destZ"),
-					row.Float("destYaw"),
-					row.Float("destPitch"),
-					PortalType.getPortalType(row.Integer("type"))
-				));
+				if (world != null)
+				{
+					warps.add(new PortalWarp(
+						row.String("ID"),
+						new RunsafeLocation(
+								RunsafeServer.Instance.getWorld(row.String("world")),
+								row.Double("x"),
+								row.Double("y"),
+								row.Double("z")
+						),
+						world,
+						row.Double("destX"),
+						row.Double("destY"),
+						row.Double("destZ"),
+						row.Float("destYaw"),
+						row.Float("destPitch"),
+						PortalType.getPortalType(row.Integer("type"))
+					));
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
 			}
 		}
 		return warps;
