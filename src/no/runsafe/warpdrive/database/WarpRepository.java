@@ -6,14 +6,11 @@ import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 
 public class WarpRepository extends Repository
 {
@@ -135,7 +132,6 @@ public class WarpRepository extends Repository
 		if (cache.containsKey(key))
 			return cache.get(key);
 
-		PreparedStatement query;
 		Map<String, Object> data;
 		if (publicWarp)
 			data = database.QueryRow(
@@ -150,11 +146,11 @@ public class WarpRepository extends Repository
 
 		RunsafeLocation location = new RunsafeLocation(
 			RunsafeServer.Instance.getWorld((String) data.get("world")),
-			(Double) data.get("x"),
-			(Double) data.get("y"),
-			(Double) data.get("z"),
-			(Float) data.get("yaw"),
-			(Float) data.get("pitch")
+			getDoubleValue(data, "x"),
+			getDoubleValue(data, "y"),
+			getDoubleValue(data, "z"),
+			getFloatValue(data, "yaw"),
+			getFloatValue(data, "pitch")
 		);
 
 		console.finer(
@@ -172,7 +168,6 @@ public class WarpRepository extends Repository
 
 	private void DelWarp(String owner, String name, boolean publicWarp)
 	{
-		PreparedStatement query;
 		if (publicWarp)
 			database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=?", name, publicWarp);
 		else
