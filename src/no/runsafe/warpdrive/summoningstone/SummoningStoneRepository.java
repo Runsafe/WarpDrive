@@ -35,9 +35,9 @@ public class SummoningStoneRepository extends Repository
 			{
 				stones.add(new RunsafeLocation(
 						RunsafeServer.Instance.getWorld((String) node.get("world")),
-						(Double) node.get("x"),
-						(Double) node.get("y"),
-						(Double) node.get("z")
+						getDoubleValue(node, "x"),
+						getDoubleValue(node, "y"),
+						getDoubleValue(node, "z")
 				));
 			}
 		}

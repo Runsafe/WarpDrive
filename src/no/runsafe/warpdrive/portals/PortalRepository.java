@@ -2,7 +2,6 @@ package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.database.IDatabase;
 import no.runsafe.framework.database.Repository;
-import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
 
@@ -38,16 +37,16 @@ public class PortalRepository extends Repository
 				(String)row.get("ID"),
 				new RunsafeLocation(
 					RunsafeServer.Instance.getWorld((String) row.get("world")),
-					(Double)row.get("x"),
-					(Double)row.get("y"),
-					(Double)row.get("z")
+					getDoubleValue(row, "x"),
+					getDoubleValue(row, "y"),
+					getDoubleValue(row, "z")
 				),
 				RunsafeServer.Instance.getWorld((String)row.get("destWorld")),
-				(Double)row.get("destX"),
-				(Double)row.get("destY"),
-				(Double)row.get("destZ"),
-				(Float)row.get("destYaw"),
-				(Float)row.get("destPitch"),
+				getDoubleValue(row, "destX"),
+				getDoubleValue(row, "destY"),
+				getDoubleValue(row, "destZ"),
+				getFloatValue(row, "destYaw"),
+				getFloatValue(row, "destPitch"),
 				PortalType.getPortalType((Integer) row.get("type"))
 			));
 		}

@@ -65,7 +65,7 @@ public class SmartWarpRepository extends Repository
 		);
 		if (progress == null)
 			return -1;
-		return (Double) progress.get("progress");
+		return getDoubleValue(progress, "progress");
 	}
 
 	public void setRange(String world, int range)
