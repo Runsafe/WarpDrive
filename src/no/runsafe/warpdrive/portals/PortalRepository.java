@@ -6,6 +6,7 @@ import no.runsafe.framework.database.Row;
 import no.runsafe.framework.database.Set;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
+import no.runsafe.framework.server.RunsafeWorld;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,17 +42,22 @@ public class PortalRepository extends Repository
 				row.Double("z")
 			);
 
-			warps.add(new PortalWarp(
-				row.String("ID"),
-				location,
-				RunsafeServer.Instance.getWorld(row.String("destWorld")),
-				row.Double("destX"),
-				row.Double("destY"),
-				row.Double("destZ"),
-				row.Float("destYaw"),
-				row.Float("destPitch"),
-				PortalType.getPortalType(row.Integer("type"))
-			));
+			RunsafeWorld world = RunsafeServer.Instance.getWorld(row.String("destWorld"));
+
+			if (world != null)
+			{
+				warps.add(new PortalWarp(
+					row.String("ID"),
+					location,
+					world,
+					row.Double("destX"),
+					row.Double("destY"),
+					row.Double("destZ"),
+					row.Float("destYaw"),
+					row.Float("destPitch"),
+					PortalType.getPortalType(row.Integer("type"))
+				));
+			}
 		}
 		return warps;
 	}
