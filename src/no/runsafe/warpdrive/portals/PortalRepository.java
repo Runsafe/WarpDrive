@@ -34,14 +34,16 @@ public class PortalRepository extends Repository
 
 		for (Row row : data)
 		{
+			RunsafeLocation location = new RunsafeLocation(
+				RunsafeServer.Instance.getWorld(row.String("world")),
+				row.Double("x"),
+				row.Double("y"),
+				row.Double("z")
+			);
+
 			warps.add(new PortalWarp(
 				row.String("ID"),
-				new RunsafeLocation(
-					RunsafeServer.Instance.getWorld(row.String("world")),
-					row.Double("x"),
-					row.Double("y"),
-					row.Double("z")
-				),
+				location,
 				RunsafeServer.Instance.getWorld(row.String("destWorld")),
 				row.Double("destX"),
 				row.Double("destY"),
