@@ -26,6 +26,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 
 	public void reloadPortals()
 	{
+		this.portals.clear();
 		int portalCount = 0;
 		for (PortalWarp portal : this.repository.getPortalWarps())
 		{
