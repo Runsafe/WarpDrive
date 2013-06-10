@@ -20,8 +20,6 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 		this.repository = repository;
 		this.smartWarpDrive = smartWarpDrive;
 		this.output = output;
-
-		this.reloadPortals();
 	}
 
 	public void reloadPortals()
