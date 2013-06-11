@@ -6,7 +6,6 @@ import no.runsafe.framework.database.Row;
 import no.runsafe.framework.database.Set;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeServer;
-import no.runsafe.framework.server.RunsafeWorld;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,34 +34,22 @@ public class PortalRepository extends Repository
 
 		for (Row row : data)
 		{
-			RunsafeWorld world = RunsafeServer.Instance.getWorld(row.String("destWorld"));
-
-			try
-			{
-				if (world != null)
-				{
-					warps.add(new PortalWarp(
-						row.String("ID"),
-						new RunsafeLocation(
-								RunsafeServer.Instance.getWorld(row.String("world")),
-								row.Double("x"),
-								row.Double("y"),
-								row.Double("z")
-						),
-						world,
-						row.Double("destX"),
-						row.Double("destY"),
-						row.Double("destZ"),
-						row.Float("destYaw"),
-						row.Float("destPitch"),
-						PortalType.getPortalType(row.Integer("type"))
-					));
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+			warps.add(new PortalWarp(
+				row.String("ID"),
+				new RunsafeLocation(
+						RunsafeServer.Instance.getWorld(row.String("world")),
+						row.Double("x"),
+						row.Double("y"),
+						row.Double("z")
+				),
+				RunsafeServer.Instance.getWorld(row.String("destWorld")),
+				row.Double("destX"),
+				row.Double("destY"),
+				row.Double("destZ"),
+				row.Float("destYaw"),
+				row.Float("destPitch"),
+				PortalType.getPortalType(row.Integer("type"))
+			));
 		}
 		return warps;
 	}
