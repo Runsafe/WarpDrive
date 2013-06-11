@@ -34,6 +34,7 @@ public class PortalRepository extends Repository
 
 		for (Row row : data)
 		{
+			RunsafeServer.Instance.getLogger().info("Type: " + row.Integer("type"));
 			warps.add(new PortalWarp(
 				row.String("ID"),
 				new RunsafeLocation(
