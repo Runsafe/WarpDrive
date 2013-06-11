@@ -34,7 +34,6 @@ public class PortalRepository extends Repository
 
 		for (Row row : data)
 		{
-			RunsafeServer.Instance.getLogger().info("Type: " + row.Integer("type"));
 			warps.add(new PortalWarp(
 				row.String("ID"),
 				new RunsafeLocation(
@@ -44,11 +43,11 @@ public class PortalRepository extends Repository
 						row.Double("z")
 				),
 				RunsafeServer.Instance.getWorld(row.String("destWorld")),
-				row.Double("destX"),
-				row.Double("destY"),
-				row.Double("destZ"),
-				row.Float("destYaw"),
-				row.Float("destPitch"),
+				(row.Double("destX") == null ? 0 : row.Double("destX")),
+				(row.Double("destY") == null ? 0 : row.Double("destY")),
+				(row.Double("destZ") == null ? 0 : row.Double("destZ")),
+				(row.Float("destYaw") == null ? 0 : row.Float("destYaw")),
+				(row.Float("destPitch") == null ? 0 : row.Float("destPitch")),
 				PortalType.getPortalType(row.Integer("type"))
 			));
 		}
