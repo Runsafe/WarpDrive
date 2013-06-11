@@ -1,13 +1,13 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.event.player.IPlayerRightClickSign;
-import no.runsafe.framework.output.ChatColour;
-import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.block.RunsafeSign;
-import no.runsafe.framework.server.item.meta.RunsafeMeta;
-import no.runsafe.framework.server.player.RunsafePlayer;
-import no.runsafe.framework.timer.IScheduler;
+import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
+import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.block.RunsafeSign;
+import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.framework.text.ChatColour;
 import no.runsafe.warpdrive.Engine;
 import no.runsafe.warpdrive.PlayerTeleportCommand;
 import no.runsafe.warpdrive.database.WarpRepository;

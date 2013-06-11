@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive;
 
-import no.runsafe.framework.event.block.ISignChange;
-import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.block.RunsafeBlock;
-import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.event.block.ISignChange;
+import no.runsafe.framework.minecraft.block.RunsafeBlock;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.commands.Warp;
 
 public class WarpSignCreator implements ISignChange

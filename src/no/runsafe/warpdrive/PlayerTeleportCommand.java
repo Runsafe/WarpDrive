@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive;
 
-import no.runsafe.framework.command.player.PlayerAsyncCallbackCommand;
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.player.RunsafePlayer;
-import no.runsafe.framework.timer.IScheduler;
+import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.player.PlayerAsyncCallbackCommand;
+import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<PlayerTeleportCommand.PlayerTeleport>
 {

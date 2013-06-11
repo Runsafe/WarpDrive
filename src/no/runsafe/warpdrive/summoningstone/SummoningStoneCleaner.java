@@ -1,10 +1,10 @@
 package no.runsafe.warpdrive.summoningstone;
 
-import no.runsafe.framework.event.IPluginDisabled;
-import no.runsafe.framework.event.IPluginEnabled;
-import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.timer.IScheduler;
+import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.event.plugin.IPluginDisabled;
+import no.runsafe.framework.api.event.plugin.IPluginEnabled;
+import no.runsafe.framework.minecraft.RunsafeLocation;
 
 import java.util.Map;
 

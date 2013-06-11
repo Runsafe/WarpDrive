@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive.database;
 
-import no.runsafe.framework.database.IDatabase;
-import no.runsafe.framework.database.Repository;
-import no.runsafe.framework.database.Row;
-import no.runsafe.framework.database.Value;
+import no.runsafe.framework.api.database.IDatabase;
+import no.runsafe.framework.internal.database.Repository;
+import no.runsafe.framework.internal.database.Row;
+import no.runsafe.framework.internal.database.Value;
 
 import java.util.ArrayList;
 import java.util.HashMap;

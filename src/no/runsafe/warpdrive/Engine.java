@@ -1,10 +1,10 @@
 package no.runsafe.warpdrive;
 
 import com.google.common.collect.Lists;
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeWorld;
-import no.runsafe.framework.server.block.RunsafeBlock;
-import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.RunsafeWorld;
+import no.runsafe.framework.minecraft.block.RunsafeBlock;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 

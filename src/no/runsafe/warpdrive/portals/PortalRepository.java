@@ -1,11 +1,11 @@
 package no.runsafe.warpdrive.portals;
 
-import no.runsafe.framework.database.IDatabase;
-import no.runsafe.framework.database.Repository;
-import no.runsafe.framework.database.Row;
-import no.runsafe.framework.database.Set;
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeServer;
+import no.runsafe.framework.api.database.IDatabase;
+import no.runsafe.framework.internal.database.Repository;
+import no.runsafe.framework.internal.database.Row;
+import no.runsafe.framework.internal.database.Set;
+import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.RunsafeServer;
 
 import java.util.ArrayList;
 import java.util.HashMap;

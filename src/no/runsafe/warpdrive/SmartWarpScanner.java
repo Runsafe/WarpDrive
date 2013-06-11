@@ -1,12 +1,12 @@
 package no.runsafe.warpdrive;
 
-import no.runsafe.framework.event.IPluginEnabled;
-import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeServer;
-import no.runsafe.framework.server.RunsafeWorld;
+import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.event.plugin.IPluginEnabled;
+import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.RunsafeServer;
+import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.framework.timer.ForegroundWorker;
-import no.runsafe.framework.timer.IScheduler;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 import no.runsafe.warpdrive.database.SmartWarpRepository;
 import org.bukkit.World;

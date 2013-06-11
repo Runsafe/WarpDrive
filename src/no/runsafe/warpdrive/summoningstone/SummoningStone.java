@@ -1,7 +1,7 @@
 package no.runsafe.warpdrive.summoningstone;
 
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.bukkit.Chunk;
 
 public class SummoningStone

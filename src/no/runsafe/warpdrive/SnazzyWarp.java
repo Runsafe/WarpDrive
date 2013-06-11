@@ -1,19 +1,19 @@
 package no.runsafe.warpdrive;
 
-import no.runsafe.framework.configuration.IConfiguration;
-import no.runsafe.framework.event.IAsyncEvent;
-import no.runsafe.framework.event.IConfigurationChanged;
-import no.runsafe.framework.event.player.IPlayerRightClickSign;
-import no.runsafe.framework.output.ChatColour;
-import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeServer;
-import no.runsafe.framework.server.RunsafeWorld;
-import no.runsafe.framework.server.block.RunsafeSign;
-import no.runsafe.framework.server.item.meta.RunsafeMeta;
-import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.event.IAsyncEvent;
+import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
+import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.RunsafeServer;
+import no.runsafe.framework.minecraft.RunsafeWorld;
+import no.runsafe.framework.minecraft.block.RunsafeSign;
+import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.framework.text.ChatColour;
 import no.runsafe.framework.timer.ForegroundWorker;
-import no.runsafe.framework.timer.IScheduler;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
-	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged
+		IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged
 {
 	public SnazzyWarp(IScheduler scheduler, Engine engine, IOutput output)
 	{

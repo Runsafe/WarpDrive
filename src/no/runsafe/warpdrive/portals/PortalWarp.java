@@ -1,8 +1,8 @@
 package no.runsafe.warpdrive.portals;
 
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeWorld;
-import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.RunsafeWorld;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 public class PortalWarp
 {

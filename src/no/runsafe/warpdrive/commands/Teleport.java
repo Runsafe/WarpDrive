@@ -1,11 +1,11 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.command.IContextPermissionProvider;
-import no.runsafe.framework.command.player.PlayerCommand;
-import no.runsafe.framework.server.ICommandExecutor;
-import no.runsafe.framework.server.RunsafeServer;
-import no.runsafe.framework.server.player.RunsafeAmbiguousPlayer;
-import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.api.command.ICommandExecutor;
+import no.runsafe.framework.api.command.IContextPermissionProvider;
+import no.runsafe.framework.api.command.player.PlayerCommand;
+import no.runsafe.framework.minecraft.RunsafeServer;
+import no.runsafe.framework.minecraft.player.RunsafeAmbiguousPlayer;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.Engine;
 
 import java.util.Arrays;

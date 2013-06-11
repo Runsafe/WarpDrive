@@ -1,8 +1,7 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.command.console.ConsoleAsyncCommand;
-import no.runsafe.framework.server.RunsafeConsole;
-import no.runsafe.framework.timer.IScheduler;
+import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.console.ConsoleAsyncCommand;
 import no.runsafe.warpdrive.database.WarpRepository;
 
 import java.util.HashMap;
