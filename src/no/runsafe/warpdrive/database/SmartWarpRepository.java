@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive.database;
 
 import no.runsafe.framework.api.database.IDatabase;
-import no.runsafe.framework.internal.database.Repository;
-import no.runsafe.framework.internal.database.Row;
-import no.runsafe.framework.internal.database.Value;
+import no.runsafe.framework.api.database.IRow;
+import no.runsafe.framework.api.database.IValue;
+import no.runsafe.framework.api.database.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class SmartWarpRepository extends Repository
 
 	public int getRange(String world)
 	{
-		Row settings = database.QueryRow(
+		IRow settings = database.QueryRow(
 			"SELECT `range` FROM smartwarp_settings WHERE world=?",
 			world
 		);
@@ -61,7 +61,7 @@ public class SmartWarpRepository extends Repository
 
 	public double getProgress(String world)
 	{
-		Row progress = database.QueryRow(
+		IRow progress = database.QueryRow(
 			"SELECT progress FROM smartwarp_settings WHERE world=?",
 			world
 		);
@@ -76,17 +76,17 @@ public class SmartWarpRepository extends Repository
 		database.Update(
 			"INSERT INTO smartwarp_settings (`world`, `range`, `progress`) VALUES (?, ?, 0)" +
 				" ON DUPLICATE KEY UPDATE `range`=VALUES(`range`)",
-				world, range
+			world, range
 		);
 	}
 
 	public List<String> getWorlds()
 	{
 		List<String> result = new ArrayList<String>();
-		List<Value> worlds = database.QueryColumn("SELECT world FROM smartwarp_settings");
+		List<IValue> worlds = database.QueryColumn("SELECT world FROM smartwarp_settings");
 
 		if (worlds != null)
-			for (Value world : worlds)
+			for (IValue world : worlds)
 				result.add(world.String());
 
 		return result;

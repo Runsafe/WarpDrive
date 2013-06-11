@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.api.database.IDatabase;
-import no.runsafe.framework.internal.database.Repository;
-import no.runsafe.framework.internal.database.Row;
-import no.runsafe.framework.internal.database.Set;
+import no.runsafe.framework.api.database.IRow;
+import no.runsafe.framework.api.database.ISet;
+import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeServer;
 
@@ -27,17 +27,17 @@ public class SummoningStoneRepository extends Repository
 	{
 		List<RunsafeLocation> stones = new ArrayList<RunsafeLocation>();
 
-		Set data = this.database.Query("SELECT ID, world, x, y, z FROM summoningStones");
+		ISet data = this.database.Query("SELECT ID, world, x, y, z FROM summoningStones");
 
 		if (data != null)
 		{
-			for (Row node : data)
+			for (IRow node : data)
 			{
 				stones.add(new RunsafeLocation(
-						RunsafeServer.Instance.getWorld(node.String("world")),
-						node.Double("x"),
-						node.Double("y"),
-						node.Double("z")
+					RunsafeServer.Instance.getWorld(node.String("world")),
+					node.Double("x"),
+					node.Double("y"),
+					node.Double("z")
 				));
 			}
 		}
@@ -58,14 +58,14 @@ public class SummoningStoneRepository extends Repository
 	public int addSummoningStone(RunsafeLocation location)
 	{
 		this.database.Execute(
-				"INSERT INTO summoningStones (world, x, y, z) VALUES(?, ?, ?, ?)",
-				location.getWorld().getName(),
-				location.getX(),
-				location.getY(),
-				location.getZ()
+			"INSERT INTO summoningStones (world, x, y, z) VALUES(?, ?, ?, ?)",
+			location.getWorld().getName(),
+			location.getX(),
+			location.getY(),
+			location.getZ()
 		);
 
-		Row data = this.database.QueryRow("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
+		IRow data = this.database.QueryRow("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
 		if (data != null)
 			return data.Integer("ID");
 
@@ -78,13 +78,13 @@ public class SummoningStoneRepository extends Repository
 		HashMap<Integer, List<String>> queries = new HashMap<Integer, List<String>>();
 		ArrayList<String> sql = new ArrayList<String>();
 		sql.add(
-				"CREATE TABLE `summoningStones` (" +
-						"`ID` int(10) NOT NULL AUTO_INCREMENT," +
-						"`world` VARCHAR(255) NOT NULL," +
-						"`x` DOUBLE NOT NULL," +
-						"`y` DOUBLE NOT NULL," +
-						"`z` DOUBLE NOT NULL," +
-						"PRIMARY KEY (`ID`)" +
+			"CREATE TABLE `summoningStones` (" +
+				"`ID` int(10) NOT NULL AUTO_INCREMENT," +
+				"`world` VARCHAR(255) NOT NULL," +
+				"`x` DOUBLE NOT NULL," +
+				"`y` DOUBLE NOT NULL," +
+				"`z` DOUBLE NOT NULL," +
+				"PRIMARY KEY (`ID`)" +
 				")"
 		);
 		queries.put(1, sql);

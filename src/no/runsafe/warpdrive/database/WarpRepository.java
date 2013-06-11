@@ -2,9 +2,9 @@ package no.runsafe.warpdrive.database;
 
 import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.database.IDatabase;
-import no.runsafe.framework.internal.database.Repository;
-import no.runsafe.framework.internal.database.Row;
-import no.runsafe.framework.internal.database.Value;
+import no.runsafe.framework.api.database.IRow;
+import no.runsafe.framework.api.database.IValue;
+import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeServer;
 
@@ -116,14 +116,14 @@ public class WarpRepository extends Repository
 	private List<String> GetWarps(String owner, boolean publicWarp)
 	{
 		ArrayList<String> names = new ArrayList<String>();
-		List<Value> result;
+		List<IValue> result;
 		if (publicWarp)
 			result = database.QueryColumn("SELECT name FROM warpdrive_locations WHERE `public`=?", publicWarp);
 		else
 			result = database.QueryColumn("SELECT name FROM warpdrive_locations WHERE `public`=? AND creator=?", publicWarp, owner);
 
 		if (result != null)
-			for (Value entry : result)
+			for (IValue entry : result)
 				names.add(entry.String().toLowerCase());
 		return names;
 	}
@@ -134,7 +134,7 @@ public class WarpRepository extends Repository
 		if (cache.containsKey(key))
 			return cache.get(key);
 
-		Row data;
+		IRow data;
 		if (publicWarp)
 			data = database.QueryRow(
 				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=?",

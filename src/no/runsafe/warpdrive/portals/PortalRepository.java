@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.api.database.IDatabase;
-import no.runsafe.framework.internal.database.Repository;
-import no.runsafe.framework.internal.database.Row;
-import no.runsafe.framework.internal.database.Set;
+import no.runsafe.framework.api.database.IRow;
+import no.runsafe.framework.api.database.ISet;
+import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeServer;
 
@@ -27,20 +27,20 @@ public class PortalRepository extends Repository
 	{
 		List<PortalWarp> warps = new ArrayList<PortalWarp>();
 
-		Set data = this.database.Query(
+		ISet data = this.database.Query(
 			"SELECT `ID`,`permission`,`type`,`world`,`x`,`y`,`z`,`destWorld`,`destX`,`destY`,`destZ`,`destYaw`,`destPitch` " +
 				"FROM warpdrive_portals"
 		);
 
-		for (Row row : data)
+		for (IRow row : data)
 		{
 			warps.add(new PortalWarp(
 				row.String("ID"),
 				new RunsafeLocation(
-						RunsafeServer.Instance.getWorld(row.String("world")),
-						row.Double("x"),
-						row.Double("y"),
-						row.Double("z")
+					RunsafeServer.Instance.getWorld(row.String("world")),
+					row.Double("x"),
+					row.Double("y"),
+					row.Double("z")
 				),
 				RunsafeServer.Instance.getWorld(row.String("destWorld")),
 				(row.Double("destX") == null ? 0 : row.Double("destX")),
