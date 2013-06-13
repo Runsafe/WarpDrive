@@ -1,23 +1,23 @@
 package no.runsafe.warpdrive.database;
 
-import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.IRow;
 import no.runsafe.framework.api.database.IValue;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.timer.TimedCache;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class WarpRepository extends Repository
 {
-	public WarpRepository(IDatabase db, IOutput output)
+	public WarpRepository(IDatabase db, IScheduler scheduler)
 	{
 		database = db;
-		console = output;
+		cache = new TimedCache<String, RunsafeLocation>(scheduler);
 	}
 
 	@Override
@@ -65,9 +65,7 @@ public class WarpRepository extends Repository
 			location.getPitch()
 		);
 		String key = cacheKey(creator, name, publicWarp);
-		if (cache.containsKey(key))
-			cache.remove(key);
-		cache.put(key, location);
+		cache.Cache(key, location);
 	}
 
 	public List<String> GetPublicList()
@@ -130,8 +128,9 @@ public class WarpRepository extends Repository
 	private RunsafeLocation GetWarp(String owner, String name, boolean publicWarp)
 	{
 		String key = cacheKey(owner, name, publicWarp);
-		if (cache.containsKey(key))
-			return cache.get(key);
+		RunsafeLocation location = cache.Cache(key);
+		if (location != null)
+			return location;
 
 		IRow data;
 		if (publicWarp)
@@ -148,18 +147,8 @@ public class WarpRepository extends Repository
 		if (data == null)
 			return null;
 
-		RunsafeLocation location = data.Location();
-		console.finer(
-			"[%.2f,%.2f,%.2f y:%.2f p:%.2f]",
-			location.getX(),
-			location.getY(),
-			location.getZ(),
-			location.getYaw(),
-			location.getPitch()
-		);
-
-		cache.put(key, location);
-		return location;
+		location = data.Location();
+		return cache.Cache(key, location);
 	}
 
 	private void DelWarp(String owner, String name, boolean publicWarp)
@@ -168,12 +157,9 @@ public class WarpRepository extends Repository
 			database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=?", name, publicWarp);
 		else
 			database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=? AND creator=?", name, publicWarp, owner);
-		String key = cacheKey(owner, name, publicWarp);
-		if (cache.containsKey(key))
-			cache.remove(key);
+		cache.Invalidate(cacheKey(owner, name, publicWarp));
 	}
 
 	private final IDatabase database;
-	private final ConcurrentHashMap<String, RunsafeLocation> cache = new ConcurrentHashMap<String, RunsafeLocation>();
-	private final IOutput console;
+	private final TimedCache<String, RunsafeLocation> cache;
 }
