@@ -146,7 +146,6 @@ public class WarpRepository extends Repository
 
 		if (data == null)
 			return null;
-
 		location = data.Location();
 		return cache.Cache(key, location);
 	}
