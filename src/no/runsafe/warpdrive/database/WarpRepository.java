@@ -6,7 +6,6 @@ import no.runsafe.framework.api.database.IRow;
 import no.runsafe.framework.api.database.IValue;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.RunsafeServer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -146,14 +145,9 @@ public class WarpRepository extends Repository
 				name, publicWarp, owner
 			);
 
-		RunsafeLocation location = new RunsafeLocation(
-			RunsafeServer.Instance.getWorld(data.String("world")),
-			data.Double("x"),
-			data.Double("y"),
-			data.Double("z"),
-			data.Float("yaw"),
-			data.Float("pitch")
-		);
+		RunsafeLocation location = data.Location();
+		if (location == null)
+			return null;
 
 		console.finer(
 			"[%.2f,%.2f,%.2f y:%.2f p:%.2f]",
