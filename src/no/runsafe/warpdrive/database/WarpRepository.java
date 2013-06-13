@@ -145,10 +145,10 @@ public class WarpRepository extends Repository
 				name, publicWarp, owner
 			);
 
-		RunsafeLocation location = data.Location();
-		if (location == null)
+		if (data == null)
 			return null;
 
+		RunsafeLocation location = data.Location();
 		console.finer(
 			"[%.2f,%.2f,%.2f y:%.2f p:%.2f]",
 			location.getX(),
