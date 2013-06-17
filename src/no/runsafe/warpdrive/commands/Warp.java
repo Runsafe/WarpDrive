@@ -2,6 +2,7 @@ package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.block.RunsafeSign;
@@ -13,6 +14,7 @@ import no.runsafe.warpdrive.PlayerTeleportCommand;
 import no.runsafe.warpdrive.database.WarpRepository;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
@@ -37,9 +39,15 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	}
 
 	@Override
-	public String getUsage()
+	public String getUsage(ICommandExecutor executor)
 	{
-		return String.format("\nExisting warps: %1$s", StringUtils.join(warpRepository.GetPublicList(), ", "));
+		ArrayList<String> warps = new ArrayList<String>();
+		for (String warp : warpRepository.GetPublicList())
+			if (executor.hasPermission(String.format("runsafe.warp.use.%s", warp)))
+				warps.add(warp);
+		if (warps.isEmpty())
+			return "\nNo warps available to you.";
+		return String.format("\nExisting warps: %1$s", StringUtils.join(warps, ", "));
 	}
 
 	@Override
