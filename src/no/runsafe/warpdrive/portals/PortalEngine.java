@@ -67,6 +67,8 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 			location.setX(this.getRandom(lowX, highX));
 			location.setZ(this.getRandom(lowZ, highZ));
 		}
+		location.incrementX(0.5);
+		location.incrementZ(0.5);
 		player.teleport(location);
 	}
 
