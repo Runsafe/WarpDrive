@@ -56,8 +56,8 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 	{
 		int highX = location.getBlockX() + radius;
 		int highZ = location.getBlockZ() + radius;
-		int lowX = location.getBlockX() + radius;
-		int lowZ = location.getBlockZ() + radius;
+		int lowX = location.getBlockX() - radius;
+		int lowZ = location.getBlockZ() - radius;
 
 		location.setX(this.getRandom(lowX, highX));
 		location.setZ(this.getRandom(lowZ, highZ));
