@@ -48,7 +48,8 @@ public class PortalRepository extends Repository
 				(row.Double("destZ") == null ? 0 : row.Double("destZ")),
 				(row.Float("destYaw") == null ? 0 : row.Float("destYaw")),
 				(row.Float("destPitch") == null ? 0 : row.Float("destPitch")),
-				PortalType.getPortalType(row.Integer("type"))
+				PortalType.getPortalType(row.Integer("type")),
+				(row.Integer("radius") == null ? 0 : row.Integer("radius"))
 			));
 		}
 		return warps;
@@ -78,6 +79,12 @@ public class PortalRepository extends Repository
 				")"
 		);
 		queries.put(1, sql);
+
+		sql.clear();
+		sql.add("ALTER TABLE `warpdrive_portals`" +
+				"ADD COLUMN `radius` INT UNSIGNED NULL DEFAULT NULL AFTER `destPitch`;");
+		queries.put(2, sql);
+
 		return queries;
 	}
 

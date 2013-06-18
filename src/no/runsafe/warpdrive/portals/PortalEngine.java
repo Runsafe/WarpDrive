@@ -4,14 +4,12 @@ import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.event.player.IPlayerPortal;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.SmartWarpDrive;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 {
@@ -49,6 +47,43 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 
 		if (portal.getType() == PortalType.RANDOM_CAVE)
 			this.smartWarpDrive.Engage(player, portal.getWorld(), true);
+
+		if (portal.getType() == PortalType.RANDOM_RADIUS)
+			this.randomRadiusTeleport(player, portal.getLocation(), portal.getRadius());
+	}
+
+	private void randomRadiusTeleport(RunsafePlayer player, RunsafeLocation location, int radius)
+	{
+		int highX = location.getBlockX() + radius;
+		int highZ = location.getBlockZ() + radius;
+		int lowX = location.getBlockX() + radius;
+		int lowZ = location.getBlockZ() + radius;
+
+		location.setX(this.getRandom(lowX, highX));
+		location.setZ(this.getRandom(lowZ, highZ));
+
+		while (!this.safeToTeleport(location))
+		{
+			location.setX(this.getRandom(lowX, highX));
+			location.setZ(this.getRandom(lowZ, highZ));
+		}
+		player.teleport(location);
+	}
+
+	private int getRandom(int low, int high)
+	{
+		return low + (int)(Math.random() * ((high - low) + 1));
+	}
+
+	private boolean safeToTeleport(RunsafeLocation location)
+	{
+		if (location.getBlock().is(Item.Unavailable.Air))
+		{
+			location.incrementY(1);
+			if (location.getBlock().is(Item.Unavailable.Air))
+				return true;
+		}
+		return false;
 	}
 
 	@Override

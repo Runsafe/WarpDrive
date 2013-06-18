@@ -6,12 +6,13 @@ import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 public class PortalWarp
 {
-	public PortalWarp(String id, RunsafeLocation location, RunsafeWorld destWorld, double destX, double destY, double destZ, float destYaw, float destPitch, PortalType type)
+	public PortalWarp(String id, RunsafeLocation location, RunsafeWorld destWorld, double destX, double destY, double destZ, float destYaw, float destPitch, PortalType type, int radius)
 	{
 		this.id = id;
 		this.location = location;
 		this.type = type;
 		this.destinationWorld = destWorld;
+		this.radius = radius;
 
 		if (this.type == PortalType.NORMAL)
 			this.destination = new RunsafeLocation(destWorld, destX, destY, destZ, destYaw, destPitch);
@@ -52,10 +53,16 @@ public class PortalWarp
 		return player.getLocation().distance(this.location) < 2;
 	}
 
+	public int getRadius()
+	{
+		return this.radius;
+	}
+
 	private String id;
 	private String perm;
 	private PortalType type;
 	private RunsafeLocation location;
 	private RunsafeLocation destination;
 	private RunsafeWorld destinationWorld;
+	private int radius;
 }

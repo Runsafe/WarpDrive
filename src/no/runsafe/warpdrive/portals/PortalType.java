@@ -4,7 +4,8 @@ public enum PortalType
 {
 	NORMAL,
 	RANDOM_SURFACE,
-	RANDOM_CAVE;
+	RANDOM_CAVE,
+	RANDOM_RADIUS;
 
 	public static PortalType getPortalType(int id)
 	{
