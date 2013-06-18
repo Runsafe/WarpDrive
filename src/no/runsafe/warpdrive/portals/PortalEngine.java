@@ -35,7 +35,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 			portalCount += 1;
 			portals.get(portalWorldName).add(portal);
 		}
-		this.output.write(portalCount + " portals loaded.");
+		this.output.logInformation("%d portals loaded in %d worlds.", portalCount, portals.size());
 	}
 
 	public void teleportPlayer(PortalWarp portal, RunsafePlayer player)
