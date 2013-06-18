@@ -14,7 +14,7 @@ public class PortalWarp
 		this.radius = radius;
 		this.perm = permission;
 
-		if (this.type == PortalType.NORMAL)
+		if (this.type == PortalType.NORMAL || this.type == PortalType.RANDOM_RADIUS)
 			this.destination = new RunsafeLocation(destWorld, destX, destY, destZ, destYaw, destPitch);
 	}
 
