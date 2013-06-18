@@ -50,7 +50,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 			this.smartWarpDrive.Engage(player, portal.getWorld(), true);
 
 		if (portal.getType() == PortalType.RANDOM_RADIUS)
-			RunsafeServer.Instance.broadcastMessage("Radius: " + portal.getRadius());
+			RunsafeServer.Instance.broadcastMessage(portal.getLocation().toString());
 			//this.randomRadiusTeleport(player, portal.getLocation(), portal.getRadius());
 	}
 
