@@ -28,7 +28,7 @@ public class PortalRepository extends Repository
 		List<PortalWarp> warps = new ArrayList<PortalWarp>();
 
 		ISet data = this.database.Query(
-			"SELECT `ID`,`permission`,`type`,`world`,`x`,`y`,`z`,`destWorld`,`destX`,`destY`,`destZ`,`destYaw`,`destPitch`, `radius` " +
+			"SELECT `ID`,`permission`,`type`,`world`,`x`,`y`,`z`,`destWorld`,`destX`,`destY`,`destZ`,`destYaw`,`destPitch`,`radius` " +
 				"FROM warpdrive_portals"
 		);
 
@@ -49,7 +49,8 @@ public class PortalRepository extends Repository
 				(row.Float("destYaw") == null ? 0 : row.Float("destYaw")),
 				(row.Float("destPitch") == null ? 0 : row.Float("destPitch")),
 				PortalType.getPortalType(row.Integer("type")),
-				(row.Integer("radius") == null ? 0 : row.Integer("radius"))
+				(row.Integer("radius") == null ? 0 : row.Integer("radius")),
+				row.String("permission")
 			));
 		}
 		return warps;
