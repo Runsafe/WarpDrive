@@ -52,8 +52,15 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 			this.randomRadiusTeleport(player, portal.getLocation(), portal.getRadius());
 	}
 
-	private void randomRadiusTeleport(RunsafePlayer player, RunsafeLocation location, int radius)
+	private void randomRadiusTeleport(RunsafePlayer player, RunsafeLocation theLocation, int radius)
 	{
+		RunsafeLocation location = new RunsafeLocation(
+				theLocation.getWorld(),
+				theLocation.getX(),
+				theLocation.getY(),
+				theLocation.getZ()
+		);
+
 		int highX = location.getBlockX() + radius;
 		int highZ = location.getBlockZ() + radius;
 		int lowX = location.getBlockX() - radius;
@@ -67,8 +74,6 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 			location.setX(this.getRandom(lowX, highX));
 			location.setZ(this.getRandom(lowZ, highZ));
 		}
-		location.incrementX(0.5);
-		location.incrementZ(0.5);
 		player.teleport(location);
 	}
 
