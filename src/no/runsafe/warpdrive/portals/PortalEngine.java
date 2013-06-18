@@ -6,6 +6,7 @@ import no.runsafe.framework.api.event.player.IPlayerPortal;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.SmartWarpDrive;
 
@@ -49,7 +50,8 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 			this.smartWarpDrive.Engage(player, portal.getWorld(), true);
 
 		if (portal.getType() == PortalType.RANDOM_RADIUS)
-			this.randomRadiusTeleport(player, portal.getLocation(), portal.getRadius());
+			RunsafeServer.Instance.broadcastMessage("Radius: " + portal.getRadius());
+			//this.randomRadiusTeleport(player, portal.getLocation(), portal.getRadius());
 	}
 
 	private void randomRadiusTeleport(RunsafePlayer player, RunsafeLocation location, int radius)
