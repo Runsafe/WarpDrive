@@ -8,7 +8,6 @@ public class PortalWarp
 {
 	public PortalWarp(String id, RunsafeLocation location, RunsafeWorld destWorld, double destX, double destY, double destZ, float destYaw, float destPitch, PortalType type, int radius, String permission)
 	{
-		this.id = id;
 		this.location = location;
 		this.type = type;
 		this.destinationWorld = destWorld;
