@@ -65,6 +65,7 @@ public class WarpRepository extends Repository
 			location.getPitch()
 		);
 		String key = cacheKey(creator, name, publicWarp);
+		cache.Invalidate(key);
 		cache.Cache(key, location);
 	}
 
