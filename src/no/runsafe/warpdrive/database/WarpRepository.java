@@ -153,6 +153,8 @@ public class WarpRepository extends Repository
 
 	private boolean DelWarp(String owner, String name, boolean publicWarp)
 	{
+		if (GetWarp(owner, name, publicWarp) == null)
+			return false;
 		boolean success;
 		if (publicWarp)
 			success = database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=?", name, publicWarp);
