@@ -18,8 +18,9 @@ public class DelWarp extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
 	{
-		warpRepository.DelPublic(parameters.get("name"));
-		return String.format("Deleted public warp %s.", parameters.get("name"));
+		if (warpRepository.DelPublic(parameters.get("name")))
+			return String.format("Deleted public warp %s.", parameters.get("name"));
+		return String.format("Unable to delete the public warp %s.", parameters.get("name"))
 	}
 
 	private final WarpRepository warpRepository;

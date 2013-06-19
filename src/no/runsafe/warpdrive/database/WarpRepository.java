@@ -89,14 +89,14 @@ public class WarpRepository extends Repository
 		return GetWarp(owner, name, false);
 	}
 
-	public void DelPublic(String name)
+	public boolean DelPublic(String name)
 	{
-		DelWarp("", name, true);
+		return DelWarp("", name, true);
 	}
 
-	public void DelPrivate(String owner, String name)
+	public boolean DelPrivate(String owner, String name)
 	{
-		DelWarp(owner, name, false);
+		return DelWarp(owner, name, false);
 	}
 
 	public void DelAllPrivate(String world)
@@ -151,13 +151,15 @@ public class WarpRepository extends Repository
 		return cache.Cache(key, location);
 	}
 
-	private void DelWarp(String owner, String name, boolean publicWarp)
+	private boolean DelWarp(String owner, String name, boolean publicWarp)
 	{
+		boolean success;
 		if (publicWarp)
-			database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=?", name, publicWarp);
+			success = database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=?", name, publicWarp);
 		else
-			database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=? AND creator=?", name, publicWarp, owner);
+			success = database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=? AND creator=?", name, publicWarp, owner);
 		cache.Invalidate(cacheKey(owner, name, publicWarp));
+		return success;
 	}
 
 	private final IDatabase database;
