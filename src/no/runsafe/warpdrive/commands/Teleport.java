@@ -78,10 +78,10 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		if (to instanceof RunsafeAmbiguousPlayer)
 			return to.toString();
 
-		if (move == null || !move.isOnline())
+		if (move == null || !move.isOnline() || player.shouldNotSee(move))
 			return String.format("Could not find player %s to teleport.", movePlayer);
 
-		if (to == null || !to.isOnline())
+		if (to == null || !to.isOnline() || player.shouldNotSee(to))
 			return String.format("Could not find destination player %s.", toPlayer);
 
 		if (to.getWorld().getName().equals(move.getWorld().getName()))
