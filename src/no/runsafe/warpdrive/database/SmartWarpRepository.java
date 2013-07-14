@@ -1,8 +1,6 @@
 package no.runsafe.warpdrive.database;
 
 import no.runsafe.framework.api.database.IDatabase;
-import no.runsafe.framework.api.database.IRow;
-import no.runsafe.framework.api.database.IValue;
 import no.runsafe.framework.api.database.Repository;
 
 import java.util.ArrayList;
@@ -41,14 +39,8 @@ public class SmartWarpRepository extends Repository
 
 	public int getRange(String world)
 	{
-		IRow settings = database.QueryRow(
-			"SELECT `range` FROM smartwarp_settings WHERE world=?",
-			world
-		);
-		if (settings == null)
-			return -1;
-
-		return settings.Integer("range");
+		Integer range = database.QueryInteger("SELECT `range` FROM smartwarp_settings WHERE world=?", world);
+		return range == null ? -1 : range;
 	}
 
 	public void setProgress(String world, double progress)
@@ -61,14 +53,8 @@ public class SmartWarpRepository extends Repository
 
 	public double getProgress(String world)
 	{
-		IRow progress = database.QueryRow(
-			"SELECT progress FROM smartwarp_settings WHERE world=?",
-			world
-		);
-		if (progress == null)
-			return -1;
-
-		return progress.Double("progress");
+		Double progress = database.QueryDouble("SELECT progress FROM smartwarp_settings WHERE world=?", world);
+		return progress == null ? -1 : progress;
 	}
 
 	public void setRange(String world, int range)
@@ -82,14 +68,7 @@ public class SmartWarpRepository extends Repository
 
 	public List<String> getWorlds()
 	{
-		List<String> result = new ArrayList<String>();
-		List<IValue> worlds = database.QueryColumn("SELECT world FROM smartwarp_settings");
-
-		if (worlds != null)
-			for (IValue world : worlds)
-				result.add(world.String());
-
-		return result;
+		return database.QueryStrings("SELECT world FROM smartwarp_settings");
 	}
 
 	private IDatabase database;

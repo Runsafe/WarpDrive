@@ -2,10 +2,8 @@ package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.IRow;
-import no.runsafe.framework.api.database.ISet;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.RunsafeServer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,22 +24,8 @@ public class SummoningStoneRepository extends Repository
 	public List<RunsafeLocation> getStoneList()
 	{
 		List<RunsafeLocation> stones = new ArrayList<RunsafeLocation>();
-
-		ISet data = this.database.Query("SELECT ID, world, x, y, z FROM summoningStones");
-
-		if (data != null)
-		{
-			for (IRow node : data)
-			{
-				stones.add(new RunsafeLocation(
-					RunsafeServer.Instance.getWorld(node.String("world")),
-					node.Double("x"),
-					node.Double("y"),
-					node.Double("z")
-				));
-			}
-		}
-
+		for (IRow node : database.Query("SELECT world, x, y, z FROM summoningStones"))
+			stones.add(node.Location());
 		return stones;
 	}
 
@@ -64,12 +48,8 @@ public class SummoningStoneRepository extends Repository
 			location.getY(),
 			location.getZ()
 		);
-
-		IRow data = this.database.QueryRow("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
-		if (data != null)
-			return data.Integer("ID");
-
-		return 0;
+		Integer id = this.database.QueryInteger("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
+		return id == null ? 0 : id;
 	}
 
 	@Override

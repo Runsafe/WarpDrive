@@ -27,27 +27,12 @@ public class PortalRepository extends Repository
 	{
 		List<PortalWarp> warps = new ArrayList<PortalWarp>();
 
-		ISet data = this.database.Query(
-			"SELECT `ID`,`permission`,`type`,`world`,`x`,`y`,`z`,`destWorld`,`destX`,`destY`,`destZ`,`destYaw`,`destPitch`,`radius` " +
-				"FROM warpdrive_portals"
-		);
-
-		for (IRow row : data)
+		for (IRow row : database.Query("SELECT * FROM warpdrive_portals"))
 		{
 			warps.add(new PortalWarp(
 				row.String("ID"),
-				new RunsafeLocation(
-					RunsafeServer.Instance.getWorld(row.String("world")),
-					row.Double("x"),
-					row.Double("y"),
-					row.Double("z")
-				),
-				RunsafeServer.Instance.getWorld(row.String("destWorld")),
-				(row.Double("destX") == null ? 0 : row.Double("destX")),
-				(row.Double("destY") == null ? 0 : row.Double("destY")),
-				(row.Double("destZ") == null ? 0 : row.Double("destZ")),
-				(row.Float("destYaw") == null ? 0 : row.Float("destYaw")),
-				(row.Float("destPitch") == null ? 0 : row.Float("destPitch")),
+				row.Location(),
+				row.Location("destWorld", "destX", "destY", "destZ", "destYaw", "destPitch"),
 				PortalType.getPortalType(row.Integer("type")),
 				(row.Integer("radius") == null ? 0 : row.Integer("radius")),
 				row.String("permission")

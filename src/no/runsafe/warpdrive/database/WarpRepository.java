@@ -2,8 +2,6 @@ package no.runsafe.warpdrive.database;
 
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.database.IDatabase;
-import no.runsafe.framework.api.database.IRow;
-import no.runsafe.framework.api.database.IValue;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.timer.TimedCache;
@@ -113,17 +111,10 @@ public class WarpRepository extends Repository
 
 	private List<String> GetWarps(String owner, boolean publicWarp)
 	{
-		ArrayList<String> names = new ArrayList<String>();
-		List<IValue> result;
 		if (publicWarp)
-			result = database.QueryColumn("SELECT name FROM warpdrive_locations WHERE `public`=?", publicWarp);
+			return database.QueryStrings("SELECT name FROM warpdrive_locations WHERE `public`=?", publicWarp);
 		else
-			result = database.QueryColumn("SELECT name FROM warpdrive_locations WHERE `public`=? AND creator=?", publicWarp, owner);
-
-		if (result != null)
-			for (IValue entry : result)
-				names.add(entry.String().toLowerCase());
-		return names;
+			return database.QueryStrings("SELECT name FROM warpdrive_locations WHERE `public`=? AND creator=?", publicWarp, owner);
 	}
 
 	private RunsafeLocation GetWarp(String owner, String name, boolean publicWarp)
@@ -133,21 +124,17 @@ public class WarpRepository extends Repository
 		if (location != null)
 			return location;
 
-		IRow data;
 		if (publicWarp)
-			data = database.QueryRow(
+			location = database.QueryRow(
 				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=?",
 				name, publicWarp
-			);
+			).Location();
 		else
-			data = database.QueryRow(
+			location = database.QueryRow(
 				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=? AND creator=?",
 				name, publicWarp, owner
-			);
+			).Location();
 
-		if (data == null)
-			return null;
-		location = data.Location();
 		return cache.Cache(key, location);
 	}
 
