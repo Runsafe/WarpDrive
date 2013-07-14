@@ -45,13 +45,10 @@ public class SmartWarpChunkRepository extends Repository
 
 	public RunsafeLocation getTarget(RunsafeWorld world, boolean cave)
 	{
-		IRow target = database.QueryRow(
+		return database.QueryLocation(
 			"SELECT world, x, y, z FROM smartwarp_targets WHERE world=? AND safe=true AND cave=? ORDER BY RAND() LIMIT 1",
 			world.getName(), cave
 		);
-		if (target.isEmpty())
-			return null;
-		return target.Location();
 	}
 
 	public void setUnsafe(RunsafeLocation candidate)

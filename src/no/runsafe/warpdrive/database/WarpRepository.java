@@ -125,15 +125,15 @@ public class WarpRepository extends Repository
 			return location;
 
 		if (publicWarp)
-			location = database.QueryRow(
+			location = database.QueryLocation(
 				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=?",
 				name, publicWarp
-			).Location();
+			);
 		else
-			location = database.QueryRow(
+			location = database.QueryLocation(
 				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=? AND creator=?",
 				name, publicWarp, owner
-			).Location();
+			);
 
 		return cache.Cache(key, location);
 	}
