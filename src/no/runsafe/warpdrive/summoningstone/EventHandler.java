@@ -39,7 +39,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 		if (from != null)
 		{
 			int stoneID = this.engine.getStoneAtLocation(from);
-			if (stoneID > -1) event.setCancelled(true);
+			if (stoneID > -1) event.cancel();
 		}
 	}
 
