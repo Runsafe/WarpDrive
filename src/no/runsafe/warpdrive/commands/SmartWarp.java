@@ -5,7 +5,7 @@ import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.warpdrive.SmartWarpScanner;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class SmartWarp extends ExecutableCommand
 {
@@ -16,7 +16,7 @@ public class SmartWarp extends ExecutableCommand
 	}
 
 	@Override
-	public String OnExecute(ICommandExecutor iCommandExecutor, HashMap<String, String> param)
+	public String OnExecute(ICommandExecutor iCommandExecutor, Map<String, String> param)
 	{
 		scanner.Setup(RunsafeServer.Instance.getWorld(param.get("world")), param.get("radius"));
 		return "&2Smart-warp scan started";

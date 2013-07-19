@@ -5,7 +5,7 @@ import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.Engine;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class TeleportPos extends PlayerCommand
 {
@@ -16,7 +16,7 @@ public class TeleportPos extends PlayerCommand
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters)
+	public String OnExecute(RunsafePlayer player, Map<String, String> parameters)
 	{
 		Double x = Double.valueOf(parameters.get("x"));
 		Double y;

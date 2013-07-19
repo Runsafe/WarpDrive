@@ -8,7 +8,6 @@ import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.database.WarpRepository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +35,7 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	}
 
 	@Override
-	public String OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
+	public String OnAsyncExecute(RunsafePlayer player, Map<String, String> parameters)
 	{
 		List<String> homes = warpRepository.GetPrivateList(player.getName());
 		String name = parameters.get("name").toLowerCase();

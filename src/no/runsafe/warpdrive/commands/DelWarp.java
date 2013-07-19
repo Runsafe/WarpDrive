@@ -5,7 +5,7 @@ import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.database.WarpRepository;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class DelWarp extends PlayerAsyncCommand
 {
@@ -16,7 +16,7 @@ public class DelWarp extends PlayerAsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
+	public String OnAsyncExecute(RunsafePlayer player, Map<String, String> parameters)
 	{
 		if (warpRepository.DelPublic(parameters.get("name")))
 			return String.format("Deleted public warp %s.", parameters.get("name"));

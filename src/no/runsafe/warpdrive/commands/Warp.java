@@ -15,7 +15,7 @@ import no.runsafe.warpdrive.database.WarpRepository;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 {
@@ -27,7 +27,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	}
 
 	@Override
-	public PlayerTeleport OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
+	public PlayerTeleport OnAsyncExecute(RunsafePlayer player, Map<String, String> parameters)
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.force = true;

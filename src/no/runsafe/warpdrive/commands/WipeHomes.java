@@ -4,7 +4,7 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.console.ConsoleAsyncCommand;
 import no.runsafe.warpdrive.database.WarpRepository;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class WipeHomes extends ConsoleAsyncCommand
 {
@@ -15,7 +15,7 @@ public class WipeHomes extends ConsoleAsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(HashMap<String, String> parameters)
+	public String OnAsyncExecute(Map<String, String> parameters)
 	{
 		String world = parameters.get("world");
 		repository.DelAllPrivate(world);

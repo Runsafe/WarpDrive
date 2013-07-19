@@ -7,8 +7,8 @@ import no.runsafe.warpdrive.PlayerTeleportCommand;
 import no.runsafe.warpdrive.database.WarpRepository;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Home extends PlayerTeleportCommand
 {
@@ -19,7 +19,7 @@ public class Home extends PlayerTeleportCommand
 	}
 
 	@Override
-	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(RunsafePlayer player, HashMap<String, String> params, String[] args)
+	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(RunsafePlayer player, Map<String, String> params, String[] args)
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.player = player;
@@ -53,7 +53,7 @@ public class Home extends PlayerTeleportCommand
 	}
 
 	@Override
-	public PlayerTeleport OnAsyncExecute(RunsafePlayer player, HashMap<String, String> stringStringHashMap)
+	public PlayerTeleport OnAsyncExecute(RunsafePlayer player, Map<String, String> stringStringHashMap)
 	{
 		return null;
 	}

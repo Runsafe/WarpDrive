@@ -5,7 +5,7 @@ import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.database.WarpRepository;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class SetWarp extends PlayerAsyncCommand
 {
@@ -16,7 +16,7 @@ public class SetWarp extends PlayerAsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(RunsafePlayer player, HashMap<String, String> parameters)
+	public String OnAsyncExecute(RunsafePlayer player, Map<String, String> parameters)
 	{
 		String name = parameters.get("name").toLowerCase();
 		warpRepository.Persist(player.getName(), name, true, player.getLocation());

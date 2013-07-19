@@ -9,7 +9,7 @@ import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.Engine;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
 
 public class Teleport extends PlayerCommand implements IContextPermissionProvider
 {
@@ -20,7 +20,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	}
 
 	@Override
-	public String getPermission(ICommandExecutor executor, HashMap<String, String> parameters, String[] args)
+	public String getPermission(ICommandExecutor executor, Map<String, String> parameters, String[] args)
 	{
 		if (args.length > 0 && args[args.length - 1].equals("-f"))
 		{
@@ -43,7 +43,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer player, HashMap<String, String> parameters, String[] args)
+	public String OnExecute(RunsafePlayer player, Map<String, String> parameters, String[] args)
 	{
 		if (args == null)
 			args = new String[0];
@@ -104,7 +104,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer player, HashMap<String, String> stringStringHashMap)
+	public String OnExecute(RunsafePlayer player, Map<String, String> stringStringHashMap)
 	{
 		return null;
 	}
