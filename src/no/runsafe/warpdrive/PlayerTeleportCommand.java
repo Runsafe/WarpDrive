@@ -7,7 +7,7 @@ import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<PlayerTeleportCommand.PlayerTeleport>
 {
-	protected PlayerTeleportCommand(String name, String description, String permission, IScheduler scheduler, Engine engine, String... args)
+	protected PlayerTeleportCommand(String name, String description, String permission, IScheduler scheduler, Engine engine, CharSequence... args)
 	{
 		super(name, description, permission, scheduler, args);
 		this.engine = engine;

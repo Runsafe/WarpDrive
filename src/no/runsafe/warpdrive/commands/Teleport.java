@@ -1,39 +1,41 @@
 package no.runsafe.warpdrive.commands;
 
+import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.IContextPermissionProvider;
+import no.runsafe.framework.api.command.argument.PlayerArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.player.RunsafeAmbiguousPlayer;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.framework.timer.TimedCache;
 import no.runsafe.warpdrive.Engine;
 
-import java.util.Arrays;
 import java.util.Map;
 
 public class Teleport extends PlayerCommand implements IContextPermissionProvider
 {
-	public Teleport(Engine engine)
+	public Teleport(Engine engine, IScheduler scheduler)
 	{
-		super("teleport", "Teleports you or another player to another player", null, "player");
+		super(
+			"teleport", "Teleports you or another player to another player", null,
+			new PlayerArgument("player1", true), new PlayerArgument("player2", false)
+		);
 		this.engine = engine;
+		this.warned = new TimedCache<String, String>(scheduler, 10);
 	}
 
 	@Override
 	public String getPermission(ICommandExecutor executor, Map<String, String> parameters, String[] args)
 	{
-		if (args.length > 0 && args[args.length - 1].equals("-f"))
-		{
-			args = Arrays.copyOfRange(args, 0, args.length - 1);
-		}
 		if (executor instanceof RunsafePlayer)
 		{
 			RunsafePlayer teleporter = (RunsafePlayer) executor;
 			RunsafePlayer target;
-			if (args.length == 0)
-				target = RunsafeServer.Instance.getOnlinePlayer(teleporter, parameters.get("player"));
+			if (!parameters.containsKey("player2"))
+				target = RunsafeServer.Instance.getOnlinePlayer(teleporter, parameters.get("player1"));
 			else
-				target = RunsafeServer.Instance.getOnlinePlayer(teleporter, args[0]);
+				target = RunsafeServer.Instance.getOnlinePlayer(teleporter, parameters.get("player2"));
 			if (target == null)
 				return null;
 
@@ -43,32 +45,24 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer player, Map<String, String> parameters, String[] args)
+	public String OnExecute(RunsafePlayer player, Map<String, String> parameters)
 	{
-		if (args == null)
-			args = new String[0];
 		String movePlayer;
 		RunsafePlayer move;
 		String toPlayer;
 		RunsafePlayer to;
-		boolean force = false;
-		if (args.length > 0 && args[args.length - 1].equals("-f"))
+		if (parameters.containsKey("player2"))
 		{
-			force = true;
-			args = Arrays.copyOfRange(args, 0, args.length - 1);
-		}
-		if (args.length > 0)
-		{
-			movePlayer = parameters.get("player");
+			movePlayer = parameters.get("player1");
 			move = RunsafeServer.Instance.getOnlinePlayer(player, movePlayer);
-			toPlayer = args[0];
+			toPlayer = parameters.get("player2");
 			to = RunsafeServer.Instance.getOnlinePlayer(player, toPlayer);
 		}
 		else
 		{
 			movePlayer = player.getName();
 			move = player;
-			toPlayer = parameters.get("player");
+			toPlayer = parameters.get("player1");
 			to = RunsafeServer.Instance.getOnlinePlayer(player, toPlayer);
 		}
 
@@ -83,6 +77,9 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 
 		if (to == null || !to.isOnline() || player.shouldNotSee(to))
 			return String.format("Could not find destination player %s.", toPlayer);
+
+		String warning = warned.Cache(player.getName());
+		boolean force = warning != null && warning.equals(toPlayer);
 
 		if (to.getWorld().getName().equals(move.getWorld().getName()))
 		{
@@ -100,14 +97,10 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		if (engine.safePlayerTeleport(to.getLocation(), move))
 			return null;
 
-		return String.format("Unable to safely teleport %1$s to %2$s, try /tp %1$s %2$s -f", move.getPrettyName(), to.getPrettyName());
-	}
-
-	@Override
-	public String OnExecute(RunsafePlayer player, Map<String, String> stringStringHashMap)
-	{
-		return null;
+		warned.Cache(player.getName(), toPlayer);
+		return String.format("Unable to safely teleport %1$s to %2$s, repeat command to force.", move.getPrettyName(), to.getPrettyName());
 	}
 
 	private final Engine engine;
+	private final TimedCache<String, String> warned;
 }

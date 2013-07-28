@@ -1,6 +1,8 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.argument.ITabComplete;
+import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.Engine;
 import no.runsafe.warpdrive.PlayerTeleportCommand;
@@ -14,17 +16,34 @@ public class Home extends PlayerTeleportCommand
 {
 	public Home(WarpRepository repository, IScheduler scheduler, Engine engine)
 	{
-		super("home", "Teleports you to a home location", "runsafe.home.use", scheduler, engine);
+		super("home", "Teleports you to a home location", "runsafe.home.use", scheduler, engine, new HomeArgument(repository));
 		warpRepository = repository;
 	}
 
+	public static class HomeArgument extends OptionalArgument implements ITabComplete
+	{
+		public HomeArgument(WarpRepository warpRepository)
+		{
+			super("home");
+			this.warpRepository = warpRepository;
+		}
+
+		@Override
+		public List<String> getAlternatives(RunsafePlayer player, String arg)
+		{
+			return warpRepository.GetPrivateList(player.getName());
+		}
+
+		private final WarpRepository warpRepository;
+	}
+
 	@Override
-	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(RunsafePlayer player, Map<String, String> params, String[] args)
+	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(RunsafePlayer player, Map<String, String> params)
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.player = player;
 		String home;
-		if (args.length == 0)
+		if (!params.containsKey("home"))
 		{
 			List<String> homes = warpRepository.GetPrivateList(player.getName());
 			if (homes.isEmpty())
@@ -41,21 +60,13 @@ public class Home extends PlayerTeleportCommand
 			}
 		}
 		else
-		{
-			home = args[0].toLowerCase();
-		}
+			home = params.get("home");
 		target.location = warpRepository.GetPrivate(player.getName(), home);
 		if (target.location == null)
 			target.message = String.format("You do not have a home named %s.", home);
 		else
 			target.force = true;
 		return target;
-	}
-
-	@Override
-	public PlayerTeleport OnAsyncExecute(RunsafePlayer player, Map<String, String> stringStringHashMap)
-	{
-		return null;
 	}
 
 	private final WarpRepository warpRepository;
