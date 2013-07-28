@@ -1,13 +1,14 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.argument.IArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCallbackCommand;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<PlayerTeleportCommand.PlayerTeleport>
 {
-	protected PlayerTeleportCommand(String name, String description, String permission, IScheduler scheduler, Engine engine, CharSequence... args)
+	protected PlayerTeleportCommand(String name, String description, String permission, IScheduler scheduler, Engine engine, IArgument... args)
 	{
 		super(name, description, permission, scheduler, args);
 		this.engine = engine;

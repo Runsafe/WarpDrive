@@ -1,6 +1,7 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.database.WarpRepository;
@@ -11,7 +12,10 @@ public class DelWarp extends PlayerAsyncCommand
 {
 	public DelWarp(IScheduler scheduler, WarpRepository repository)
 	{
-		super("delwarp", "Deletes a warp location", "runsafe.warp.delete", scheduler, "name");
+		super(
+			"delwarp", "Deletes a warp location", "runsafe.warp.delete", scheduler,
+			new RequiredArgument("name")
+		);
 		warpRepository = repository;
 	}
 

@@ -3,6 +3,7 @@ package no.runsafe.warpdrive.commands;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
@@ -16,7 +17,10 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 {
 	public SetHome(IScheduler scheduler, WarpRepository repository, IOutput output)
 	{
-		super("sethome", "Saves your current location as a home", "runsafe.home.set", scheduler, "name");
+		super(
+			"sethome", "Saves your current location as a home", "runsafe.home.set", scheduler,
+			new RequiredArgument("name")
+		);
 		warpRepository = repository;
 		console = output;
 	}

@@ -1,5 +1,6 @@
 package no.runsafe.warpdrive.commands;
 
+import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
@@ -11,7 +12,10 @@ public class TeleportPos extends PlayerCommand
 {
 	public TeleportPos(Engine engine)
 	{
-		super("teleportpos", "Teleports you to the given coordinates in your current world.", "runsafe.teleport.coordinate", "x", "y", "z");
+		super(
+			"teleportpos", "Teleports you to the given coordinates in your current world.", "runsafe.teleport.coordinate",
+			new RequiredArgument("x"), new RequiredArgument("y"), new RequiredArgument("z")
+		);
 		this.engine = engine;
 	}
 

@@ -3,6 +3,7 @@ package no.runsafe.warpdrive.commands;
 import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.ICommandExecutor;
+import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.block.RunsafeSign;
@@ -21,7 +22,10 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 {
 	public Warp(WarpRepository repository, IOutput output, IScheduler scheduler, Engine engine)
 	{
-		super("warp", "Teleports you to a predefined warp location", "runsafe.warp.use.<destination>", scheduler, engine, "destination");
+		super(
+			"warp", "Teleports you to a predefined warp location", "runsafe.warp.use.<destination>", scheduler, engine,
+			new RequiredArgument("destination")
+		);
 		warpRepository = repository;
 		console = output;
 	}

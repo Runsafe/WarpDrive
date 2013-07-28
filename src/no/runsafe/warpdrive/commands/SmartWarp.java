@@ -2,6 +2,8 @@ package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.command.ExecutableCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
+import no.runsafe.framework.api.command.argument.RequiredArgument;
+import no.runsafe.framework.api.command.argument.WorldArgument;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.warpdrive.SmartWarpScanner;
 
@@ -11,7 +13,10 @@ public class SmartWarp extends ExecutableCommand
 {
 	public SmartWarp(SmartWarpScanner scanner)
 	{
-		super("smartwarp", "Sets up smart warps", "runsafe.warpdrive.smart", "world", "radius");
+		super(
+			"smartwarp", "Sets up smart warps", "runsafe.warpdrive.smart",
+			new WorldArgument(), new RequiredArgument("radius")
+		);
 		this.scanner = scanner;
 	}
 
