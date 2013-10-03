@@ -58,10 +58,21 @@ public class PortalWarp
 		return this.radius;
 	}
 
+	public void setLocked(boolean locked)
+	{
+		this.locked = locked;
+	}
+
+	public boolean isLocked()
+	{
+		return locked;
+	}
+
 	private String perm;
 	private PortalType type;
 	private RunsafeLocation location;
 	private RunsafeLocation destination;
 	private RunsafeWorld destinationWorld;
 	private int radius;
+	private boolean locked = false;
 }

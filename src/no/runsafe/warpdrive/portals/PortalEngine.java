@@ -2,16 +2,20 @@ package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.player.IPlayerPortal;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.RunsafeWorld;
+import no.runsafe.framework.minecraft.block.RunsafeBlock;
+import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.SmartWarpDrive;
 
 import java.util.*;
 
-public class PortalEngine implements IPlayerPortal, IConfigurationChanged
+public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent
 {
 	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IOutput output)
 	{
@@ -43,13 +47,34 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 			player.teleport(portal.getLocation());
 
 		if (portal.getType() == PortalType.RANDOM_SURFACE)
-			this.smartWarpDrive.Engage(player, portal.getWorld(), false);
+			this.smartWarpDrive.Engage(player, portal.getWorld(), false, portal.isLocked());
 
 		if (portal.getType() == PortalType.RANDOM_CAVE)
-			this.smartWarpDrive.Engage(player, portal.getWorld(), true);
+			this.smartWarpDrive.Engage(player, portal.getWorld(), true, portal.isLocked());
 
 		if (portal.getType() == PortalType.RANDOM_RADIUS)
 			this.randomRadiusTeleport(player, portal.getLocation(), portal.getRadius());
+
+		portal.setLocked(false);
+	}
+
+	@Override
+	public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
+	{
+		RunsafeBlock block = event.getBlock();
+		if (block != null && block.is(Item.Redstone.Button.Stone))
+		{
+			RunsafePlayer player = event.getPlayer();
+			RunsafeWorld world = player.getWorld();
+
+			if (world != null && portals.containsKey(world.getName()))
+			{
+				List<PortalWarp> portalList = portals.get(world.getName());
+				for (PortalWarp warp : portalList)
+					if (warp.getLocation().distance(block.getLocation()) < 5)
+						warp.setLocked(true);
+			}
+		}
 	}
 
 	private void randomRadiusTeleport(RunsafePlayer player, RunsafeLocation theLocation, int radius)
@@ -125,4 +150,5 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged
 	private PortalRepository repository;
 	private SmartWarpDrive smartWarpDrive;
 	private IOutput output;
+	private boolean shouldLock = false;
 }

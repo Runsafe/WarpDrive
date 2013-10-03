@@ -13,13 +13,22 @@ public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 	public SmartWarpDrive(IScheduler scheduler, SmartWarpChunkRepository smartWarpChunks, Engine engine)
 	{
 		super(scheduler);
+		this.scheduler = scheduler;
 		this.smartWarpChunks = smartWarpChunks;
 		this.engine = engine;
 		setInterval(10);
 	}
 
-	public void Engage(RunsafePlayer player, RunsafeWorld target, boolean cave)
+	public void Engage(RunsafePlayer player, RunsafeWorld target, boolean cave, boolean lock)
 	{
+		if (lockedLocation != null)
+		{
+			process(player.getName(), lockedLocation);
+			return;
+		}
+		if (lock)
+			shouldLock = true; // Lock the next location we produce.
+
 		RunsafeLocation candidate;
 		while (true)
 		{
@@ -42,8 +51,28 @@ public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 		target.incrementX(0.5);
 		target.incrementZ(0.5);
 		player.teleport(target);
+
+		if (shouldLock)
+		{
+			shouldLock = false;
+			lockedLocation = target;
+			scheduler.startSyncTask(new Runnable() {
+				@Override
+				public void run() {
+					unlock();
+				}
+			}, 300);
+		}
 	}
 
+	private void unlock()
+	{
+		lockedLocation = null;
+	}
+
+	private boolean shouldLock = false;
+	private RunsafeLocation lockedLocation;
+	private final IScheduler scheduler;
 	private final SmartWarpChunkRepository smartWarpChunks;
 	private final Engine engine;
 }
