@@ -48,6 +48,11 @@ public class PortalWarp
 		return this.destination;
 	}
 
+	public RunsafeLocation getPortalLocation()
+	{
+		return location;
+	}
+
 	public boolean isInPortal(RunsafePlayer player)
 	{
 		return player.getLocation().distance(this.location) < 2;
