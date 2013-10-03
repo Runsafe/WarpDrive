@@ -73,7 +73,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			{
 				List<PortalWarp> portalList = portals.get(world.getName());
 				for (PortalWarp warp : portalList)
-					if (warp.getLocation().distance(block.getLocation()) < 5)
+					if (warp.getPortalLocation().distance(block.getLocation()) < 5)
 						warp.setLocked(true);
 			}
 		}
