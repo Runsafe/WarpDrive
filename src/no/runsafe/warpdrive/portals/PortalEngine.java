@@ -43,6 +43,8 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	public void teleportPlayer(PortalWarp portal, RunsafePlayer player)
 	{
 		this.output.fine("Teleporting player in portal: " + player.getName());
+		this.output.fine("Portal lock state: " + (portal.isLocked() ? "locked" : "unlocked"));
+
 		if (portal.getType() == PortalType.NORMAL)
 			player.teleport(portal.getLocation());
 
@@ -150,5 +152,4 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private PortalRepository repository;
 	private SmartWarpDrive smartWarpDrive;
 	private IOutput output;
-	private boolean shouldLock = false;
 }
