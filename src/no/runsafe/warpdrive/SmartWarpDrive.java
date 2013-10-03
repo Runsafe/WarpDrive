@@ -61,7 +61,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 				public void run() {
 					unlock();
 				}
-			}, 300);
+			}, 20);
 		}
 	}
 
