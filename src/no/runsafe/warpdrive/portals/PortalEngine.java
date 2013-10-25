@@ -124,7 +124,11 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	public boolean OnPlayerPortal(RunsafePlayer player, RunsafeLocation from, RunsafeLocation to)
 	{
 		this.output.fine("Portal event detected: " + player.getName());
-		String worldName = player.getWorld().getName();
+		RunsafeWorld playerWorld = player.getWorld();
+		if (playerWorld == null)
+			return false;
+
+		String worldName = playerWorld.getName();
 		if (portals.containsKey(worldName))
 		{
 			for (PortalWarp portal : this.portals.get(worldName))
