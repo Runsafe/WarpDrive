@@ -182,6 +182,8 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		if (!portals.containsKey(worldName))
 			portals.put(worldName, new ArrayList<PortalWarp>());
 
+		repository.updatePortalWarp(warp); // Store changes in the database.
+
 		int index = 0;
 		for (PortalWarp portalWarp : portals.get(worldName))
 		{
