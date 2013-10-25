@@ -41,6 +41,29 @@ public class PortalRepository extends Repository
 		return warps;
 	}
 
+	public void storeWarp(PortalWarp warp)
+	{
+		database.Execute(
+				"INSERT INTO warpdrive_portals (ID, world, x, y, z, destWorld, destX, destY, destZ, destYaw, destPitch, radius, permission) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+				warp.getID(), warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getDestinationWorldName(),
+				warp.getDestinationX(), warp.getDestinationY(), warp.getDestinationZ(), warp.getDestinationYaw(),
+				warp.getDestinationPitch(), null, null
+		);
+	}
+
+	public void updatePortalWarp(PortalWarp warp)
+	{
+		database.Execute(
+				"UPDATE warpdrive_portals" +
+				"SET destWorld = ?, destX = ?, destY = ?, destZ = ?, destYaw = ?, destPitch = ?," +
+				"world = ?, x = ?, y = ?, z = ?, type = ?",
+				warp.getDestinationWorldName(),	warp.getDestinationX(),	warp.getDestinationY(),
+				warp.getDestinationZ(),	warp.getDestinationYaw(), warp.getDestinationPitch(),
+				warp.getWorldName(),  warp.getX(), warp.getY(), warp.getZ(), warp.getType()
+			);
+	}
+
 	@Override
 	public HashMap<Integer, List<String>> getSchemaUpdateQueries()
 	{

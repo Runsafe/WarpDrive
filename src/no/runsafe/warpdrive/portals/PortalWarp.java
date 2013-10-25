@@ -8,6 +8,7 @@ public class PortalWarp
 {
 	public PortalWarp(String id, RunsafeLocation location, RunsafeLocation destination, PortalType type, int radius, String permission)
 	{
+		this.id = id;
 		this.location = location;
 		this.type = type;
 		this.destinationWorld = destination.getWorld();
@@ -16,6 +17,11 @@ public class PortalWarp
 
 		if (this.type == PortalType.NORMAL || this.type == PortalType.RANDOM_RADIUS)
 			this.destination = destination;
+	}
+
+	public String getID()
+	{
+		return id;
 	}
 
 	public void setPermission(String perm)
@@ -73,6 +79,68 @@ public class PortalWarp
 		return locked;
 	}
 
+	public String getWorldName()
+	{
+		return location.getWorld().getName();
+	}
+
+	public double getX()
+	{
+		return location.getX();
+	}
+
+	public double getY()
+	{
+		return location.getY();
+	}
+
+	public double getZ()
+	{
+		return location.getZ();
+	}
+
+	public String getDestinationWorldName()
+	{
+		return destinationWorld.getName();
+	}
+
+	public double getDestinationX()
+	{
+		return destination.getX();
+	}
+
+	public double getDestinationY()
+	{
+		return destination.getY();
+	}
+
+	public double getDestinationZ()
+	{
+		return destination.getZ();
+	}
+
+	public float getDestinationYaw()
+	{
+		return destination.getYaw();
+	}
+
+	public float getDestinationPitch()
+	{
+		return destination.getPitch();
+	}
+
+	public void setLocation(RunsafeLocation location)
+	{
+		this.location = location;
+	}
+
+	public void setDestination(RunsafeLocation location)
+	{
+		destination = location;
+		destinationWorld = location.getWorld();
+	}
+
+	private String id;
 	private String perm;
 	private PortalType type;
 	private RunsafeLocation location;

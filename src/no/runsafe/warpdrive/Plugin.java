@@ -42,6 +42,7 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(WipeHomes.class);
 		addComponent(TeleportToEntityID.class);
 		addComponent(SmartWarp.class);
+		addComponent(SetPortal.class);
 
 		addComponent(WarpSignCreator.class);
 

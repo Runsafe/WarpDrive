@@ -152,6 +152,49 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		this.reloadPortals();
 	}
 
+	public PortalWarp getWarp(RunsafeWorld world, String portalName)
+	{
+		String worldName = world.getName();
+		if (portals.containsKey(worldName))
+		{
+			List<PortalWarp> worldPortals = portals.get(worldName);
+			for (PortalWarp warp : worldPortals)
+				if (warp.getID().equalsIgnoreCase(portalName))
+					return warp;
+		}
+		return null;
+	}
+
+	public void createWarp(String portalName, RunsafeLocation location, RunsafeLocation destination, PortalType type)
+	{
+		String worldName = location.getWorld().getName();
+		if (!portals.containsKey(worldName)) // Check if we're missing a container for this world.
+			portals.put(worldName, new ArrayList<PortalWarp>()); // Create a new warp container.
+
+		PortalWarp warp = new PortalWarp(portalName, location, destination, type, -1, null); // Create new warp.
+		repository.storeWarp(warp); // Store the warp in the database.
+		portals.get(worldName).add(warp); // Add to the in-memory warp storage.
+	}
+
+	public void updateWarp(PortalWarp warp)
+	{
+		String worldName = warp.getWorldName();
+		if (!portals.containsKey(worldName))
+			portals.put(worldName, new ArrayList<PortalWarp>());
+
+		int index = 0;
+		for (PortalWarp portalWarp : portals.get(worldName))
+		{
+			if (portalWarp.getID().equalsIgnoreCase(warp.getID()))
+			{
+				portals.get(worldName).remove(index); // Remove the old warp.
+				portals.get(worldName).add(warp); // Insert the updated warp.
+				return;
+			}
+			index++;
+		}
+	}
+
 	private Map<String, List<PortalWarp>> portals = new HashMap<String, List<PortalWarp>>();
 	private PortalRepository repository;
 	private SmartWarpDrive smartWarpDrive;
