@@ -73,7 +73,7 @@ public class PortalRepository extends Repository
 				"world = ?, x = ?, y = ?, z = ?, type = ?",
 				warp.getDestinationWorldName(),	warp.getDestinationX(),	warp.getDestinationY(),
 				warp.getDestinationZ(),	warp.getDestinationYaw(), warp.getDestinationPitch(),
-				warp.getWorldName(),  warp.getX(), warp.getY(), warp.getZ(), warp.getType()
+				warp.getWorldName(),  warp.getX(), warp.getY(), warp.getZ(), warp.getType().ordinal()
 			);
 	}
 
