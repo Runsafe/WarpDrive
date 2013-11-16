@@ -68,7 +68,7 @@ public class PortalRepository extends Repository
 	public void updatePortalWarp(PortalWarp warp)
 	{
 		database.Execute(
-				"UPDATE warpdrive_portals" +
+				"UPDATE warpdrive_portals " +
 				"SET destWorld = ?, destX = ?, destY = ?, destZ = ?, destYaw = ?, destPitch = ?," +
 				"world = ?, x = ?, y = ?, z = ?, type = ?",
 				warp.getDestinationWorldName(),	warp.getDestinationX(),	warp.getDestinationY(),
