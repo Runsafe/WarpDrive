@@ -165,7 +165,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		return null;
 	}
 
-	public void createWarp(String portalName, RunsafeLocation location, RunsafeLocation destination, PortalType type)
+	public void createWarp(String portalName, RunsafeLocation location, RunsafeLocation destination, PortalType type) throws NullPointerException
 	{
 		String worldName = location.getWorld().getName();
 		if (!portals.containsKey(worldName)) // Check if we're missing a container for this world.

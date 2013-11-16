@@ -29,16 +29,29 @@ public class PortalRepository extends Repository
 
 		for (IRow row : database.Query("SELECT * FROM warpdrive_portals"))
 		{
-			warps.add(new PortalWarp(
-				row.String("ID"),
-				row.Location(),
-				row.Location("destWorld", "destX", "destY", "destZ", "destYaw", "destPitch"),
-				PortalType.getPortalType(row.Integer("type")),
-				(row.Integer("radius") == null ? 0 : row.Integer("radius")),
-				row.String("permission")
-			));
+			String portalID = row.String("ID");
+			try
+			{
+				warps.add(new PortalWarp(
+						portalID,
+						row.Location(),
+						row.Location("destWorld", "destX", "destY", "destZ", "destYaw", "destPitch"),
+						PortalType.getPortalType(row.Integer("type")),
+						(row.Integer("radius") == null ? 0 : row.Integer("radius")),
+						row.String("permission")
+				));
+			}
+			catch (NullPointerException e)
+			{
+				deleteWarp(portalID);
+			}
 		}
 		return warps;
+	}
+
+	public void deleteWarp(String warpID)
+	{
+		database.Execute("DELETE FROM warpdrive_portals WHERE ID = ?", warpID);
 	}
 
 	public void storeWarp(PortalWarp warp)

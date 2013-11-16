@@ -6,14 +6,20 @@ import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 public class PortalWarp
 {
-	public PortalWarp(String id, RunsafeLocation location, RunsafeLocation destination, PortalType type, int radius, String permission)
+	public PortalWarp(String id, RunsafeLocation location, RunsafeLocation destination, PortalType type, int radius, String permission) throws NullPointerException
 	{
 		this.id = id;
 		this.location = location;
 		this.type = type;
+
+		if (destination == null || destination.getWorld() == null)
+			throw new NullPointerException("Invalid destination world provided.");
+
 		this.destinationWorld = destination.getWorld();
 		this.radius = radius;
-		this.perm = permission.length() > 0 ? permission : null;
+
+		if (permission == null)
+			perm = permission;
 
 		if (this.type == PortalType.NORMAL || this.type == PortalType.RANDOM_RADIUS)
 			this.destination = destination;

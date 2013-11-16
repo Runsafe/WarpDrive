@@ -63,12 +63,19 @@ public class SetPortal extends PlayerAsyncCommand
 			RunsafeLocation worldStart = new RunsafeLocation(playerWorld, 0, 0, 0); // Placeholder location.
 
 			// Create the new warp in the engine.
-			engine.createWarp(
-					portalName,
-					setDestination ? worldStart : playerLocation,
-					setDestination ? playerLocation : worldStart,
-					PortalType.getPortalType(Integer.parseInt(parameters.get("portalType")))
-			);
+			try
+			{
+				engine.createWarp(
+						portalName,
+						setDestination ? worldStart : playerLocation,
+						setDestination ? playerLocation : worldStart,
+						PortalType.getPortalType(Integer.parseInt(parameters.get("portalType")))
+				);
+			}
+			catch (NullPointerException e)
+			{
+				return "Error: " + e.getMessage();
+			}
 
 			return "Warp created at " + playerLocation.toString();
 		}
