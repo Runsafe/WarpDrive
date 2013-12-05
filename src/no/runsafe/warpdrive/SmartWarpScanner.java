@@ -1,6 +1,6 @@
 package no.runsafe.warpdrive;
 
-import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.minecraft.RunsafeLocation;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> implements IPluginEnabled
 {
-	public SmartWarpScanner(IScheduler scheduler, IOutput console, SmartWarpRepository warpRepository, SmartWarpChunkRepository chunkRepository, Engine engine)
+	public SmartWarpScanner(IScheduler scheduler, IConsole console, SmartWarpRepository warpRepository, SmartWarpChunkRepository chunkRepository, Engine engine)
 	{
 		super(scheduler);
 		this.console = console;
@@ -80,7 +80,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 		if (progress.get(world) % 1000 == 0)
 		{
 			double d = range.get(world) / 16;
-			console.writeColoured(
+			console.logInformation(
 				"Scanning location %.0f/%.0f in %s (%.2f%%)",
 				p, d * d, world, 100D * p / (d * d)
 			);
@@ -94,7 +94,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 		double target = d * d;
 		if (progress.get(world) >= target)
 		{
-			console.writeColoured("Nothing left to scan in %s, stopping!", world);
+			console.logInformation("Nothing left to scan in %s, stopping!", world);
 			return;
 		}
 		Push(world, CalculateNextLocation(world));
@@ -114,7 +114,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 	private HashMap<String, Double> progress = new HashMap<String, Double>();
 	private HashMap<String, Integer> range = new HashMap<String, Integer>();
 	private HashMap<String, RunsafeWorld> worlds = new HashMap<String, RunsafeWorld>();
-	private IOutput console;
+	private IConsole console;
 	private SmartWarpRepository warpRepository;
 	private SmartWarpChunkRepository chunkRepository;
 	private Engine engine;

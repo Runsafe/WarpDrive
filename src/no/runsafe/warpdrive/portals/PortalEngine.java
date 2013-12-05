@@ -1,7 +1,7 @@
 package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.api.IConfiguration;
-import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IDebug;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.player.IPlayerPortal;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
@@ -13,15 +13,18 @@ import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.SmartWarpDrive;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent
 {
-	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IOutput output)
+	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger)
 	{
 		this.repository = repository;
 		this.smartWarpDrive = smartWarpDrive;
-		this.output = output;
+		this.debugger = debugger;
 	}
 
 	public void reloadPortals()
@@ -37,13 +40,13 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			portalCount += 1;
 			portals.get(portalWorldName).add(portal);
 		}
-		this.output.logInformation("%d portals loaded in %d worlds.", portalCount, portals.size());
+		this.debugger.logInformation("%d portals loaded in %d worlds.", portalCount, portals.size());
 	}
 
 	public void teleportPlayer(PortalWarp portal, RunsafePlayer player)
 	{
-		this.output.fine("Teleporting player in portal: " + player.getName());
-		this.output.fine("Portal lock state: " + (portal.isLocked() ? "locked" : "unlocked"));
+		this.debugger.debugFine("Teleporting player in portal: " + player.getName());
+		this.debugger.debugFine("Portal lock state: " + (portal.isLocked() ? "locked" : "unlocked"));
 
 		if (portal.getType() == PortalType.NORMAL)
 			player.teleport(portal.getLocation());
@@ -82,10 +85,10 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private void randomRadiusTeleport(RunsafePlayer player, RunsafeLocation theLocation, int radius)
 	{
 		RunsafeLocation location = new RunsafeLocation(
-				theLocation.getWorld(),
-				theLocation.getX(),
-				theLocation.getY(),
-				theLocation.getZ()
+			theLocation.getWorld(),
+			theLocation.getX(),
+			theLocation.getY(),
+			theLocation.getZ()
 		);
 
 		int highX = location.getBlockX() + radius;
@@ -106,7 +109,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 	private int getRandom(int low, int high)
 	{
-		return low + (int)(Math.random() * ((high - low) + 1));
+		return low + (int) (Math.random() * ((high - low) + 1));
 	}
 
 	private boolean safeToTeleport(RunsafeLocation location)
@@ -123,7 +126,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	@Override
 	public boolean OnPlayerPortal(RunsafePlayer player, RunsafeLocation from, RunsafeLocation to)
 	{
-		this.output.fine("Portal event detected: " + player.getName());
+		this.debugger.debugFine("Portal event detected: " + player.getName());
 		RunsafeWorld playerWorld = player.getWorld();
 		if (playerWorld == null)
 			return false;
@@ -200,5 +203,5 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private Map<String, List<PortalWarp>> portals = new HashMap<String, List<PortalWarp>>();
 	private PortalRepository repository;
 	private SmartWarpDrive smartWarpDrive;
-	private IOutput output;
+	private IDebug debugger;
 }

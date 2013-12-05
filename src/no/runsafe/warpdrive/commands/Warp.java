@@ -1,6 +1,6 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 {
-	public Warp(WarpRepository repository, IOutput output, IScheduler scheduler, Engine engine)
+	public Warp(WarpRepository repository, IConsole output, IScheduler scheduler, Engine engine)
 	{
 		super(
 			"warp", "Teleports you to a predefined warp location", "runsafe.warp.use.<destination>", scheduler, engine,
@@ -64,7 +64,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 		RunsafeLocation destination = warpRepository.GetPublic(name);
 		if (destination == null)
 		{
-			console.write(String.format("%s used a invalid warp sign %s.", player.getName(), name));
+			console.logWarning("%s used a invalid warp sign %s.", player.getName(), name);
 			return false;
 		}
 		if (!player.hasPermission("runsafe.warpsign.use.*")
@@ -76,7 +76,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	}
 
 	private final WarpRepository warpRepository;
-	private final IOutput console;
+	private final IConsole console;
 	public static final String signHeader = "[" + ChatColour.BLUE.toBukkit() + "warp" + ChatColour.RESET.toBukkit() + "]";
 	public static final String signTag = "[warp]";
 }

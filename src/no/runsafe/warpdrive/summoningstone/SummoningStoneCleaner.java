@@ -31,7 +31,7 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 				this.scheduler.cancelTask(stone.getTimerID());
 
 			this.summoningStoneRepository.deleteSummoningStone(node.getKey());
-			this.output.write("Removing summoning portal: " + stone.getLocation().toString());
+			this.output.logInformation("Removing summoning portal: %s", stone.getLocation());
 		}
 	}
 
@@ -43,7 +43,7 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 		{
 			SummoningStone stone = new SummoningStone(stoneLocation);
 			stone.reset();
-			this.output.write("Reset leftover portal: " + stoneLocation.toString());
+			this.output.logInformation("Reset leftover portal: %s", stoneLocation);
 		}
 
 		// Wipe any stones we had remembered

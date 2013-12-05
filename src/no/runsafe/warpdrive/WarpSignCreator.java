@@ -1,6 +1,8 @@
 package no.runsafe.warpdrive;
 
+import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.database.IValue;
 import no.runsafe.framework.api.event.block.ISignChange;
 import no.runsafe.framework.minecraft.block.RunsafeBlock;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
@@ -8,7 +10,7 @@ import no.runsafe.warpdrive.commands.Warp;
 
 public class WarpSignCreator implements ISignChange
 {
-	public WarpSignCreator(IOutput console)
+	public WarpSignCreator(IConsole console)
 	{
 		this.console = console;
 	}
@@ -21,7 +23,7 @@ public class WarpSignCreator implements ISignChange
 		{
 			if (player.hasPermission("runsafe.snazzysign.create"))
 			{
-				console.writeColoured("%s created a snazzy warp sign named %s.", player.getPrettyName(), strings[1]);
+				console.logInformation("%s created a snazzy warp sign named %s.", player.getPrettyName(), strings[1]);
 				strings[0] = SnazzyWarp.signHeader;
 				return true;
 			}
@@ -32,7 +34,7 @@ public class WarpSignCreator implements ISignChange
 		{
 			if (player.hasPermission("runsafe.warpsign.create"))
 			{
-				console.writeColoured("%s created a warp sign for the warp %s.", player.getPrettyName(), strings[1]);
+				console.logInformation("%s created a warp sign for the warp %s.", player.getPrettyName(), strings[1]);
 				strings[0] = Warp.signHeader;
 				return true;
 			}
@@ -41,5 +43,5 @@ public class WarpSignCreator implements ISignChange
 		return true;
 	}
 
-	private final IOutput console;
+	private final IConsole console;
 }

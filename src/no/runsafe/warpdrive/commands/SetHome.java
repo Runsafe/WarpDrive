@@ -1,6 +1,7 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
@@ -15,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 {
-	public SetHome(IScheduler scheduler, WarpRepository repository, IOutput output)
+	public SetHome(IScheduler scheduler, WarpRepository repository, IConsole output)
 	{
 		super(
 			"sethome", "Saves your current location as a home", "runsafe.home.set", scheduler,
@@ -29,10 +30,10 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
 		Map<String, String> section = configuration.getConfigValuesAsMap("private.max");
-		console.write("Loading configuration..");
-		console.write("private.max:");
+		console.logInformation("Loading configuration..");
+		console.logInformation("private.max:");
 		for (String key : section.keySet())
-			console.write(String.format("  %s: %s", key, section.get(key)));
+			console.logInformation("  %s: %s", key, section.get(key));
 		privateWarpLimit.clear();
 		for (String key : section.keySet())
 			privateWarpLimit.put(key, Integer.valueOf(section.get(key)));
@@ -63,5 +64,5 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 
 	private final WarpRepository warpRepository;
 	private final ConcurrentHashMap<String, Integer> privateWarpLimit = new ConcurrentHashMap<String, Integer>();
-	private final IOutput console;
+	private final IConsole console;
 }

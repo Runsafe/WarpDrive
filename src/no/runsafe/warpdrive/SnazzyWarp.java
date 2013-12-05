@@ -1,7 +1,7 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.api.IConfiguration;
-import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IDebug;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.event.IAsyncEvent;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
@@ -24,11 +24,11 @@ import java.util.logging.Level;
 public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
 		IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged
 {
-	public SnazzyWarp(IScheduler scheduler, Engine engine, IOutput output)
+	public SnazzyWarp(IScheduler scheduler, Engine engine, IDebug output)
 	{
 		super(scheduler, 2);
 		this.engine = engine;
-		console = output;
+		debugger = output;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 				|| snazzyWarps.get(theSign.getLine(1)).refresh(theSign))
 				snazzyWarps.put(theSign.getLine(1), new WarpParameters(theSign));
 			Push(thePlayer.getName(), snazzyWarps.get(theSign.getLine(1)));
-			console.outputDebugToConsole("Pushed player click..", Level.FINE);
+			debugger.debugFine("Pushed player click..");
 			return false;
 		}
 		return true;
@@ -51,13 +51,13 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	{
 		if (parameters == null)
 			return;
-		console.outputDebugToConsole(String.format("Player %s teleporting", player), Level.FINE);
+		debugger.outputDebugToConsole(String.format("Player %s teleporting", player), Level.FINE);
 		RunsafePlayer target = RunsafeServer.Instance.getPlayer(player);
 		RunsafeLocation destination = parameters.getTarget();
 		if (target.isOnline() && destination != null)
 			target.teleport(destination);
 		else
-			console.outputDebugToConsole("Unable to find destination..", Level.FINE);
+			debugger.outputDebugToConsole("Unable to find destination..", Level.FINE);
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 			maxDistance = Integer.parseInt(sign.getLine(2));
 			minDistance = Integer.parseInt(sign.getLine(3));
 			world = RunsafeServer.Instance.getWorld(sign.getLine(1));
-			console.outputDebugToConsole(
+			debugger.outputDebugToConsole(
 				String.format(
 					"Configured new warp sign %s in world %s [%d-%d].",
 					sign.getLine(1),
@@ -139,7 +139,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	}
 
 	private final ConcurrentHashMap<String, WarpParameters> snazzyWarps = new ConcurrentHashMap<String, WarpParameters>();
-	private final IOutput console;
+	private final IDebug debugger;
 	private Duration change_after;
 	public static final String signHeader = ChatColour.DARK_BLUE.toBukkit() + "[Snazzy Warp]";
 	public static final String signTag = "[snazzy warp]";
