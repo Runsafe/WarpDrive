@@ -23,7 +23,6 @@ import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.Plugin;
 import org.bukkit.Effect;
 import org.bukkit.Material;
-import sun.plugin.dom.exception.PluginNotSupportedException;
 
 public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent, IPlayerRightClickBlock, IPlayerJoinEvent
 {
