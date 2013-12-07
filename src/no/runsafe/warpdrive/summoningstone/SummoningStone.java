@@ -3,6 +3,7 @@ package no.runsafe.warpdrive.summoningstone;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.warpdrive.Plugin;
 import org.bukkit.Chunk;
 
 public class SummoningStone
@@ -112,6 +113,7 @@ public class SummoningStone
 			if (checkLocation.getBlock().is(Item.get(bounds[3])))
 				return false;
 		}
+		Plugin.debug.debugFine("Block clicked is part of a summoning stone construct.");
 		return true;
 	}
 
