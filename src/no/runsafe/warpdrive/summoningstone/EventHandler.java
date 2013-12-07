@@ -1,6 +1,5 @@
 package no.runsafe.warpdrive.summoningstone;
 
-import no.runsafe.framework.api.IDebug;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.entity.IEntityPortalEnterEvent;
 import no.runsafe.framework.api.event.player.IPlayerJoinEvent;
