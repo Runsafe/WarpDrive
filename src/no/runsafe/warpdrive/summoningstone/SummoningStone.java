@@ -109,7 +109,8 @@ public class SummoningStone
 					location.getY() + bounds[1],
 					location.getZ() + bounds[2]
 			);
-			if (checkLocation.getBlock().is(Item.get(bounds[3])))
+
+			if (!checkLocation.getBlock().is(Item.get(bounds[3])))
 				return false;
 		}
 		return true;
