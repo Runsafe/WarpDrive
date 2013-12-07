@@ -2,10 +2,11 @@ package no.runsafe.warpdrive;
 
 import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
+import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeServer;
-import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 import no.runsafe.warpdrive.database.SmartWarpRepository;
@@ -26,7 +27,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 		this.setInterval(10);
 	}
 
-	public void Setup(RunsafeWorld world, String radius)
+	public void Setup(IWorld world, String radius)
 	{
 		int r = Integer.valueOf(radius);
 		warpRepository.setRange(world.getName(), r);
@@ -54,7 +55,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 		location = engine.findTop(location);
 		if (engine.targetFloorIsSafe(location, true))
 			chunkRepository.saveTarget(location, true, false);
-		if (location.getWorld().getRaw().getEnvironment() != World.Environment.NETHER)
+		if (((World) ObjectUnwrapper.convert(location.getWorld())).getEnvironment() != World.Environment.NETHER)
 		{
 			location.setY(50);
 			int air = 0;
@@ -113,7 +114,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 
 	private HashMap<String, Double> progress = new HashMap<String, Double>();
 	private HashMap<String, Integer> range = new HashMap<String, Integer>();
-	private HashMap<String, RunsafeWorld> worlds = new HashMap<String, RunsafeWorld>();
+	private HashMap<String, IWorld> worlds = new HashMap<String, IWorld>();
 	private IConsole console;
 	private SmartWarpRepository warpRepository;
 	private SmartWarpChunkRepository chunkRepository;

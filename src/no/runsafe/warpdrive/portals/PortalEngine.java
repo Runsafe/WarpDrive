@@ -2,6 +2,7 @@ package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IDebug;
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.player.IPlayerPortal;
@@ -9,7 +10,6 @@ import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.warpdrive.SmartWarpDrive;
 
@@ -70,7 +70,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		if (block != null && block.is(Item.Redstone.Button.Stone))
 		{
 			IPlayer player = event.getPlayer();
-			RunsafeWorld world = player.getWorld();
+			IWorld world = player.getWorld();
 
 			if (world != null && portals.containsKey(world.getName()))
 			{
@@ -127,7 +127,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	public boolean OnPlayerPortal(IPlayer player, RunsafeLocation from, RunsafeLocation to)
 	{
 		this.debugger.debugFine("Portal event detected: " + player.getName());
-		RunsafeWorld playerWorld = player.getWorld();
+		IWorld playerWorld = player.getWorld();
 		if (playerWorld == null)
 			return false;
 
@@ -155,7 +155,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		this.reloadPortals();
 	}
 
-	public PortalWarp getWarp(RunsafeWorld world, String portalName)
+	public PortalWarp getWarp(IWorld world, String portalName)
 	{
 		String worldName = world.getName();
 		if (portals.containsKey(worldName))

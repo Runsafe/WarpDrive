@@ -2,11 +2,11 @@ package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeServer;
-import no.runsafe.framework.minecraft.RunsafeWorld;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,9 +67,11 @@ public class SummoningEngine implements IConfigurationChanged
 
 	public int registerExpireTimer(final int stoneID)
 	{
-		return this.scheduler.startSyncTask(new Runnable() {
+		return this.scheduler.startSyncTask(new Runnable()
+		{
 			@Override
-			public void run() {
+			public void run()
+			{
 				summoningStoneExpire(stoneID);
 			}
 		}, this.stoneExpireTime);
@@ -102,12 +104,12 @@ public class SummoningEngine implements IConfigurationChanged
 		return this.stones;
 	}
 
-	public boolean isRitualWorld(RunsafeWorld world)
+	public boolean isRitualWorld(IWorld world)
 	{
 		return this.ritualWorlds.contains(world.getName());
 	}
 
-	public boolean canCreateStone(RunsafeWorld world)
+	public boolean canCreateStone(IWorld world)
 	{
 		return this.stoneWorlds.contains(world.getName());
 	}

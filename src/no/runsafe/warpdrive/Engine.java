@@ -1,10 +1,11 @@
 package no.runsafe.warpdrive;
 
 import com.google.common.collect.Lists;
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.RunsafeWorld;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 
@@ -80,14 +81,14 @@ public class Engine
 		}
 	}
 
-	private List<RunsafeLocation> findSafePoints(RunsafeWorld world, int x, int z)
+	private List<RunsafeLocation> findSafePoints(IWorld world, int x, int z)
 	{
 		ArrayList<RunsafeLocation> options = new ArrayList<RunsafeLocation>();
 		int safe = 0;
 		boolean safeFloor = false;
 		RunsafeLocation floor = null;
 		int maxy = world.getMaxHeight();
-		if (world.getRaw().getEnvironment() == World.Environment.NETHER)
+		if (((World) ObjectUnwrapper.convert(world)).getEnvironment() == World.Environment.NETHER)
 			maxy = 125;
 		for (int y = 0; y < maxy; ++y)
 		{
@@ -116,8 +117,8 @@ public class Engine
 
 	public RunsafeLocation findTop(RunsafeLocation location)
 	{
-		RunsafeWorld world = location.getWorld();
-		if (location.getWorld().getRaw().getEnvironment() == World.Environment.NETHER)
+		IWorld world = location.getWorld();
+		if (((World) ObjectUnwrapper.convert(location.getWorld())).getEnvironment() == World.Environment.NETHER)
 		{
 			int maxHeight = 125;
 			int minHeight = 4;
@@ -137,12 +138,12 @@ public class Engine
 			return location;
 		}
 		else
-			return new RunsafeLocation(world.getRaw().getHighestBlockAt(location.getRaw()).getLocation());
+			return new RunsafeLocation(((World) ObjectUnwrapper.convert(location.getWorld())).getHighestBlockAt(location.getRaw()).getLocation());
 	}
 
 	public boolean targetFloorIsSafe(RunsafeLocation location, boolean playerLocation)
 	{
-		Chunk chunk = location.getWorld().getRaw().getChunkAt(location.getRaw());
+		Chunk chunk = ((World) ObjectUnwrapper.convert(location.getWorld())).getChunkAt(location.getRaw());
 		if (!chunk.isLoaded())
 			chunk.load();
 		IBlock floor;

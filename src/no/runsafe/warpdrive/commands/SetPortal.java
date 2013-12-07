@@ -1,12 +1,12 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.warpdrive.portals.PortalEngine;
 import no.runsafe.warpdrive.portals.PortalType;
 import no.runsafe.warpdrive.portals.PortalWarp;
@@ -35,7 +35,7 @@ public class SetPortal extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer player, Map<String, String> parameters)
 	{
-		RunsafeWorld playerWorld = player.getWorld();
+		IWorld playerWorld = player.getWorld();
 		if (playerWorld == null)
 			return "Invalid world."; // Player's world is null, return with an error.
 

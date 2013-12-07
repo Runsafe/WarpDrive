@@ -1,8 +1,8 @@
 package no.runsafe.warpdrive.portals;
 
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.RunsafeWorld;
 
 public class PortalWarp
 {
@@ -45,12 +45,12 @@ public class PortalWarp
 		return this.type;
 	}
 
-	public RunsafeWorld getPortalWorld()
+	public IWorld getPortalWorld()
 	{
 		return this.location.getWorld();
 	}
 
-	public RunsafeWorld getWorld()
+	public IWorld getWorld()
 	{
 		return this.destinationWorld;
 	}
@@ -151,7 +151,7 @@ public class PortalWarp
 	private PortalType type;
 	private RunsafeLocation location;
 	private RunsafeLocation destination;
-	private RunsafeWorld destinationWorld;
+	private IWorld destinationWorld;
 	private int radius;
 	private boolean locked = false;
 }

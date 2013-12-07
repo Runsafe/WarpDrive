@@ -1,5 +1,6 @@
 package no.runsafe.warpdrive.summoningstone;
 
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.entity.IEntityPortalEnterEvent;
 import no.runsafe.framework.api.event.player.IPlayerJoinEvent;
@@ -62,10 +63,10 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 					if (item.is(Item.Special.Crafted.WrittenBook))
 					{
 						RunsafeBook book = (RunsafeBook) item;
-						RunsafeWorld world = location.getWorld();
+						IWorld world = location.getWorld();
 						this.engine.registerPendingSummon(book.getAuthor(), stoneID);
-						world.playEffect(location, Effect.GHAST_SHRIEK, 0);
-						world.createExplosion(location.getX() + 0.5, location.getY(), location.getZ() + 0.5, 0, false, false);
+						((RunsafeWorld)world).playEffect(location, Effect.GHAST_SHRIEK, 0);
+						((RunsafeWorld)world).createExplosion(location.getX() + 0.5, location.getY(), location.getZ() + 0.5, 0, false, false);
 					}
 				}
 

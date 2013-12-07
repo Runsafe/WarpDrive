@@ -1,10 +1,10 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeServer;
-import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 
@@ -19,7 +19,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 		setInterval(10);
 	}
 
-	public void Engage(IPlayer player, RunsafeWorld target, boolean cave, boolean lock)
+	public void Engage(IPlayer player, IWorld target, boolean cave, boolean lock)
 	{
 		if (lockedLocation != null)
 		{
