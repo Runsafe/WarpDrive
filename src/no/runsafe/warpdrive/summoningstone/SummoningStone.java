@@ -111,15 +111,9 @@ public class SummoningStone
 					location.getZ() + bounds[2]
 			);
 
-			int blockID = checkLocation.getBlock().getMaterial().getTypeID();
-			int test = Item.get(bounds[3]).getTypeID();
-
-			Plugin.debug.debugFine("Found %s. Expected %s", blockID, test);
-
-			if (checkLocation.getBlock().is(Item.get(bounds[3])))
+			if (!checkLocation.getBlock().is(Item.get(bounds[3])))
 				return false;
 		}
-		Plugin.debug.debugFine("Block clicked is part of a summoning stone construct.");
 		return true;
 	}
 
