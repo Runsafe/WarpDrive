@@ -2,8 +2,8 @@ package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
+import no.runsafe.framework.api.entity.IEntity;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 
 import java.util.Map;
 
@@ -22,8 +22,8 @@ public class TeleportToEntityID extends PlayerCommand
 	{
 		String entityId = parameters.get("entityid");
 		int id = Integer.parseInt(entityId);
-		RunsafeEntity entity = player.getWorld().getEntityById(id);
-		player.teleport(entity.getLocation());
+		IEntity entity = player.getWorld().getEntityById(id);
+		player.teleport(entity);
 		return null;
 	}
 }

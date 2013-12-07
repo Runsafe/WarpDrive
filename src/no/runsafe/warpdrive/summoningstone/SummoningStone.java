@@ -3,7 +3,7 @@ package no.runsafe.warpdrive.summoningstone;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import org.bukkit.Chunk;
+import no.runsafe.framework.minecraft.chunk.RunsafeChunk;
 
 public class SummoningStone
 {
@@ -49,10 +49,10 @@ public class SummoningStone
 		for (int[] bounds : data)
 		{
 			RunsafeLocation checkLocation = new RunsafeLocation(
-					this.location.getWorld(),
-					this.location.getX() + bounds[0],
-					this.location.getY() + bounds[1],
-					this.location.getZ() + bounds[2]
+				this.location.getWorld(),
+				this.location.getX() + bounds[0],
+				this.location.getY() + bounds[1],
+				this.location.getZ() + bounds[2]
 			);
 			checkLocation.getBlock().setMaterial(Item.get(bounds[3]));
 		}
@@ -64,14 +64,14 @@ public class SummoningStone
 		for (int[] bounds : SummoningStone.constructedPortal)
 		{
 			RunsafeLocation checkLocation = new RunsafeLocation(
-					this.location.getWorld(),
-					this.location.getX() + bounds[0],
-					this.location.getY() + bounds[1],
-					this.location.getZ() + bounds[2]
+				this.location.getWorld(),
+				this.location.getX() + bounds[0],
+				this.location.getY() + bounds[1],
+				this.location.getZ() + bounds[2]
 			);
 
-			Chunk chunk = this.location.getWorld().getRaw().getChunkAt(checkLocation.getRaw());
-			if (!chunk.isLoaded())
+			RunsafeChunk chunk = checkLocation.getChunk();
+			if (chunk.isUnloaded())
 				chunk.load();
 		}
 	}
@@ -104,10 +104,10 @@ public class SummoningStone
 		for (int[] bounds : SummoningStone.constructedPortal)
 		{
 			RunsafeLocation checkLocation = new RunsafeLocation(
-					location.getWorld(),
-					location.getX() + bounds[0],
-					location.getY() + bounds[1],
-					location.getZ() + bounds[2]
+				location.getWorld(),
+				location.getX() + bounds[0],
+				location.getY() + bounds[1],
+				location.getZ() + bounds[2]
 			);
 
 			if (!checkLocation.getBlock().is(Item.get(bounds[3])))
@@ -117,16 +117,16 @@ public class SummoningStone
 	}
 
 	public static int[][] constructedPortal = {
-			{0, 0, 0, 133},
-			{1, 0, 0, 57},
-			{0, 0, 1, 57},
-			{-1, 0, 0, 57},
-			{0, 0, -1, 57},
-			{-1, 0, -1, 42},
-			{-1, 0, 1, 42},
-			{1, 0, -1, 42},
-			{1, 0, 1, 42},
-			{0, 2, 0, 152}
+		{0, 0, 0, 133},
+		{1, 0, 0, 57},
+		{0, 0, 1, 57},
+		{-1, 0, 0, 57},
+		{0, 0, -1, 57},
+		{-1, 0, -1, 42},
+		{-1, 0, 1, 42},
+		{1, 0, -1, 42},
+		{1, 0, 1, 42},
+		{0, 2, 0, 152}
 	};
 
 	public static int[][] activatedPortal = {
@@ -144,44 +144,44 @@ public class SummoningStone
 	};
 
 	public static int[][] awaitingPortal = {
-			{0, 0, 0, 49},
-			{1, 0, 0, 7},
-			{0, 0, 1, 7},
-			{-1, 0, 0, 7},
-			{0, 0, -1, 7},
-			{-1, 0, -1, 7},
-			{-1, 0, 1, 7},
-			{1, 0, -1, 7},
-			{1, 0, 1, 7},
-			{0, 2, 0, 0},
-			{0, -1, 0, 0}
+		{0, 0, 0, 49},
+		{1, 0, 0, 7},
+		{0, 0, 1, 7},
+		{-1, 0, 0, 7},
+		{0, 0, -1, 7},
+		{-1, 0, -1, 7},
+		{-1, 0, 1, 7},
+		{1, 0, -1, 7},
+		{1, 0, 1, 7},
+		{0, 2, 0, 0},
+		{0, -1, 0, 0}
 	};
 
 	public static int[][] completePortal = {
-			{0, 0, 0, 49},
-			{1, 0, 0, 155},
-			{0, 0, 1, 155},
-			{-1, 0, 0, 155},
-			{0, 0, -1, 155},
-			{-1, 0, -1, 155},
-			{-1, 0, 1, 155},
-			{1, 0, -1, 155},
-			{1, 0, 1, 155},
-			{0, 2, 0, 0},
-			{0, -1, 0, 0}
+		{0, 0, 0, 49},
+		{1, 0, 0, 155},
+		{0, 0, 1, 155},
+		{-1, 0, 0, 155},
+		{0, 0, -1, 155},
+		{-1, 0, -1, 155},
+		{-1, 0, 1, 155},
+		{1, 0, -1, 155},
+		{1, 0, 1, 155},
+		{0, 2, 0, 0},
+		{0, -1, 0, 0}
 	};
 
 	public static int[][] removedPortal = {
-			{0, 0, 0, 0},
-			{1, 0, 0, 0},
-			{0, 0, 1, 0},
-			{-1, 0, 0, 0},
-			{0, 0, -1, 0},
-			{-1, 0, -1, 0},
-			{-1, 0, 1, 0},
-			{1, 0, -1, 0},
-			{1, 0, 1, 0},
-			{0, 2, 0, 0},
-			{0, -1, 0, 0}
+		{0, 0, 0, 0},
+		{1, 0, 0, 0},
+		{0, 0, 1, 0},
+		{-1, 0, 0, 0},
+		{0, 0, -1, 0},
+		{-1, 0, -1, 0},
+		{-1, 0, 1, 0},
+		{1, 0, -1, 0},
+		{1, 0, 1, 0},
+		{0, 2, 0, 0},
+		{0, -1, 0, 0}
 	};
 }
