@@ -1,5 +1,6 @@
 package no.runsafe.warpdrive.summoningstone;
 
+import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.bukkit.Chunk;
@@ -53,7 +54,7 @@ public class SummoningStone
 					this.location.getY() + bounds[1],
 					this.location.getZ() + bounds[2]
 			);
-			checkLocation.getBlock().setTypeId(bounds[3]);
+			checkLocation.getBlock().setMaterial(Item.get(bounds[3]));
 		}
 	}
 
@@ -108,7 +109,7 @@ public class SummoningStone
 					location.getY() + bounds[1],
 					location.getZ() + bounds[2]
 			);
-			if (checkLocation.getBlock().getTypeId() != bounds[3])
+			if (checkLocation.getBlock().is(Item.get(bounds[3])))
 				return false;
 		}
 		return true;

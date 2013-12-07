@@ -1,10 +1,8 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.api.IConsole;
-import no.runsafe.framework.api.IOutput;
-import no.runsafe.framework.api.database.IValue;
+import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.block.ISignChange;
-import no.runsafe.framework.minecraft.block.RunsafeBlock;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.commands.Warp;
 
@@ -16,7 +14,7 @@ public class WarpSignCreator implements ISignChange
 	}
 
 	@Override
-	public boolean OnSignChange(RunsafePlayer player, RunsafeBlock runsafeBlock, String[] strings)
+	public boolean OnSignChange(RunsafePlayer player, IBlock runsafeBlock, String[] strings)
 	{
 		String head = strings[0].toLowerCase();
 		if (head.contains(SnazzyWarp.signTag) || head.contains(SnazzyWarp.signHeader.toLowerCase()))

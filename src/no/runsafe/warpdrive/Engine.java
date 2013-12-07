@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive;
 
 import com.google.common.collect.Lists;
+import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeWorld;
-import no.runsafe.framework.minecraft.block.RunsafeBlock;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -91,7 +91,7 @@ public class Engine
 			maxy = 125;
 		for (int y = 0; y < maxy; ++y)
 		{
-			RunsafeBlock block = world.getBlockAt(x, y, z);
+			IBlock block = world.getBlockAt(x, y, z);
 			if (!block.canPassThrough())
 			{
 				safeFloor = !block.isHazardous();
@@ -145,7 +145,7 @@ public class Engine
 		Chunk chunk = location.getWorld().getRaw().getChunkAt(location.getRaw());
 		if (!chunk.isLoaded())
 			chunk.load();
-		RunsafeBlock floor;
+		IBlock floor;
 		if (location.getWorld().getBlockAt(location).isAir() || playerLocation)
 			floor = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
 		else
@@ -155,14 +155,14 @@ public class Engine
 
 		for (int y = playerLocation ? 0 : 1; y < (playerLocation ? 2 : 3); ++y)
 		{
-			RunsafeBlock block = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY() + y, location.getBlockZ());
+			IBlock block = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY() + y, location.getBlockZ());
 			if (!block.isAir())
 				return false;
 		}
 		for (int x = -1; x < 2; ++x)
 			for (int z = -1; z < 2; ++z)
 			{
-				RunsafeBlock adjacent = location.getWorld().getBlockAt(location.getBlockX() + x, location.getBlockY() + 1, location.getBlockZ() + z);
+				IBlock adjacent = location.getWorld().getBlockAt(location.getBlockX() + x, location.getBlockY() + 1, location.getBlockZ() + z);
 				if (adjacent.isHazardous())
 					return false;
 			}

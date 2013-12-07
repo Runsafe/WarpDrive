@@ -1,5 +1,6 @@
 package no.runsafe.warpdrive.summoningstone;
 
+import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.entity.IEntityPortalEnterEvent;
 import no.runsafe.framework.api.event.player.IPlayerJoinEvent;
 import no.runsafe.framework.api.event.player.IPlayerPortalEvent;
@@ -8,7 +9,6 @@ import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeWorld;
-import no.runsafe.framework.minecraft.block.RunsafeBlock;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.PassiveEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
@@ -75,12 +75,12 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 	}
 
 	@Override
-	public boolean OnPlayerRightClick(RunsafePlayer runsafePlayer, RunsafeMeta itemStack, RunsafeBlock runsafeBlock)
+	public boolean OnPlayerRightClick(RunsafePlayer runsafePlayer, RunsafeMeta itemStack, IBlock runsafeBlock)
 	{
 		if (itemStack == null)
 			return true;
 
-		if (itemStack.getType() == Material.FLINT_AND_STEEL && runsafeBlock.getTypeId() == Material.EMERALD_BLOCK.getId())
+		if (itemStack.getType() == Material.FLINT_AND_STEEL && runsafeBlock.is(Item.BuildingBlock.Emerald))
 		{
 			RunsafeLocation stoneLocation = runsafeBlock.getLocation();
 			if (this.engine.canCreateStone(stoneLocation.getWorld()) && SummoningStone.isSummoningStone(stoneLocation))
@@ -94,7 +94,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 				return false;
 			}
 		}
-		else if (itemStack.getType() == Material.EYE_OF_ENDER && runsafeBlock.getTypeId() == Material.ENDER_PORTAL_FRAME.getId())
+		else if (itemStack.getType() == Material.EYE_OF_ENDER && runsafeBlock.is(Item.Decoration.EnderPortalFrame))
 		{
 			if (this.engine.isRitualWorld(runsafePlayer.getWorld()))
 			{

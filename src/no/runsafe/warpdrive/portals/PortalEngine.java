@@ -2,13 +2,13 @@ package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IDebug;
+import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.player.IPlayerPortal;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeWorld;
-import no.runsafe.framework.minecraft.block.RunsafeBlock;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.SmartWarpDrive;
@@ -66,7 +66,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	@Override
 	public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
 	{
-		RunsafeBlock block = event.getBlock();
+		IBlock block = event.getBlock();
 		if (block != null && block.is(Item.Redstone.Button.Stone))
 		{
 			RunsafePlayer player = event.getPlayer();
