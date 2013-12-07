@@ -1,8 +1,8 @@
 package no.runsafe.warpdrive.portals;
 
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeWorld;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 public class PortalWarp
 {
@@ -35,7 +35,7 @@ public class PortalWarp
 		this.perm = perm;
 	}
 
-	public boolean canTeleport(RunsafePlayer player)
+	public boolean canTeleport(IPlayer player)
 	{
 		return (this.perm == null || player.hasPermission(this.perm));
 	}
@@ -65,7 +65,7 @@ public class PortalWarp
 		return location;
 	}
 
-	public boolean isInPortal(RunsafePlayer player)
+	public boolean isInPortal(IPlayer player)
 	{
 		return player.getLocation().distance(this.location) < 2;
 	}

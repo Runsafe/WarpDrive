@@ -6,12 +6,12 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.event.IAsyncEvent;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.framework.minecraft.block.RunsafeSign;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.text.ChatColour;
 import no.runsafe.framework.timer.ForegroundWorker;
 import org.joda.time.DateTime;
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
-		IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged
+	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged
 {
 	public SnazzyWarp(IScheduler scheduler, Engine engine, IDebug output)
 	{
@@ -32,7 +32,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	}
 
 	@Override
-	public boolean OnPlayerRightClickSign(RunsafePlayer thePlayer, RunsafeMeta runsafeItemStack, RunsafeSign theSign)
+	public boolean OnPlayerRightClickSign(IPlayer thePlayer, RunsafeMeta runsafeItemStack, RunsafeSign theSign)
 	{
 		if (theSign.getLine(0).equalsIgnoreCase(signHeader))
 		{
@@ -52,7 +52,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		if (parameters == null)
 			return;
 		debugger.outputDebugToConsole(String.format("Player %s teleporting", player), Level.FINE);
-		RunsafePlayer target = RunsafeServer.Instance.getPlayer(player);
+		IPlayer target = RunsafeServer.Instance.getPlayer(player);
 		RunsafeLocation destination = parameters.getTarget();
 		if (target.isOnline() && destination != null)
 			target.teleport(destination);
@@ -75,16 +75,16 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 			maxDistance = Integer.parseInt(sign.getLine(2));
 			minDistance = Integer.parseInt(sign.getLine(3));
 			world = RunsafeServer.Instance.getWorld(sign.getLine(1));
-			debugger.outputDebugToConsole(
-				String.format(
+			if (world == null)
+				debugger.debugFine("New warp sign created outside a world!");
+			else
+				debugger.debugFine(
 					"Configured new warp sign %s in world %s [%d-%d].",
 					sign.getLine(1),
 					world.getName(),
 					minDistance,
 					maxDistance
-				),
-				Level.FINE
-			);
+				);
 		}
 
 		public RunsafeLocation getTarget()

@@ -6,11 +6,11 @@ import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.player.IPlayerPortal;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.SmartWarpDrive;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		this.debugger.logInformation("%d portals loaded in %d worlds.", portalCount, portals.size());
 	}
 
-	public void teleportPlayer(PortalWarp portal, RunsafePlayer player)
+	public void teleportPlayer(PortalWarp portal, IPlayer player)
 	{
 		this.debugger.debugFine("Teleporting player in portal: " + player.getName());
 		this.debugger.debugFine("Portal lock state: " + (portal.isLocked() ? "locked" : "unlocked"));
@@ -69,7 +69,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		IBlock block = event.getBlock();
 		if (block != null && block.is(Item.Redstone.Button.Stone))
 		{
-			RunsafePlayer player = event.getPlayer();
+			IPlayer player = event.getPlayer();
 			RunsafeWorld world = player.getWorld();
 
 			if (world != null && portals.containsKey(world.getName()))
@@ -82,7 +82,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		}
 	}
 
-	private void randomRadiusTeleport(RunsafePlayer player, RunsafeLocation theLocation, int radius)
+	private void randomRadiusTeleport(IPlayer player, RunsafeLocation theLocation, int radius)
 	{
 		RunsafeLocation location = new RunsafeLocation(
 			theLocation.getWorld(),
@@ -124,7 +124,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	}
 
 	@Override
-	public boolean OnPlayerPortal(RunsafePlayer player, RunsafeLocation from, RunsafeLocation to)
+	public boolean OnPlayerPortal(IPlayer player, RunsafeLocation from, RunsafeLocation to)
 	{
 		this.debugger.debugFine("Portal event detected: " + player.getName());
 		RunsafeWorld playerWorld = player.getWorld();

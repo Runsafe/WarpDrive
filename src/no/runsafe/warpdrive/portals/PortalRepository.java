@@ -2,10 +2,7 @@ package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.IRow;
-import no.runsafe.framework.api.database.ISet;
 import no.runsafe.framework.api.database.Repository;
-import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.RunsafeServer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,12 +30,12 @@ public class PortalRepository extends Repository
 			try
 			{
 				warps.add(new PortalWarp(
-						portalID,
-						row.Location(),
-						row.Location("destWorld", "destX", "destY", "destZ", "destYaw", "destPitch"),
-						PortalType.getPortalType(row.Integer("type")),
-						(row.Integer("radius") == null ? 0 : row.Integer("radius")),
-						row.String("permission")
+					portalID,
+					row.Location(),
+					row.Location("destWorld", "destX", "destY", "destZ", "destYaw", "destPitch"),
+					PortalType.getPortalType(row.Integer("type")),
+					(row.Integer("radius") == null ? 0 : row.Integer("radius")),
+					row.String("permission")
 				));
 			}
 			catch (NullPointerException e)
@@ -57,24 +54,24 @@ public class PortalRepository extends Repository
 	public void storeWarp(PortalWarp warp)
 	{
 		database.Execute(
-				"INSERT INTO warpdrive_portals (ID, world, x, y, z, destWorld, destX, destY, destZ, destYaw, destPitch, radius, permission) " +
+			"INSERT INTO warpdrive_portals (ID, world, x, y, z, destWorld, destX, destY, destZ, destYaw, destPitch, radius, permission) " +
 				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-				warp.getID(), warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getDestinationWorldName(),
-				warp.getDestinationX(), warp.getDestinationY(), warp.getDestinationZ(), warp.getDestinationYaw(),
-				warp.getDestinationPitch(), null, ""
+			warp.getID(), warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getDestinationWorldName(),
+			warp.getDestinationX(), warp.getDestinationY(), warp.getDestinationZ(), warp.getDestinationYaw(),
+			warp.getDestinationPitch(), null, ""
 		);
 	}
 
 	public void updatePortalWarp(PortalWarp warp)
 	{
 		database.Execute(
-				"UPDATE warpdrive_portals " +
+			"UPDATE warpdrive_portals " +
 				"SET destWorld = ?, destX = ?, destY = ?, destZ = ?, destYaw = ?, destPitch = ?," +
 				"world = ?, x = ?, y = ?, z = ?, type = ?",
-				warp.getDestinationWorldName(),	warp.getDestinationX(),	warp.getDestinationY(),
-				warp.getDestinationZ(),	warp.getDestinationYaw(), warp.getDestinationPitch(),
-				warp.getWorldName(),  warp.getX(), warp.getY(), warp.getZ(), warp.getType().ordinal()
-			);
+			warp.getDestinationWorldName(), warp.getDestinationX(), warp.getDestinationY(),
+			warp.getDestinationZ(), warp.getDestinationYaw(), warp.getDestinationPitch(),
+			warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getType().ordinal()
+		);
 	}
 
 	@Override
@@ -104,7 +101,7 @@ public class PortalRepository extends Repository
 
 		sql.clear();
 		sql.add("ALTER TABLE `warpdrive_portals`" +
-				"ADD COLUMN `radius` INT UNSIGNED NULL DEFAULT NULL AFTER `destPitch`;");
+			"ADD COLUMN `radius` INT UNSIGNED NULL DEFAULT NULL AFTER `destPitch`;");
 		queries.put(2, sql);
 
 		return queries;

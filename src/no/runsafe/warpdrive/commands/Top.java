@@ -1,8 +1,8 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.command.player.PlayerCommand;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.warpdrive.Engine;
 
 import java.util.Map;
@@ -16,7 +16,7 @@ public class Top extends PlayerCommand
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer player, Map<String, String> parameters)
+	public String OnExecute(IPlayer player, Map<String, String> parameters)
 	{
 		RunsafeLocation top = engine.findTop(player.getLocation());
 		top.setY(top.getY() + 1);

@@ -6,6 +6,7 @@ import no.runsafe.framework.api.event.player.IPlayerJoinEvent;
 import no.runsafe.framework.api.event.player.IPlayerPortalEvent;
 import no.runsafe.framework.api.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeWorld;
@@ -19,7 +20,6 @@ import no.runsafe.framework.minecraft.event.player.RunsafePlayerPortalEvent;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
 import no.runsafe.framework.minecraft.item.meta.RunsafeBook;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 
@@ -75,7 +75,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 	}
 
 	@Override
-	public boolean OnPlayerRightClick(RunsafePlayer runsafePlayer, RunsafeMeta itemStack, IBlock runsafeBlock)
+	public boolean OnPlayerRightClick(IPlayer runsafePlayer, RunsafeMeta itemStack, IBlock runsafeBlock)
 	{
 		if (itemStack == null)
 			return true;
@@ -117,7 +117,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 	@Override
 	public void OnPlayerJoinEvent(RunsafePlayerJoinEvent event)
 	{
-		RunsafePlayer player = event.getPlayer();
+		IPlayer player = event.getPlayer();
 		if (this.engine.playerHasPendingSummon(player))
 			player.sendColouredMessage("&3You have a pending summon, head to the ritual stone to accept.");
 	}

@@ -5,9 +5,9 @@ import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.IContextPermissionProvider;
 import no.runsafe.framework.api.command.argument.PlayerArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
+import no.runsafe.framework.api.player.IAmbiguousPlayer;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeServer;
-import no.runsafe.framework.minecraft.player.RunsafeAmbiguousPlayer;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.timer.TimedCache;
 import no.runsafe.warpdrive.Engine;
 
@@ -28,10 +28,10 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	@Override
 	public String getPermission(ICommandExecutor executor, Map<String, String> parameters, String[] args)
 	{
-		if (executor instanceof RunsafePlayer)
+		if (executor instanceof IPlayer)
 		{
-			RunsafePlayer teleporter = (RunsafePlayer) executor;
-			RunsafePlayer target;
+			IPlayer teleporter = (IPlayer) executor;
+			IPlayer target;
 			if (!parameters.containsKey("player2"))
 				target = RunsafeServer.Instance.getOnlinePlayer(teleporter, parameters.get("player1"));
 			else
@@ -45,12 +45,12 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	}
 
 	@Override
-	public String OnExecute(RunsafePlayer player, Map<String, String> parameters)
+	public String OnExecute(IPlayer player, Map<String, String> parameters)
 	{
 		String movePlayer;
-		RunsafePlayer move;
+		IPlayer move;
 		String toPlayer;
-		RunsafePlayer to;
+		IPlayer to;
 		if (parameters.containsKey("player2"))
 		{
 			movePlayer = parameters.get("player1");
@@ -66,10 +66,10 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 			to = RunsafeServer.Instance.getOnlinePlayer(player, toPlayer);
 		}
 
-		if (move instanceof RunsafeAmbiguousPlayer)
+		if (move instanceof IAmbiguousPlayer)
 			return move.toString();
 
-		if (to instanceof RunsafeAmbiguousPlayer)
+		if (to instanceof IAmbiguousPlayer)
 			return to.toString();
 
 		if (move == null || !move.isOnline() || player.shouldNotSee(move))
@@ -81,7 +81,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		String warning = warned.Cache(player.getName());
 		boolean force = warning != null && warning.equals(toPlayer);
 
-		if (to.getWorld().getName().equals(move.getWorld().getName()))
+		if (to.getWorldName().equals(move.getWorldName()))
 		{
 			if (to.isCreative() && move.isCreative())
 			{

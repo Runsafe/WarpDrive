@@ -1,10 +1,10 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.RunsafeWorld;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 
@@ -19,7 +19,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 		setInterval(10);
 	}
 
-	public void Engage(RunsafePlayer player, RunsafeWorld target, boolean cave, boolean lock)
+	public void Engage(IPlayer player, RunsafeWorld target, boolean cave, boolean lock)
 	{
 		if (lockedLocation != null)
 		{
@@ -45,7 +45,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 	@Override
 	public void process(String playerName, RunsafeLocation target)
 	{
-		RunsafePlayer player = RunsafeServer.Instance.getPlayerExact(playerName);
+		IPlayer player = RunsafeServer.Instance.getPlayerExact(playerName);
 		if (player == null)
 			return;
 		target.incrementX(0.5);
@@ -56,9 +56,11 @@ public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 		{
 			shouldLock = false;
 			lockedLocation = target;
-			scheduler.startSyncTask(new Runnable() {
+			scheduler.startSyncTask(new Runnable()
+			{
 				@Override
-				public void run() {
+				public void run()
+				{
 					unlock();
 				}
 			}, 20);

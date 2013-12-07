@@ -1,8 +1,8 @@
 package no.runsafe.warpdrive.summoningstone;
 
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.bukkit.Chunk;
 
 public class SummoningStone
@@ -37,7 +37,7 @@ public class SummoningStone
 		this.transformPortal(SummoningStone.constructedPortal);
 	}
 
-	public void teleportPlayer(RunsafePlayer player)
+	public void teleportPlayer(IPlayer player)
 	{
 		player.teleport(this.location.getWorld(), this.location.getX() + 0.5, this.location.getY() + 1, this.location.getZ() + 0.5);
 	}

@@ -2,12 +2,11 @@ package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IConsole;
-import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.database.WarpRepository;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	}
 
 	@Override
-	public String OnAsyncExecute(RunsafePlayer player, Map<String, String> parameters)
+	public String OnAsyncExecute(IPlayer player, Map<String, String> parameters)
 	{
 		List<String> homes = warpRepository.GetPrivateList(player.getName());
 		String name = parameters.get("name").toLowerCase();

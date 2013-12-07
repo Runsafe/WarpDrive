@@ -5,10 +5,10 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.block.RunsafeSign;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.text.ChatColour;
 import no.runsafe.warpdrive.Engine;
 import no.runsafe.warpdrive.PlayerTeleportCommand;
@@ -31,7 +31,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	}
 
 	@Override
-	public PlayerTeleport OnAsyncExecute(RunsafePlayer player, Map<String, String> parameters)
+	public PlayerTeleport OnAsyncExecute(IPlayer player, Map<String, String> parameters)
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.force = true;
@@ -55,7 +55,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	}
 
 	@Override
-	public boolean OnPlayerRightClickSign(RunsafePlayer player, RunsafeMeta itemStack, RunsafeSign sign)
+	public boolean OnPlayerRightClickSign(IPlayer player, RunsafeMeta itemStack, RunsafeSign sign)
 	{
 		if (!sign.getLine(0).contains(signHeader))
 			return true;

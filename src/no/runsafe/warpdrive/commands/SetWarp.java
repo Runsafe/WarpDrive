@@ -3,7 +3,7 @@ package no.runsafe.warpdrive.commands;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.database.WarpRepository;
 
 import java.util.Map;
@@ -20,7 +20,7 @@ public class SetWarp extends PlayerAsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(RunsafePlayer player, Map<String, String> parameters)
+	public String OnAsyncExecute(IPlayer player, Map<String, String> parameters)
 	{
 		String name = parameters.get("name").toLowerCase();
 		warpRepository.Persist(player.getName(), name, true, player.getLocation());

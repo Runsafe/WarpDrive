@@ -3,7 +3,7 @@ package no.runsafe.warpdrive.commands;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.ITabComplete;
 import no.runsafe.framework.api.command.argument.OptionalArgument;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.Engine;
 import no.runsafe.warpdrive.PlayerTeleportCommand;
 import no.runsafe.warpdrive.database.WarpRepository;
@@ -29,7 +29,7 @@ public class Home extends PlayerTeleportCommand
 		}
 
 		@Override
-		public List<String> getAlternatives(RunsafePlayer player, String arg)
+		public List<String> getAlternatives(IPlayer player, String arg)
 		{
 			return warpRepository.GetPrivateList(player.getName());
 		}
@@ -38,7 +38,7 @@ public class Home extends PlayerTeleportCommand
 	}
 
 	@Override
-	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(RunsafePlayer player, Map<String, String> params)
+	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(IPlayer player, Map<String, String> params)
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.player = player;

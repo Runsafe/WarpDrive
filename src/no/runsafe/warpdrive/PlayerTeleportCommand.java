@@ -3,8 +3,8 @@ package no.runsafe.warpdrive;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.IArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCallbackCommand;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<PlayerTeleportCommand.PlayerTeleport>
 {
@@ -34,7 +34,7 @@ public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<P
 	{
 		public String message = null;
 		public RunsafeLocation location = null;
-		public RunsafePlayer player = null;
+		public IPlayer player = null;
 		public boolean force = false;
 	}
 }

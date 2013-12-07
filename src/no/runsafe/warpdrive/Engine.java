@@ -2,9 +2,9 @@ package no.runsafe.warpdrive;
 
 import com.google.common.collect.Lists;
 import no.runsafe.framework.api.block.IBlock;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeWorld;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Engine
 {
-	public boolean safePlayerTeleport(RunsafeLocation originalLocation, RunsafePlayer player)
+	public boolean safePlayerTeleport(RunsafeLocation originalLocation, IPlayer player)
 	{
 		RunsafeLocation target = findSafeSpot(originalLocation);
 		if (target != null)

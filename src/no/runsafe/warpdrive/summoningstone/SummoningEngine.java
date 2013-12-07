@@ -3,10 +3,10 @@ package no.runsafe.warpdrive.summoningstone;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.RunsafeWorld;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,17 +27,17 @@ public class SummoningEngine implements IConfigurationChanged
 		stone.setAwaitingPlayer();
 		this.pendingSummons.put(playerName, stoneID);
 
-		RunsafePlayer player = RunsafeServer.Instance.getPlayerExact(playerName);
+		IPlayer player = RunsafeServer.Instance.getPlayerExact(playerName);
 		if (player != null && player.isOnline())
 			player.sendColouredMessage("&3You have a pending summon, head to the ritual stone to accept.");
 	}
 
-	public boolean playerHasPendingSummon(RunsafePlayer player)
+	public boolean playerHasPendingSummon(IPlayer player)
 	{
 		return this.pendingSummons.containsKey(player.getName());
 	}
 
-	public void acceptPlayerSummon(RunsafePlayer player)
+	public void acceptPlayerSummon(IPlayer player)
 	{
 		String playerName = player.getName();
 		int stoneID = this.pendingSummons.get(playerName);
