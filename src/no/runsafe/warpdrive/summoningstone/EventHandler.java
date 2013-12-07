@@ -21,16 +21,16 @@ import no.runsafe.framework.minecraft.item.RunsafeItemStack;
 import no.runsafe.framework.minecraft.item.meta.RunsafeBook;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.warpdrive.Plugin;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 
 public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent, IPlayerRightClickBlock, IPlayerJoinEvent
 {
-	public EventHandler(SummoningEngine engine, SummoningStoneRepository repository, IDebug debug)
+	public EventHandler(SummoningEngine engine, SummoningStoneRepository repository)
 	{
 		this.engine = engine;
 		this.repository = repository;
-		this.debug = debug;
 	}
 
 	@Override
@@ -82,15 +82,15 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 		if (itemStack == null)
 			return true;
 
-		debug.logInformation("Detected right click event from player: " + runsafePlayer.getName());
+		Plugin.debug.debugFine("Detected right click event from player: " + runsafePlayer.getName());
 
 		if (itemStack.getType() == Material.FLINT_AND_STEEL && runsafeBlock.is(Item.BuildingBlock.Emerald))
 		{
-			debug.logInformation("Detected FLINT_AND_STEEL click on EMERALD_BLOCK");
+			Plugin.debug.debugFine("Detected FLINT_AND_STEEL click on EMERALD_BLOCK");
 			RunsafeLocation stoneLocation = runsafeBlock.getLocation();
 			if (this.engine.canCreateStone(stoneLocation.getWorld()) && SummoningStone.isSummoningStone(stoneLocation))
 			{
-				debug.logInformation("Location is safe to create a summoning stone.");
+				Plugin.debug.debugFine("Location is safe to create a summoning stone.");
 				int stoneID = this.repository.addSummoningStone(stoneLocation);
 				SummoningStone summoningStone = new SummoningStone(stoneLocation);
 				summoningStone.activate();
@@ -130,5 +130,4 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 
 	private SummoningEngine engine;
 	private SummoningStoneRepository repository;
-	private final IDebug debug;
 }

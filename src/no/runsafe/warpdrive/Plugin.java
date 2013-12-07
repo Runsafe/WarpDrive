@@ -1,6 +1,7 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.RunsafeConfigurablePlugin;
+import no.runsafe.framework.api.IDebug;
 import no.runsafe.warpdrive.commands.*;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 import no.runsafe.warpdrive.database.SmartWarpRepository;
@@ -17,6 +18,8 @@ public class Plugin extends RunsafeConfigurablePlugin
 	@Override
 	protected void PluginSetup()
 	{
+		debug = getComponent(IDebug.class); // Set a debugger.
+
 		addComponent(Engine.class);
 
 		// Database
@@ -56,4 +59,6 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(SummoningStoneCleaner.class);
 		addComponent(EventHandler.class);
 	}
+
+	public static IDebug debug;
 }
