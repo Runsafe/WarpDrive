@@ -7,7 +7,6 @@ import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 import no.runsafe.warpdrive.database.SmartWarpRepository;
-import org.bukkit.World;
 
 import java.util.HashMap;
 
@@ -53,7 +52,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 		location = engine.findTop(location);
 		if (engine.targetFloorIsSafe(location, true))
 			chunkRepository.saveTarget(location, true, false);
-		if (((World) ObjectUnwrapper.convert(location.getWorld())).getEnvironment() != World.Environment.NETHER)
+		if (location.getWorld().isNether())
 		{
 			location.setY(50);
 			int air = 0;

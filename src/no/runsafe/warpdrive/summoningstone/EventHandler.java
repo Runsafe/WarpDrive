@@ -23,7 +23,6 @@ import no.runsafe.framework.minecraft.item.meta.RunsafeBook;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import no.runsafe.warpdrive.Plugin;
 import org.bukkit.Effect;
-import org.bukkit.Material;
 
 public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent, IPlayerRightClickBlock, IPlayerJoinEvent
 {
@@ -84,7 +83,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 
 		Plugin.debug.debugFine("Detected right click event from player: " + runsafePlayer.getName());
 
-		if (itemStack.getType() == Material.FLINT_AND_STEEL && runsafeBlock.is(Item.BuildingBlock.Emerald))
+		if (itemStack.is(Item.Tool.FlintAndSteel) && runsafeBlock.is(Item.BuildingBlock.Emerald))
 		{
 			Plugin.debug.debugFine("Detected FLINT_AND_STEEL click on EMERALD_BLOCK");
 			ILocation stoneLocation = runsafeBlock.getLocation();
@@ -100,7 +99,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 				return false;
 			}
 		}
-		else if (itemStack.getType() == Material.EYE_OF_ENDER && runsafeBlock.is(Item.Decoration.EnderPortalFrame))
+		else if (itemStack.is(Item.Miscellaneous.EyeOfEnder) && runsafeBlock.is(Item.Decoration.EnderPortalFrame))
 		{
 			if (this.engine.isRitualWorld(runsafePlayer.getWorld()))
 			{

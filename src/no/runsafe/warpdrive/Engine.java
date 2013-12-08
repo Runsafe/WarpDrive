@@ -7,7 +7,6 @@ import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.chunk.RunsafeChunk;
-import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +87,7 @@ public class Engine
 		boolean safeFloor = false;
 		ILocation floor = null;
 		int maxy = world.getMaxHeight();
-		if (((World) ObjectUnwrapper.convert(world)).getEnvironment() == World.Environment.NETHER)
+		if (world.isNether())
 			maxy = 125;
 		for (int y = 0; y < maxy; ++y)
 		{
@@ -118,7 +117,7 @@ public class Engine
 	public ILocation findTop(ILocation location)
 	{
 		IWorld world = location.getWorld();
-		if (((World) ObjectUnwrapper.convert(location.getWorld())).getEnvironment() == World.Environment.NETHER)
+		if (location.getWorld().isNether())
 		{
 			int maxHeight = 125;
 			int minHeight = 4;
