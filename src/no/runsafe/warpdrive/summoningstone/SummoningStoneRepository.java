@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive.summoningstone;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.IRow;
 import no.runsafe.framework.api.database.Repository;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,9 +21,9 @@ public class SummoningStoneRepository extends Repository
 		return "summoningStones";
 	}
 
-	public List<RunsafeLocation> getStoneList()
+	public List<ILocation> getStoneList()
 	{
-		List<RunsafeLocation> stones = new ArrayList<RunsafeLocation>();
+		List<ILocation> stones = new ArrayList<ILocation>();
 		for (IRow node : database.Query("SELECT world, x, y, z FROM summoningStones"))
 			stones.add(node.Location());
 		return stones;
@@ -39,7 +39,7 @@ public class SummoningStoneRepository extends Repository
 		this.database.Execute("DELETE FROM summoningStones WHERE ID = ?", ID);
 	}
 
-	public int addSummoningStone(RunsafeLocation location)
+	public int addSummoningStone(ILocation location)
 	{
 		this.database.Execute(
 			"INSERT INTO summoningStones (world, x, y, z) VALUES(?, ?, ?, ?)",

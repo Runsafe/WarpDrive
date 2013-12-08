@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive.commands;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.warpdrive.Engine;
 
 import java.util.Map;
@@ -35,7 +35,7 @@ public class TeleportPos extends PlayerCommand
 		Double z = Double.valueOf(parameters.get("z"));
 		if (x.isNaN() || z.isNaN())
 			return "Invalid coordinate";
-		RunsafeLocation target = player.getLocation();
+		ILocation target = player.getLocation();
 		target.setX(x);
 		target.setZ(z);
 		if (y.isNaN())

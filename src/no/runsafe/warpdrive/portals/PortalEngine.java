@@ -2,6 +2,7 @@ package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IDebug;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
@@ -82,9 +83,9 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		}
 	}
 
-	private void randomRadiusTeleport(IPlayer player, RunsafeLocation theLocation, int radius)
+	private void randomRadiusTeleport(IPlayer player, ILocation theLocation, int radius)
 	{
-		RunsafeLocation location = new RunsafeLocation(
+		ILocation location = new RunsafeLocation(
 			theLocation.getWorld(),
 			theLocation.getX(),
 			theLocation.getY(),
@@ -112,7 +113,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		return low + (int) (Math.random() * ((high - low) + 1));
 	}
 
-	private boolean safeToTeleport(RunsafeLocation location)
+	private boolean safeToTeleport(ILocation location)
 	{
 		if (location.getBlock().is(Item.Unavailable.Air))
 		{
@@ -124,7 +125,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	}
 
 	@Override
-	public boolean OnPlayerPortal(IPlayer player, RunsafeLocation from, RunsafeLocation to)
+	public boolean OnPlayerPortal(IPlayer player, ILocation from, ILocation to)
 	{
 		this.debugger.debugFine("Portal event detected: " + player.getName());
 		IWorld playerWorld = player.getWorld();
@@ -168,7 +169,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		return null;
 	}
 
-	public void createWarp(String portalName, RunsafeLocation location, RunsafeLocation destination, PortalType type) throws NullPointerException
+	public void createWarp(String portalName, ILocation location, ILocation destination, PortalType type) throws NullPointerException
 	{
 		String worldName = location.getWorld().getName();
 		if (!portals.containsKey(worldName)) // Check if we're missing a container for this world.

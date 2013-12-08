@@ -1,5 +1,6 @@
 package no.runsafe.warpdrive.commands;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.command.argument.OptionalArgument;
@@ -42,7 +43,7 @@ public class SetPortal extends PlayerAsyncCommand
 		String portalName = parameters.get("portalID"); // The ID of the portal.
 		PortalWarp warp = engine.getWarp(playerWorld, portalName); // Grab the portal warp.
 		boolean setDestination = parameters.containsKey("destination"); // Should we be setting it as a destination.
-		RunsafeLocation playerLocation = player.getLocation(); // Location of the player.
+		ILocation playerLocation = player.getLocation(); // Location of the player.
 
 		if (playerLocation == null)
 			return "Invalid location.";
@@ -60,7 +61,7 @@ public class SetPortal extends PlayerAsyncCommand
 		}
 		else
 		{
-			RunsafeLocation worldStart = new RunsafeLocation(playerWorld, 0, 0, 0); // Placeholder location.
+			ILocation worldStart = new RunsafeLocation(playerWorld, 0, 0, 0); // Placeholder location.
 
 			// Create the new warp in the engine.
 			try

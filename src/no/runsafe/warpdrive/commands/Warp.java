@@ -1,12 +1,12 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IConsole;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.block.RunsafeSign;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import no.runsafe.framework.text.ChatColour;
@@ -61,7 +61,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 			return true;
 
 		String name = sign.getLine(1).toLowerCase();
-		RunsafeLocation destination = warpRepository.GetPublic(name);
+		ILocation destination = warpRepository.GetPublic(name);
 		if (destination == null)
 		{
 			console.logWarning("%s used a invalid warp sign %s.", player.getName(), name);

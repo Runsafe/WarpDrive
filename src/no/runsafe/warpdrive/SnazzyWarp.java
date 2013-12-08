@@ -1,9 +1,6 @@
 package no.runsafe.warpdrive;
 
-import no.runsafe.framework.api.IConfiguration;
-import no.runsafe.framework.api.IDebug;
-import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.IAsyncEvent;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
@@ -53,7 +50,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 			return;
 		debugger.outputDebugToConsole(String.format("Player %s teleporting", player), Level.FINE);
 		IPlayer target = RunsafeServer.Instance.getPlayer(player);
-		RunsafeLocation destination = parameters.getTarget();
+		ILocation destination = parameters.getTarget();
 		if (target.isOnline() && destination != null)
 			target.teleport(destination);
 		else
@@ -87,7 +84,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 				);
 		}
 
-		public RunsafeLocation getTarget()
+		public ILocation getTarget()
 		{
 			if (target == null || expires.isBefore(DateTime.now()) || !engine.targetFloorIsSafe(target, true))
 			{
@@ -97,7 +94,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 			return target;
 		}
 
-		private RunsafeLocation getNewTarget()
+		private ILocation getNewTarget()
 		{
 			boolean negX = rng.nextInt(100) > 50;
 			boolean negZ = rng.nextInt(100) > 50;
@@ -110,7 +107,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 				else
 					randomZ += (negZ ? -1 : 1) * minDistance;
 			}
-			RunsafeLocation target = null;
+			ILocation target = null;
 			int retries = 10;
 			while (target == null && retries-- > 0)
 				target = engine.findRandomSafeSpot(
@@ -130,7 +127,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		private final int minDistance;
 		private final Random rng = new Random();
 		private DateTime expires = DateTime.now();
-		private RunsafeLocation target;
+		private ILocation target;
 
 		public boolean refresh(RunsafeSign sign)
 		{

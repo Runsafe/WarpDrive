@@ -1,5 +1,6 @@
 package no.runsafe.warpdrive.summoningstone;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
@@ -7,7 +8,7 @@ import no.runsafe.framework.minecraft.chunk.RunsafeChunk;
 
 public class SummoningStone
 {
-	public SummoningStone(RunsafeLocation location)
+	public SummoningStone(ILocation location)
 	{
 		this.location = location;
 	}
@@ -48,7 +49,7 @@ public class SummoningStone
 
 		for (int[] bounds : data)
 		{
-			RunsafeLocation checkLocation = new RunsafeLocation(
+			ILocation checkLocation = new RunsafeLocation(
 				this.location.getWorld(),
 				this.location.getX() + bounds[0],
 				this.location.getY() + bounds[1],
@@ -63,7 +64,7 @@ public class SummoningStone
 	{
 		for (int[] bounds : SummoningStone.constructedPortal)
 		{
-			RunsafeLocation checkLocation = new RunsafeLocation(
+			ILocation checkLocation = new RunsafeLocation(
 				this.location.getWorld(),
 				this.location.getX() + bounds[0],
 				this.location.getY() + bounds[1],
@@ -76,7 +77,7 @@ public class SummoningStone
 		}
 	}
 
-	public RunsafeLocation getLocation()
+	public ILocation getLocation()
 	{
 		return this.location;
 	}
@@ -96,14 +97,14 @@ public class SummoningStone
 		return this.timerID;
 	}
 
-	private RunsafeLocation location;
+	private ILocation location;
 	private int timerID = -1;
 
-	public static boolean isSummoningStone(RunsafeLocation location)
+	public static boolean isSummoningStone(ILocation location)
 	{
 		for (int[] bounds : SummoningStone.constructedPortal)
 		{
-			RunsafeLocation checkLocation = new RunsafeLocation(
+			ILocation checkLocation = new RunsafeLocation(
 				location.getWorld(),
 				location.getX() + bounds[0],
 				location.getY() + bounds[1],

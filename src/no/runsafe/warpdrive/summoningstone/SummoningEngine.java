@@ -1,11 +1,11 @@
 package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeServer;
 
 import java.util.ArrayList;
@@ -54,11 +54,11 @@ public class SummoningEngine implements IConfigurationChanged
 		this.pendingSummons.remove(playerName);
 	}
 
-	public int getStoneAtLocation(RunsafeLocation location)
+	public int getStoneAtLocation(ILocation location)
 	{
 		for (Map.Entry<Integer, SummoningStone> stone : this.stones.entrySet())
 		{
-			RunsafeLocation stoneLocation = stone.getValue().getLocation();
+			ILocation stoneLocation = stone.getValue().getLocation();
 			if (stoneLocation.getWorld().equals(location.getWorld()) && stoneLocation.distance(location) < 2)
 				return stone.getKey();
 		}

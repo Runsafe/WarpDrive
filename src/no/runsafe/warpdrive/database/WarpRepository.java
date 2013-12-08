@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive.database;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.Repository;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.timer.TimedCache;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class WarpRepository extends Repository
 	public WarpRepository(IDatabase db, IScheduler scheduler)
 	{
 		database = db;
-		cache = new TimedCache<String, RunsafeLocation>(scheduler);
+		cache = new TimedCache<String, ILocation>(scheduler);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class WarpRepository extends Repository
 		return queries;
 	}
 
-	public void Persist(String creator, String name, boolean publicWarp, RunsafeLocation location)
+	public void Persist(String creator, String name, boolean publicWarp, ILocation location)
 	{
 		database.Update(
 			"INSERT INTO warpdrive_locations (creator, name, `public`, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)" +
@@ -77,12 +77,12 @@ public class WarpRepository extends Repository
 		return GetWarps(owner, false);
 	}
 
-	public RunsafeLocation GetPublic(String name)
+	public ILocation GetPublic(String name)
 	{
 		return GetWarp("", name, true);
 	}
 
-	public RunsafeLocation GetPrivate(String owner, String name)
+	public ILocation GetPrivate(String owner, String name)
 	{
 		return GetWarp(owner, name, false);
 	}
@@ -117,10 +117,10 @@ public class WarpRepository extends Repository
 			return database.QueryStrings("SELECT name FROM warpdrive_locations WHERE `public`=? AND creator=?", publicWarp, owner);
 	}
 
-	private RunsafeLocation GetWarp(String owner, String name, boolean publicWarp)
+	private ILocation GetWarp(String owner, String name, boolean publicWarp)
 	{
 		String key = cacheKey(owner, name, publicWarp);
-		RunsafeLocation location = cache.Cache(key);
+		ILocation location = cache.Cache(key);
 		if (location != null)
 			return location;
 
@@ -152,5 +152,5 @@ public class WarpRepository extends Repository
 	}
 
 	private final IDatabase database;
-	private final TimedCache<String, RunsafeLocation> cache;
+	private final TimedCache<String, ILocation> cache;
 }

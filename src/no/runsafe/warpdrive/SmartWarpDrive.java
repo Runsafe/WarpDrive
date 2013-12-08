@@ -1,14 +1,14 @@
 package no.runsafe.warpdrive;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 
-public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
+public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 {
 	public SmartWarpDrive(IScheduler scheduler, SmartWarpChunkRepository smartWarpChunks, Engine engine)
 	{
@@ -29,7 +29,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 		if (lock)
 			shouldLock = true; // Lock the next location we produce.
 
-		RunsafeLocation candidate;
+		ILocation candidate;
 		while (true)
 		{
 			candidate = smartWarpChunks.getTarget(target, cave);
@@ -43,7 +43,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 	}
 
 	@Override
-	public void process(String playerName, RunsafeLocation target)
+	public void process(String playerName, ILocation target)
 	{
 		IPlayer player = RunsafeServer.Instance.getPlayerExact(playerName);
 		if (player == null)
@@ -73,7 +73,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, RunsafeLocation>
 	}
 
 	private boolean shouldLock = false;
-	private RunsafeLocation lockedLocation;
+	private ILocation lockedLocation;
 	private final IScheduler scheduler;
 	private final SmartWarpChunkRepository smartWarpChunks;
 	private final Engine engine;

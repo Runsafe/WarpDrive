@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive.database;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.Repository;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +42,7 @@ public class SmartWarpChunkRepository extends Repository
 		return queries;
 	}
 
-	public RunsafeLocation getTarget(IWorld world, boolean cave)
+	public ILocation getTarget(IWorld world, boolean cave)
 	{
 		return database.QueryLocation(
 			"SELECT world, x, y, z FROM smartwarp_targets WHERE world=? AND safe=true AND cave=? ORDER BY RAND() LIMIT 1",
@@ -50,7 +50,7 @@ public class SmartWarpChunkRepository extends Repository
 		);
 	}
 
-	public void setUnsafe(RunsafeLocation candidate)
+	public void setUnsafe(ILocation candidate)
 	{
 		database.Update(
 			"UPDATE smartwarp_targets SET safe=false WHERE world=? AND x=? AND y=? AND z=?",
@@ -59,7 +59,7 @@ public class SmartWarpChunkRepository extends Repository
 		);
 	}
 
-	public void saveTarget(RunsafeLocation target, boolean safe, boolean cave)
+	public void saveTarget(ILocation target, boolean safe, boolean cave)
 	{
 		database.Update(
 			"INSERT INTO smartwarp_targets (world, x, y, z, safe, cave) VALUES (?, ?, ?, ?, ?, ?)" +

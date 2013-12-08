@@ -1,11 +1,13 @@
 package no.runsafe.warpdrive;
 
 import com.google.common.collect.Lists;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.chunk.RunsafeChunk;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 
@@ -14,9 +16,9 @@ import java.util.List;
 
 public class Engine
 {
-	public boolean safePlayerTeleport(RunsafeLocation originalLocation, IPlayer player)
+	public boolean safePlayerTeleport(ILocation originalLocation, IPlayer player)
 	{
-		RunsafeLocation target = findSafeSpot(originalLocation);
+		ILocation target = findSafeSpot(originalLocation);
 		if (target != null)
 		{
 			player.setFallDistance(0.0F);
@@ -26,7 +28,7 @@ public class Engine
 		return false;
 	}
 
-	public RunsafeLocation findSafeSpot(RunsafeLocation location)
+	public ILocation findSafeSpot(ILocation location)
 	{
 		int maxScan = 100;
 		double x = location.getX();
@@ -52,7 +54,7 @@ public class Engine
 		}
 	}
 
-	public RunsafeLocation findRandomSafeSpot(RunsafeLocation originalLocation)
+	public ILocation findRandomSafeSpot(ILocation originalLocation)
 	{
 		int maxScan = 100;
 		double x = originalLocation.getX();
@@ -62,7 +64,7 @@ public class Engine
 
 		while (true)
 		{
-			for (RunsafeLocation option : findSafePoints(originalLocation.getWorld(), posX, posZ))
+			for (ILocation option : findSafePoints(originalLocation.getWorld(), posX, posZ))
 			{
 				if (targetFloorIsSafe(option, false))
 				{
@@ -81,12 +83,12 @@ public class Engine
 		}
 	}
 
-	private List<RunsafeLocation> findSafePoints(IWorld world, int x, int z)
+	private List<ILocation> findSafePoints(IWorld world, int x, int z)
 	{
-		ArrayList<RunsafeLocation> options = new ArrayList<RunsafeLocation>();
+		ArrayList<ILocation> options = new ArrayList<ILocation>();
 		int safe = 0;
 		boolean safeFloor = false;
-		RunsafeLocation floor = null;
+		ILocation floor = null;
 		int maxy = world.getMaxHeight();
 		if (((World) ObjectUnwrapper.convert(world)).getEnvironment() == World.Environment.NETHER)
 			maxy = 125;
@@ -115,7 +117,7 @@ public class Engine
 		return Lists.reverse(options);
 	}
 
-	public RunsafeLocation findTop(RunsafeLocation location)
+	public ILocation findTop(ILocation location)
 	{
 		IWorld world = location.getWorld();
 		if (((World) ObjectUnwrapper.convert(location.getWorld())).getEnvironment() == World.Environment.NETHER)
@@ -138,13 +140,13 @@ public class Engine
 			return location;
 		}
 		else
-			return new RunsafeLocation(((World) ObjectUnwrapper.convert(location.getWorld())).getHighestBlockAt(location.getRaw()).getLocation());
+			return location.findTop();
 	}
 
-	public boolean targetFloorIsSafe(RunsafeLocation location, boolean playerLocation)
+	public boolean targetFloorIsSafe(ILocation location, boolean playerLocation)
 	{
-		Chunk chunk = ((World) ObjectUnwrapper.convert(location.getWorld())).getChunkAt(location.getRaw());
-		if (!chunk.isLoaded())
+		RunsafeChunk chunk = location.getChunk();
+		if (chunk.isUnloaded())
 			chunk.load();
 		IBlock floor;
 		if (location.getWorld().getBlockAt(location).isAir() || playerLocation)

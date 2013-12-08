@@ -1,10 +1,10 @@
 package no.runsafe.warpdrive.summoningstone;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.event.plugin.IPluginDisabled;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 
 import java.util.Map;
 
@@ -39,7 +39,7 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 	public void OnPluginEnabled()
 	{
 		// If we have any stones stored here, the server crashed, reset them all.
-		for (RunsafeLocation stoneLocation : this.summoningStoneRepository.getStoneList())
+		for (ILocation stoneLocation : this.summoningStoneRepository.getStoneList())
 		{
 			SummoningStone stone = new SummoningStone(stoneLocation);
 			stone.reset();

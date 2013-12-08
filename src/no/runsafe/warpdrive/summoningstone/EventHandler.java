@@ -1,5 +1,6 @@
 package no.runsafe.warpdrive.summoningstone;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.entity.IEntityPortalEnterEvent;
@@ -9,7 +10,6 @@ import no.runsafe.framework.api.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.PassiveEntity;
@@ -36,7 +36,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 	@Override
 	public void OnPlayerPortalEvent(RunsafePlayerPortalEvent event)
 	{
-		RunsafeLocation from = event.getFrom();
+		ILocation from = event.getFrom();
 
 		if (from != null)
 		{
@@ -50,7 +50,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 	{
 		if (event.getBlock().is(Item.Unavailable.EnderPortal))
 		{
-			RunsafeLocation location = event.getLocation();
+			ILocation location = event.getLocation();
 			int stoneID = this.engine.getStoneAtLocation(location);
 
 			if (stoneID > -1)
@@ -65,8 +65,8 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 						RunsafeBook book = (RunsafeBook) item;
 						IWorld world = location.getWorld();
 						this.engine.registerPendingSummon(book.getAuthor(), stoneID);
-						((RunsafeWorld)world).playEffect(location, Effect.GHAST_SHRIEK, 0);
-						((RunsafeWorld)world).createExplosion(location.getX() + 0.5, location.getY(), location.getZ() + 0.5, 0, false, false);
+						((RunsafeWorld) world).playEffect(location, Effect.GHAST_SHRIEK, 0);
+						((RunsafeWorld) world).createExplosion(location.getX() + 0.5, location.getY(), location.getZ() + 0.5, 0, false, false);
 					}
 				}
 
@@ -87,7 +87,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 		if (itemStack.getType() == Material.FLINT_AND_STEEL && runsafeBlock.is(Item.BuildingBlock.Emerald))
 		{
 			Plugin.debug.debugFine("Detected FLINT_AND_STEEL click on EMERALD_BLOCK");
-			RunsafeLocation stoneLocation = runsafeBlock.getLocation();
+			ILocation stoneLocation = runsafeBlock.getLocation();
 			if (this.engine.canCreateStone(stoneLocation.getWorld()) && SummoningStone.isSummoningStone(stoneLocation))
 			{
 				Plugin.debug.debugFine("Location is safe to create a summoning stone.");

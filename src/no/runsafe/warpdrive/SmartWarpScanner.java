@@ -1,6 +1,7 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.api.IConsole;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
@@ -14,7 +15,7 @@ import org.bukkit.World;
 
 import java.util.HashMap;
 
-public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> implements IPluginEnabled
+public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implements IPluginEnabled
 {
 	public SmartWarpScanner(IScheduler scheduler, IConsole console, SmartWarpRepository warpRepository, SmartWarpChunkRepository chunkRepository, Engine engine)
 	{
@@ -50,7 +51,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 	}
 
 	@Override
-	public void process(String world, RunsafeLocation location)
+	public void process(String world, ILocation location)
 	{
 		location = engine.findTop(location);
 		if (engine.targetFloorIsSafe(location, true))
@@ -101,7 +102,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, RunsafeLocation> 
 		Push(world, CalculateNextLocation(world));
 	}
 
-	private RunsafeLocation CalculateNextLocation(String world)
+	private ILocation CalculateNextLocation(String world)
 	{
 		if (!worlds.containsKey(world))
 			worlds.put(world, RunsafeServer.Instance.getWorld(world));

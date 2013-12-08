@@ -1,12 +1,12 @@
 package no.runsafe.warpdrive.portals;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 
 public class PortalWarp
 {
-	public PortalWarp(String id, RunsafeLocation location, RunsafeLocation destination, PortalType type, int radius, String permission) throws NullPointerException
+	public PortalWarp(String id, ILocation location, ILocation destination, PortalType type, int radius, String permission) throws NullPointerException
 	{
 		this.id = id;
 		this.location = location;
@@ -55,12 +55,12 @@ public class PortalWarp
 		return this.destinationWorld;
 	}
 
-	public RunsafeLocation getLocation()
+	public ILocation getLocation()
 	{
 		return this.destination;
 	}
 
-	public RunsafeLocation getPortalLocation()
+	public ILocation getPortalLocation()
 	{
 		return location;
 	}
@@ -135,12 +135,12 @@ public class PortalWarp
 		return destination.getPitch();
 	}
 
-	public void setLocation(RunsafeLocation location)
+	public void setLocation(ILocation location)
 	{
 		this.location = location;
 	}
 
-	public void setDestination(RunsafeLocation location)
+	public void setDestination(ILocation location)
 	{
 		destination = location;
 		destinationWorld = location.getWorld();
@@ -149,8 +149,8 @@ public class PortalWarp
 	private String id;
 	private String perm;
 	private PortalType type;
-	private RunsafeLocation location;
-	private RunsafeLocation destination;
+	private ILocation location;
+	private ILocation destination;
 	private IWorld destinationWorld;
 	private int radius;
 	private boolean locked = false;
