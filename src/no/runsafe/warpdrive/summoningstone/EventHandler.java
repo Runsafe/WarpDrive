@@ -128,6 +128,6 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 			player.sendColouredMessage("&3You have a pending summon, head to the ritual stone to accept.");
 	}
 
-	private SummoningEngine engine;
-	private SummoningStoneRepository repository;
+	private final SummoningEngine engine;
+	private final SummoningStoneRepository repository;
 }

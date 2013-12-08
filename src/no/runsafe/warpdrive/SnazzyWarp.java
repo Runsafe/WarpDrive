@@ -6,7 +6,6 @@ import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.minecraft.block.RunsafeSign;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import no.runsafe.framework.text.ChatColour;
@@ -21,11 +20,12 @@ import java.util.logging.Level;
 public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
 	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged
 {
-	public SnazzyWarp(IScheduler scheduler, Engine engine, IDebug output)
+	public SnazzyWarp(IScheduler scheduler, Engine engine, IDebug output, IServer server)
 	{
 		super(scheduler, 2);
 		this.engine = engine;
 		debugger = output;
+		this.server = server;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		if (parameters == null)
 			return;
 		debugger.outputDebugToConsole(String.format("Player %s teleporting", player), Level.FINE);
-		IPlayer target = RunsafeServer.Instance.getPlayer(player);
+		IPlayer target = server.getPlayer(player);
 		ILocation destination = parameters.getTarget();
 		if (target.isOnline() && destination != null)
 			target.teleport(destination);
@@ -71,7 +71,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		{
 			maxDistance = Integer.parseInt(sign.getLine(2));
 			minDistance = Integer.parseInt(sign.getLine(3));
-			world = RunsafeServer.Instance.getWorld(sign.getLine(1));
+			world = server.getWorld(sign.getLine(1));
 			if (world == null)
 				debugger.debugFine("New warp sign created outside a world!");
 			else
@@ -137,6 +137,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 
 	private final ConcurrentHashMap<String, WarpParameters> snazzyWarps = new ConcurrentHashMap<String, WarpParameters>();
 	private final IDebug debugger;
+	private final IServer server;
 	private Duration change_after;
 	public static final String signHeader = ChatColour.DARK_BLUE.toBukkit() + "[Snazzy Warp]";
 	public static final String signTag = "[snazzy warp]";

@@ -82,5 +82,5 @@ public class SetPortal extends PlayerAsyncCommand
 		}
 	}
 
-	private PortalEngine engine;
+	private final PortalEngine engine;
 }

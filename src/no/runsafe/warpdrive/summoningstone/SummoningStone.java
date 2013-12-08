@@ -97,7 +97,7 @@ public class SummoningStone
 		return this.timerID;
 	}
 
-	private ILocation location;
+	private final ILocation location;
 	private int timerID = -1;
 
 	public static boolean isSummoningStone(ILocation location)
@@ -117,7 +117,7 @@ public class SummoningStone
 		return true;
 	}
 
-	public static int[][] constructedPortal = {
+	public static final int[][] constructedPortal = {
 		{0, 0, 0, 133},
 		{1, 0, 0, 57},
 		{0, 0, 1, 57},
@@ -130,7 +130,7 @@ public class SummoningStone
 		{0, 2, 0, 152}
 	};
 
-	public static int[][] activatedPortal = {
+	public static final int[][] activatedPortal = {
 		{0, 0, 0, 119},
 		{1, 0, 0, 7},
 		{0, 0, 1, 7},
@@ -144,7 +144,7 @@ public class SummoningStone
 		{0, 2, 0, 7}
 	};
 
-	public static int[][] awaitingPortal = {
+	public static final int[][] awaitingPortal = {
 		{0, 0, 0, 49},
 		{1, 0, 0, 7},
 		{0, 0, 1, 7},
@@ -158,7 +158,7 @@ public class SummoningStone
 		{0, -1, 0, 0}
 	};
 
-	public static int[][] completePortal = {
+	public static final int[][] completePortal = {
 		{0, 0, 0, 49},
 		{1, 0, 0, 155},
 		{0, 0, 1, 155},
@@ -172,7 +172,7 @@ public class SummoningStone
 		{0, -1, 0, 0}
 	};
 
-	public static int[][] removedPortal = {
+	public static final int[][] removedPortal = {
 		{0, 0, 0, 0},
 		{1, 0, 0, 0},
 		{0, 0, 1, 0},

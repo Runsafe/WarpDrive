@@ -201,8 +201,8 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		}
 	}
 
-	private Map<String, List<PortalWarp>> portals = new HashMap<String, List<PortalWarp>>();
-	private PortalRepository repository;
-	private SmartWarpDrive smartWarpDrive;
-	private IDebug debugger;
+	private final Map<String, List<PortalWarp>> portals = new HashMap<String, List<PortalWarp>>();
+	private final PortalRepository repository;
+	private final SmartWarpDrive smartWarpDrive;
+	private final IDebug debugger;
 }

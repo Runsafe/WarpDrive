@@ -71,5 +71,5 @@ public class SmartWarpRepository extends Repository
 		return database.QueryStrings("SELECT world FROM smartwarp_settings");
 	}
 
-	private IDatabase database;
+	private final IDatabase database;
 }

@@ -1,13 +1,13 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.IContextPermissionProvider;
 import no.runsafe.framework.api.command.argument.PlayerArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IAmbiguousPlayer;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.timer.TimedCache;
 import no.runsafe.warpdrive.Engine;
 
@@ -15,13 +15,14 @@ import java.util.Map;
 
 public class Teleport extends PlayerCommand implements IContextPermissionProvider
 {
-	public Teleport(Engine engine, IScheduler scheduler)
+	public Teleport(Engine engine, IScheduler scheduler, IServer server)
 	{
 		super(
 			"teleport", "Teleports you or another player to another player", null,
 			new PlayerArgument("player1", true), new PlayerArgument("player2", false)
 		);
 		this.engine = engine;
+		this.server = server;
 		this.warned = new TimedCache<String, String>(scheduler, 10);
 	}
 
@@ -33,9 +34,9 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 			IPlayer teleporter = (IPlayer) executor;
 			IPlayer target;
 			if (!parameters.containsKey("player2"))
-				target = RunsafeServer.Instance.getOnlinePlayer(teleporter, parameters.get("player1"));
+				target = server.getOnlinePlayer(teleporter, parameters.get("player1"));
 			else
-				target = RunsafeServer.Instance.getOnlinePlayer(teleporter, parameters.get("player2"));
+				target = server.getOnlinePlayer(teleporter, parameters.get("player2"));
 			if (target == null)
 				return null;
 
@@ -54,16 +55,16 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 		if (parameters.containsKey("player2"))
 		{
 			movePlayer = parameters.get("player1");
-			move = RunsafeServer.Instance.getOnlinePlayer(player, movePlayer);
+			move = server.getOnlinePlayer(player, movePlayer);
 			toPlayer = parameters.get("player2");
-			to = RunsafeServer.Instance.getOnlinePlayer(player, toPlayer);
+			to = server.getOnlinePlayer(player, toPlayer);
 		}
 		else
 		{
 			movePlayer = player.getName();
 			move = player;
 			toPlayer = parameters.get("player1");
-			to = RunsafeServer.Instance.getOnlinePlayer(player, toPlayer);
+			to = server.getOnlinePlayer(player, toPlayer);
 		}
 
 		if (move instanceof IAmbiguousPlayer)
@@ -103,4 +104,5 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 
 	private final Engine engine;
 	private final TimedCache<String, String> warned;
+	private final IServer server;
 }

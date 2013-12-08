@@ -6,9 +6,7 @@ import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.chunk.RunsafeChunk;
-import org.bukkit.Chunk;
 import org.bukkit.World;
 
 import java.util.ArrayList;

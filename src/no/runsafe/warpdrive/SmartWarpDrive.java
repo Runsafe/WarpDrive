@@ -2,20 +2,21 @@ package no.runsafe.warpdrive;
 
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 
 public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 {
-	public SmartWarpDrive(IScheduler scheduler, SmartWarpChunkRepository smartWarpChunks, Engine engine)
+	public SmartWarpDrive(IScheduler scheduler, SmartWarpChunkRepository smartWarpChunks, Engine engine, IServer server)
 	{
 		super(scheduler);
 		this.scheduler = scheduler;
 		this.smartWarpChunks = smartWarpChunks;
 		this.engine = engine;
+		this.server = server;
 		setInterval(10);
 	}
 
@@ -45,7 +46,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	@Override
 	public void process(String playerName, ILocation target)
 	{
-		IPlayer player = RunsafeServer.Instance.getPlayerExact(playerName);
+		IPlayer player = server.getPlayerExact(playerName);
 		if (player == null)
 			return;
 		target.incrementX(0.5);
@@ -77,4 +78,5 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	private final IScheduler scheduler;
 	private final SmartWarpChunkRepository smartWarpChunks;
 	private final Engine engine;
+	private final IServer server;
 }

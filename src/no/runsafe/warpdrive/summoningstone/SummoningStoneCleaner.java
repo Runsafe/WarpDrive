@@ -50,8 +50,8 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 		this.summoningStoneRepository.wipeStoneList();
 	}
 
-	private SummoningEngine summoningEngine;
-	private SummoningStoneRepository summoningStoneRepository;
-	private IOutput output;
-	private IScheduler scheduler;
+	private final SummoningEngine summoningEngine;
+	private final SummoningStoneRepository summoningStoneRepository;
+	private final IOutput output;
+	private final IScheduler scheduler;
 }

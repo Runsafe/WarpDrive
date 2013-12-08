@@ -70,5 +70,5 @@ public class SmartWarpChunkRepository extends Repository
 		);
 	}
 
-	private IDatabase database;
+	private final IDatabase database;
 }

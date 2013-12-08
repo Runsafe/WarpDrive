@@ -1,12 +1,8 @@
 package no.runsafe.warpdrive.summoningstone;
 
-import no.runsafe.framework.api.IConfiguration;
-import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeServer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,10 +11,11 @@ import java.util.Map;
 
 public class SummoningEngine implements IConfigurationChanged
 {
-	public SummoningEngine(SummoningStoneRepository summoningStoneRepository, IScheduler scheduler)
+	public SummoningEngine(SummoningStoneRepository summoningStoneRepository, IScheduler scheduler, IServer server)
 	{
 		this.summoningStoneRepository = summoningStoneRepository;
 		this.scheduler = scheduler;
+		this.server = server;
 	}
 
 	public void registerPendingSummon(String playerName, int stoneID)
@@ -27,7 +24,7 @@ public class SummoningEngine implements IConfigurationChanged
 		stone.setAwaitingPlayer();
 		this.pendingSummons.put(playerName, stoneID);
 
-		IPlayer player = RunsafeServer.Instance.getPlayerExact(playerName);
+		IPlayer player = server.getPlayerExact(playerName);
 		if (player != null && player.isOnline())
 			player.sendColouredMessage("&3You have a pending summon, head to the ritual stone to accept.");
 	}
@@ -123,10 +120,11 @@ public class SummoningEngine implements IConfigurationChanged
 	}
 
 	private int stoneExpireTime = 600;
-	private HashMap<Integer, SummoningStone> stones = new HashMap<Integer, SummoningStone>();
-	private HashMap<String, Integer> pendingSummons = new HashMap<String, Integer>();
+	private final HashMap<Integer, SummoningStone> stones = new HashMap<Integer, SummoningStone>();
+	private final HashMap<String, Integer> pendingSummons = new HashMap<String, Integer>();
 	private List<String> ritualWorlds = new ArrayList<String>();
 	private List<String> stoneWorlds = new ArrayList<String>();
-	private SummoningStoneRepository summoningStoneRepository;
-	private IScheduler scheduler;
+	private final SummoningStoneRepository summoningStoneRepository;
+	private final IScheduler scheduler;
+	private final IServer server;
 }

@@ -1,13 +1,9 @@
 package no.runsafe.warpdrive;
 
-import no.runsafe.framework.api.IConsole;
-import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.RunsafeServer;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 import no.runsafe.warpdrive.database.SmartWarpRepository;
@@ -17,13 +13,14 @@ import java.util.HashMap;
 
 public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implements IPluginEnabled
 {
-	public SmartWarpScanner(IScheduler scheduler, IConsole console, SmartWarpRepository warpRepository, SmartWarpChunkRepository chunkRepository, Engine engine)
+	public SmartWarpScanner(IScheduler scheduler, IConsole console, SmartWarpRepository warpRepository, SmartWarpChunkRepository chunkRepository, Engine engine, IServer server)
 	{
 		super(scheduler);
 		this.console = console;
 		this.warpRepository = warpRepository;
 		this.chunkRepository = chunkRepository;
 		this.engine = engine;
+		this.server = server;
 
 		this.setInterval(10);
 	}
@@ -105,7 +102,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 	private ILocation CalculateNextLocation(String world)
 	{
 		if (!worlds.containsKey(world))
-			worlds.put(world, RunsafeServer.Instance.getWorld(world));
+			worlds.put(world, server.getWorld(world));
 		int r = range.get(world) / 16;
 		double offset = (range.get(world) / 2) - 0.5;
 		double x = 16 * (progress.get(world) % r) - offset;
@@ -113,11 +110,12 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 		return new RunsafeLocation(worlds.get(world), x, 255, z);
 	}
 
-	private HashMap<String, Double> progress = new HashMap<String, Double>();
-	private HashMap<String, Integer> range = new HashMap<String, Integer>();
-	private HashMap<String, IWorld> worlds = new HashMap<String, IWorld>();
-	private IConsole console;
-	private SmartWarpRepository warpRepository;
-	private SmartWarpChunkRepository chunkRepository;
-	private Engine engine;
+	private final HashMap<String, Double> progress = new HashMap<String, Double>();
+	private final HashMap<String, Integer> range = new HashMap<String, Integer>();
+	private final HashMap<String, IWorld> worlds = new HashMap<String, IWorld>();
+	private final IConsole console;
+	private final SmartWarpRepository warpRepository;
+	private final SmartWarpChunkRepository chunkRepository;
+	private final Engine engine;
+	private final IServer server;
 }

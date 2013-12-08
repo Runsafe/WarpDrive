@@ -15,6 +15,7 @@ import no.runsafe.warpdrive.PlayerTeleportCommand;
 import no.runsafe.warpdrive.database.WarpRepository;
 import org.apache.commons.lang.StringUtils;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -42,8 +43,9 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 		return target;
 	}
 
+	@Nonnull
 	@Override
-	public String getUsage(ICommandExecutor executor)
+	public String getUsage(@Nonnull ICommandExecutor executor)
 	{
 		ArrayList<String> warps = new ArrayList<String>();
 		for (String warp : warpRepository.GetPublicList())

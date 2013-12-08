@@ -71,5 +71,5 @@ public class SummoningStoneRepository extends Repository
 		return queries;
 	}
 
-	private IDatabase database;
+	private final IDatabase database;
 }

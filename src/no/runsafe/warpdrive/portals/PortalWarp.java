@@ -19,7 +19,7 @@ public class PortalWarp
 		this.radius = radius;
 
 		if (permission == null)
-			perm = permission;
+			perm = null;
 
 		if (this.type == PortalType.NORMAL || this.type == PortalType.RANDOM_RADIUS)
 			this.destination = destination;
@@ -146,9 +146,9 @@ public class PortalWarp
 		destinationWorld = location.getWorld();
 	}
 
-	private String id;
+	private final String id;
 	private String perm;
-	private PortalType type;
+	private final PortalType type;
 	private ILocation location;
 	private ILocation destination;
 	private IWorld destinationWorld;

@@ -107,5 +107,5 @@ public class PortalRepository extends Repository
 		return queries;
 	}
 
-	private IDatabase database;
+	private final IDatabase database;
 }
