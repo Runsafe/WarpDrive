@@ -1,11 +1,11 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.block.RunsafeSign;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;

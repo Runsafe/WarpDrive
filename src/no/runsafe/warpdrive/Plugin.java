@@ -1,7 +1,7 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.RunsafeConfigurablePlugin;
-import no.runsafe.framework.api.IDebug;
+import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.warpdrive.commands.*;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 import no.runsafe.warpdrive.database.SmartWarpRepository;

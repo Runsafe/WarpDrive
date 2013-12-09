@@ -1,8 +1,8 @@
 package no.runsafe.warpdrive;
 
-import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.block.ISignChange;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.commands.Warp;
 
