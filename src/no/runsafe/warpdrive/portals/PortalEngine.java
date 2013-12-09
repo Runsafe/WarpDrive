@@ -7,6 +7,7 @@ import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.player.IPlayerPortal;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
@@ -21,11 +22,12 @@ import java.util.Map;
 
 public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent
 {
-	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger)
+	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console)
 	{
 		this.repository = repository;
 		this.smartWarpDrive = smartWarpDrive;
 		this.debugger = debugger;
+		this.console = console;
 	}
 
 	public void reloadPortals()
@@ -41,7 +43,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			portalCount += 1;
 			portals.get(portalWorldName).add(portal);
 		}
-		this.debugger.logInformation("%d portals loaded in %d worlds.", portalCount, portals.size());
+		this.console.logInformation("%d portals loaded in %d worlds.", portalCount, portals.size());
 	}
 
 	public void teleportPlayer(PortalWarp portal, IPlayer player)
@@ -205,4 +207,5 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private final PortalRepository repository;
 	private final SmartWarpDrive smartWarpDrive;
 	private final IDebug debugger;
+	private final IConsole console;
 }
