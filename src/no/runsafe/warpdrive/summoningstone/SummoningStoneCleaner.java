@@ -1,20 +1,20 @@
 package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.event.plugin.IPluginDisabled;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
+import no.runsafe.framework.api.log.IConsole;
 
 import java.util.Map;
 
 public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 {
-	public SummoningStoneCleaner(SummoningEngine summoningEngine, SummoningStoneRepository summoningStoneRepository, IOutput output, IScheduler scheduler)
+	public SummoningStoneCleaner(SummoningEngine summoningEngine, SummoningStoneRepository summoningStoneRepository, IConsole output, IScheduler scheduler)
 	{
 		this.summoningEngine = summoningEngine;
 		this.summoningStoneRepository = summoningStoneRepository;
-		this.output = output;
+		this.console = output;
 		this.scheduler = scheduler;
 	}
 
@@ -31,7 +31,7 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 				this.scheduler.cancelTask(stone.getTimerID());
 
 			this.summoningStoneRepository.deleteSummoningStone(node.getKey());
-			this.output.logInformation("Removing summoning portal: %s", stone.getLocation());
+			this.console.logInformation("Removing summoning portal: %s", stone.getLocation());
 		}
 	}
 
@@ -43,7 +43,7 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 		{
 			SummoningStone stone = new SummoningStone(stoneLocation);
 			stone.reset();
-			this.output.logInformation("Reset leftover portal: %s", stoneLocation);
+			this.console.logInformation("Reset leftover portal: %s", stoneLocation);
 		}
 
 		// Wipe any stones we had remembered
@@ -52,6 +52,6 @@ public class SummoningStoneCleaner implements IPluginEnabled, IPluginDisabled
 
 	private final SummoningEngine summoningEngine;
 	private final SummoningStoneRepository summoningStoneRepository;
-	private final IOutput output;
+	private final IConsole console;
 	private final IScheduler scheduler;
 }
