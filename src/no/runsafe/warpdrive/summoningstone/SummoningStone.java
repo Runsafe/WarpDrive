@@ -1,10 +1,13 @@
 package no.runsafe.warpdrive.summoningstone;
 
+import com.google.common.collect.Lists;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.chunk.RunsafeChunk;
+
+import java.util.List;
 
 public class SummoningStone
 {
@@ -55,26 +58,31 @@ public class SummoningStone
 				this.location.getY() + bounds[1],
 				this.location.getZ() + bounds[2]
 			);
-			checkLocation.getBlock().setMaterial(Item.get(bounds[3]));
+			checkLocation.getBlock().setMaterial(palette.get(bounds[3]));
 		}
 	}
 
 	// Load all chunks the portal is in so we can edit it.
 	private void preparePortalForEditing()
 	{
-		for (int[] bounds : SummoningStone.constructedPortal)
-		{
-			ILocation checkLocation = new RunsafeLocation(
-				this.location.getWorld(),
-				this.location.getX() + bounds[0],
-				this.location.getY() + bounds[1],
-				this.location.getZ() + bounds[2]
-			);
+		loadChunkAt(-1, -1);
+		loadChunkAt(-1, 1);
+		loadChunkAt(1, -1);
+		loadChunkAt(1, 1);
+	}
 
-			RunsafeChunk chunk = checkLocation.getChunk();
-			if (chunk.isUnloaded())
-				chunk.load();
-		}
+	private void loadChunkAt(int xOffset, int zOffset)
+	{
+		ILocation checkLocation = new RunsafeLocation(
+			this.location.getWorld(),
+			this.location.getX() + xOffset,
+			this.location.getY(),
+			this.location.getZ() + zOffset
+		);
+
+		RunsafeChunk chunk = checkLocation.getChunk();
+		if (chunk.isUnloaded())
+			chunk.load();
 	}
 
 	public ILocation getLocation()
@@ -111,78 +119,98 @@ public class SummoningStone
 				location.getZ() + bounds[2]
 			);
 
-			if (!checkLocation.getBlock().is(Item.get(bounds[3])))
+			if (!checkLocation.getBlock().is(palette.get(bounds[3])))
 				return false;
 		}
 		return true;
 	}
 
+	private static final List<Item> palette = Lists.newArrayList(
+		Item.Unavailable.Air,
+		Item.BuildingBlock.Bedrock,
+		Item.BuildingBlock.IronBlock,
+		Item.BuildingBlock.Obsidian,
+		Item.BuildingBlock.Diamond,
+		Item.Unavailable.EnderPortal,
+		Item.BuildingBlock.Emerald,
+		Item.Redstone.Block,
+		Item.BuildingBlock.Quartz.Normal
+	);
+	private static final int AIR = palette.indexOf(Item.Unavailable.Air);
+	private static final int BEDROCK = palette.indexOf(Item.BuildingBlock.Bedrock);
+	private static final int IRON = palette.indexOf(Item.BuildingBlock.IronBlock);
+	private static final int OBSIDIAN = palette.indexOf(Item.BuildingBlock.Obsidian);
+	private static final int DIAMOND = palette.indexOf(Item.BuildingBlock.Diamond);
+	private static final int PORTAL = palette.indexOf(Item.Unavailable.EnderPortal);
+	private static final int EMERALD = palette.indexOf(Item.BuildingBlock.Emerald);
+	private static final int REDSTONE = palette.indexOf(Item.Redstone.Block);
+	private static final int QUARTZ = palette.indexOf(Item.BuildingBlock.Quartz.Normal);
 	public static final int[][] constructedPortal = {
-		{0, 0, 0, 133},
-		{1, 0, 0, 57},
-		{0, 0, 1, 57},
-		{-1, 0, 0, 57},
-		{0, 0, -1, 57},
-		{-1, 0, -1, 42},
-		{-1, 0, 1, 42},
-		{1, 0, -1, 42},
-		{1, 0, 1, 42},
-		{0, 2, 0, 152}
+		{0, 0, 0, EMERALD},
+		{1, 0, 0, DIAMOND},
+		{0, 0, 1, DIAMOND},
+		{-1, 0, 0, DIAMOND},
+		{0, 0, -1, DIAMOND},
+		{-1, 0, -1, IRON},
+		{-1, 0, 1, IRON},
+		{1, 0, -1, IRON},
+		{1, 0, 1, IRON},
+		{0, 2, 0, REDSTONE}
 	};
 
 	public static final int[][] activatedPortal = {
-		{0, 0, 0, 119},
-		{1, 0, 0, 7},
-		{0, 0, 1, 7},
-		{-1, 0, 0, 7},
-		{0, 0, -1, 7},
-		{-1, 0, -1, 7},
-		{-1, 0, 1, 7},
-		{1, 0, -1, 7},
-		{1, 0, 1, 7},
-		{0, -1, 0, 7},
-		{0, 2, 0, 7}
+		{0, 0, 0, PORTAL},
+		{1, 0, 0, BEDROCK},
+		{0, 0, 1, BEDROCK},
+		{-1, 0, 0, BEDROCK},
+		{0, 0, -1, BEDROCK},
+		{-1, 0, -1, BEDROCK},
+		{-1, 0, 1, BEDROCK},
+		{1, 0, -1, BEDROCK},
+		{1, 0, 1, BEDROCK},
+		{0, -1, 0, BEDROCK},
+		{0, 2, 0, BEDROCK}
 	};
 
 	public static final int[][] awaitingPortal = {
-		{0, 0, 0, 49},
-		{1, 0, 0, 7},
-		{0, 0, 1, 7},
-		{-1, 0, 0, 7},
-		{0, 0, -1, 7},
-		{-1, 0, -1, 7},
-		{-1, 0, 1, 7},
-		{1, 0, -1, 7},
-		{1, 0, 1, 7},
-		{0, 2, 0, 0},
-		{0, -1, 0, 0}
+		{0, 0, 0, OBSIDIAN},
+		{1, 0, 0, BEDROCK},
+		{0, 0, 1, BEDROCK},
+		{-1, 0, 0, BEDROCK},
+		{0, 0, -1, BEDROCK},
+		{-1, 0, -1, BEDROCK},
+		{-1, 0, 1, BEDROCK},
+		{1, 0, -1, BEDROCK},
+		{1, 0, 1, BEDROCK},
+		{0, 2, 0, AIR},
+		{0, -1, 0, AIR}
 	};
 
 	public static final int[][] completePortal = {
-		{0, 0, 0, 49},
-		{1, 0, 0, 155},
-		{0, 0, 1, 155},
-		{-1, 0, 0, 155},
-		{0, 0, -1, 155},
-		{-1, 0, -1, 155},
-		{-1, 0, 1, 155},
-		{1, 0, -1, 155},
-		{1, 0, 1, 155},
-		{0, 2, 0, 0},
-		{0, -1, 0, 0}
+		{0, 0, 0, OBSIDIAN},
+		{1, 0, 0, QUARTZ},
+		{0, 0, 1, QUARTZ},
+		{-1, 0, 0, QUARTZ},
+		{0, 0, -1, QUARTZ},
+		{-1, 0, -1, QUARTZ},
+		{-1, 0, 1, QUARTZ},
+		{1, 0, -1, QUARTZ},
+		{1, 0, 1, QUARTZ},
+		{0, 2, 0, AIR},
+		{0, -1, 0, AIR}
 	};
 
 	public static final int[][] removedPortal = {
-		{0, 0, 0, 0},
-		{1, 0, 0, 0},
-		{0, 0, 1, 0},
-		{-1, 0, 0, 0},
-		{0, 0, -1, 0},
-		{-1, 0, -1, 0},
-		{-1, 0, 1, 0},
-		{1, 0, -1, 0},
-		{1, 0, 1, 0},
-		{0, 2, 0, 0},
-		{0, -1, 0, 0}
+		{0, 0, 0, AIR},
+		{1, 0, 0, AIR},
+		{0, 0, 1, AIR},
+		{-1, 0, 0, AIR},
+		{0, 0, -1, AIR},
+		{-1, 0, -1, AIR},
+		{-1, 0, 1, AIR},
+		{1, 0, -1, AIR},
+		{1, 0, 1, AIR},
+		{0, 2, 0, AIR},
+		{0, -1, 0, AIR}
 	};
 }
