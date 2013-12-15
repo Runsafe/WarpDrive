@@ -2,6 +2,9 @@ package no.runsafe.warpdrive;
 
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.log.IDebug;
+import no.runsafe.framework.features.Commands;
+import no.runsafe.framework.features.Database;
+import no.runsafe.framework.features.Events;
 import no.runsafe.warpdrive.commands.*;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 import no.runsafe.warpdrive.database.SmartWarpRepository;
@@ -18,6 +21,11 @@ public class Plugin extends RunsafeConfigurablePlugin
 	@Override
 	protected void PluginSetup()
 	{
+		// Framework features
+		addComponent(Commands.class);
+		addComponent(Database.class);
+		addComponent(Events.class);
+
 		debug = getComponent(IDebug.class); // Set a debugger.
 
 		addComponent(Engine.class);
