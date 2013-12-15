@@ -58,7 +58,7 @@ public class SummoningStone
 				this.location.getY() + bounds[1],
 				this.location.getZ() + bounds[2]
 			);
-			checkLocation.getBlock().setMaterial(palette.get(bounds[3]));
+			checkLocation.getBlock().set(palette.get(bounds[3]));
 		}
 	}
 
