@@ -40,7 +40,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 			if (target == null)
 				return null;
 
-			return "runsafe.teleport.world." + target.getWorld().getName();
+			return "runsafe.teleport.world." + target.getWorldName();
 		}
 		return null;
 	}

@@ -28,7 +28,7 @@ public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<P
 			playerTeleport.player.sendColouredMessage(playerTeleport.message);
 	}
 
-	protected final Engine engine;
+	private final Engine engine;
 
 	public class PlayerTeleport
 	{

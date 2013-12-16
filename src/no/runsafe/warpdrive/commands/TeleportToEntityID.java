@@ -17,6 +17,7 @@ public class TeleportToEntityID extends PlayerCommand
 		);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Override
 	public String OnExecute(IPlayer player, Map<String, String> parameters)
 	{

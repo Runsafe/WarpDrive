@@ -112,9 +112,9 @@ public class WarpRepository extends Repository
 	private List<String> GetWarps(String owner, boolean publicWarp)
 	{
 		if (publicWarp)
-			return database.QueryStrings("SELECT name FROM warpdrive_locations WHERE `public`=?", publicWarp);
+			return database.QueryStrings("SELECT name FROM warpdrive_locations WHERE `public`=1");
 		else
-			return database.QueryStrings("SELECT name FROM warpdrive_locations WHERE `public`=? AND creator=?", publicWarp, owner);
+			return database.QueryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator=?", owner);
 	}
 
 	private ILocation GetWarp(String owner, String name, boolean publicWarp)
@@ -126,13 +126,13 @@ public class WarpRepository extends Repository
 
 		if (publicWarp)
 			location = database.QueryLocation(
-				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=?",
-				name, publicWarp
+				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=1",
+				name
 			);
 		else
 			location = database.QueryLocation(
-				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=? AND creator=?",
-				name, publicWarp, owner
+				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=0 AND creator=?",
+				name, owner
 			);
 
 		return cache.Cache(key, location);
@@ -144,9 +144,9 @@ public class WarpRepository extends Repository
 			return false;
 		boolean success;
 		if (publicWarp)
-			success = database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=?", name, publicWarp);
+			success = database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=1", name);
 		else
-			success = database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=? AND creator=?", name, publicWarp, owner);
+			success = database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator=?", name, owner);
 		cache.Invalidate(cacheKey(owner, name, publicWarp));
 		return success;
 	}

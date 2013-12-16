@@ -52,7 +52,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		debugger.outputDebugToConsole(String.format("Player %s teleporting", player), Level.FINE);
 		IPlayer target = server.getPlayer(player);
 		ILocation destination = parameters.getTarget();
-		if (target.isOnline() && destination != null)
+		if (target != null && target.isOnline() && destination != null)
 			target.teleport(destination);
 		else
 			debugger.outputDebugToConsole("Unable to find destination..", Level.FINE);

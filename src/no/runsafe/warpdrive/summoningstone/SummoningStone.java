@@ -145,7 +145,7 @@ public class SummoningStone
 	private static final int EMERALD = palette.indexOf(Item.BuildingBlock.Emerald);
 	private static final int REDSTONE = palette.indexOf(Item.Redstone.Block);
 	private static final int QUARTZ = palette.indexOf(Item.BuildingBlock.Quartz.Normal);
-	public static final int[][] constructedPortal = {
+	private static final int[][] constructedPortal = {
 		{0, 0, 0, EMERALD},
 		{1, 0, 0, DIAMOND},
 		{0, 0, 1, DIAMOND},
@@ -158,7 +158,7 @@ public class SummoningStone
 		{0, 2, 0, REDSTONE}
 	};
 
-	public static final int[][] activatedPortal = {
+	private static final int[][] activatedPortal = {
 		{0, 0, 0, PORTAL},
 		{1, 0, 0, BEDROCK},
 		{0, 0, 1, BEDROCK},
@@ -172,7 +172,7 @@ public class SummoningStone
 		{0, 2, 0, BEDROCK}
 	};
 
-	public static final int[][] awaitingPortal = {
+	private static final int[][] awaitingPortal = {
 		{0, 0, 0, OBSIDIAN},
 		{1, 0, 0, BEDROCK},
 		{0, 0, 1, BEDROCK},
@@ -186,7 +186,7 @@ public class SummoningStone
 		{0, -1, 0, AIR}
 	};
 
-	public static final int[][] completePortal = {
+	private static final int[][] completePortal = {
 		{0, 0, 0, OBSIDIAN},
 		{1, 0, 0, QUARTZ},
 		{0, 0, 1, QUARTZ},
@@ -200,7 +200,7 @@ public class SummoningStone
 		{0, -1, 0, AIR}
 	};
 
-	public static final int[][] removedPortal = {
+	private static final int[][] removedPortal = {
 		{0, 0, 0, AIR},
 		{1, 0, 0, AIR},
 		{0, 0, 1, AIR},
