@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.chunk.RunsafeChunk;
 
 import java.util.List;
@@ -52,12 +51,7 @@ public class SummoningStone
 
 		for (int[] bounds : data)
 		{
-			ILocation checkLocation = new RunsafeLocation(
-				this.location.getWorld(),
-				this.location.getX() + bounds[0],
-				this.location.getY() + bounds[1],
-				this.location.getZ() + bounds[2]
-			);
+			ILocation checkLocation = location.add(bounds[0], bounds[1], bounds[2]);
 			checkLocation.getBlock().set(palette.get(bounds[3]));
 		}
 	}
@@ -73,13 +67,7 @@ public class SummoningStone
 
 	private void loadChunkAt(int xOffset, int zOffset)
 	{
-		ILocation checkLocation = new RunsafeLocation(
-			this.location.getWorld(),
-			this.location.getX() + xOffset,
-			this.location.getY(),
-			this.location.getZ() + zOffset
-		);
-
+		ILocation checkLocation = this.location.add(xOffset, 0, zOffset);
 		RunsafeChunk chunk = checkLocation.getChunk();
 		if (chunk.isUnloaded())
 			chunk.load();
@@ -112,13 +100,7 @@ public class SummoningStone
 	{
 		for (int[] bounds : SummoningStone.constructedPortal)
 		{
-			ILocation checkLocation = new RunsafeLocation(
-				location.getWorld(),
-				location.getX() + bounds[0],
-				location.getY() + bounds[1],
-				location.getZ() + bounds[2]
-			);
-
+			ILocation checkLocation = location.add(bounds[0], bounds[1], bounds[2]);
 			if (!checkLocation.getBlock().is(palette.get(bounds[3])))
 				return false;
 		}

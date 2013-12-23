@@ -7,7 +7,6 @@ import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.warpdrive.portals.PortalEngine;
 import no.runsafe.warpdrive.portals.PortalType;
 import no.runsafe.warpdrive.portals.PortalWarp;
@@ -61,7 +60,7 @@ public class SetPortal extends PlayerAsyncCommand
 		}
 		else
 		{
-			ILocation worldStart = new RunsafeLocation(playerWorld, 0, 0, 0); // Placeholder location.
+			ILocation worldStart = playerWorld.getLocation(0.0, 0.0, 0.0); // Placeholder location.
 
 			// Create the new warp in the engine.
 			try

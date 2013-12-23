@@ -6,7 +6,6 @@ import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.api.log.IConsole;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 import no.runsafe.warpdrive.database.SmartWarpRepository;
@@ -109,7 +108,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 		double offset = (range.get(world) / 2) - 0.5;
 		double x = 16 * (progress.get(world) % r) - offset;
 		double z = 16 * (progress.get(world) / r) - offset;
-		return new RunsafeLocation(worlds.get(world), x, 255, z);
+		return worlds.get(world).getLocation(x, 255.0, z);
 	}
 
 	private final HashMap<String, Double> progress = new HashMap<String, Double>();

@@ -6,7 +6,6 @@ import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.block.RunsafeSign;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import no.runsafe.framework.text.ChatColour;
@@ -111,9 +110,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 			ILocation target = null;
 			int retries = 10;
 			while (target == null && retries-- > 0)
-				target = engine.findRandomSafeSpot(
-					new RunsafeLocation(world, randomX + 0.5, 64.0D, randomZ + 0.5)
-				);
+				target = engine.findRandomSafeSpot(world.getLocation(randomX + 0.5, 64.0D, randomZ + 0.5));
 			if (target != null)
 			{
 				target.setX(target.getBlockX() + 0.5);

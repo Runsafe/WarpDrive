@@ -11,7 +11,6 @@ import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.warpdrive.SmartWarpDrive;
 
@@ -87,13 +86,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 	private void randomRadiusTeleport(IPlayer player, ILocation theLocation, int radius)
 	{
-		ILocation location = new RunsafeLocation(
-			theLocation.getWorld(),
-			theLocation.getX(),
-			theLocation.getY(),
-			theLocation.getZ()
-		);
-
+		ILocation location = theLocation.add(0, 0, 0);
 		int highX = location.getBlockX() + radius;
 		int highZ = location.getBlockZ() + radius;
 		int lowX = location.getBlockX() - radius;
