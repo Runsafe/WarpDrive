@@ -1,12 +1,12 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.api.*;
+import no.runsafe.framework.api.block.ISign;
 import no.runsafe.framework.api.event.IAsyncEvent;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.block.RunsafeSign;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import no.runsafe.framework.text.ChatColour;
 import no.runsafe.framework.timer.ForegroundWorker;
@@ -29,7 +29,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	}
 
 	@Override
-	public boolean OnPlayerRightClickSign(IPlayer thePlayer, RunsafeMeta runsafeItemStack, RunsafeSign theSign)
+	public boolean OnPlayerRightClickSign(IPlayer thePlayer, RunsafeMeta runsafeItemStack, ISign theSign)
 	{
 		if (theSign.getLine(0).equalsIgnoreCase(signHeader))
 		{
@@ -67,7 +67,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 
 	class WarpParameters
 	{
-		WarpParameters(RunsafeSign sign)
+		WarpParameters(ISign sign)
 		{
 			maxDistance = Integer.parseInt(sign.getLine(2));
 			minDistance = Integer.parseInt(sign.getLine(3));
@@ -127,7 +127,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		private DateTime expires = DateTime.now();
 		private ILocation target;
 
-		public boolean refresh(RunsafeSign sign)
+		public boolean refresh(ISign sign)
 		{
 			return maxDistance != Integer.parseInt(sign.getLine(2)) || minDistance != Integer.parseInt(sign.getLine(3));
 		}
