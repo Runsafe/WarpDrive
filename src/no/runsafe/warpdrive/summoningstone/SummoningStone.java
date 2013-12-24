@@ -109,9 +109,13 @@ public class SummoningStone
 		{
 			ILocation checkLocation = location.add(bounds[0], bounds[1], bounds[2]);
 			IBlock locationBlock = checkLocation.getBlock();
+			Item paletteItem = palette.get(bounds[3]);
 
-			if (!locationBlock.is(palette.get(bounds[3])))
+			if (!locationBlock.is(paletteItem))
+			{
+				WarpDrive.debug.debugFine("Summoning portal mis-match, expected %s got %s.", paletteItem.getName(), locationBlock.getMaterial().getName());
 				return false;
+			}
 		}
 		return true;
 	}
