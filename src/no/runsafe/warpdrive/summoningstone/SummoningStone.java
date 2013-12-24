@@ -124,6 +124,7 @@ public class SummoningStone
 		Item.Redstone.Block,
 		Item.BuildingBlock.Quartz.Normal
 	);
+
 	private static final int AIR = palette.indexOf(Item.Unavailable.Air);
 	private static final int BEDROCK = palette.indexOf(Item.BuildingBlock.Bedrock);
 	private static final int IRON = palette.indexOf(Item.BuildingBlock.IronBlock);
@@ -133,6 +134,7 @@ public class SummoningStone
 	private static final int EMERALD = palette.indexOf(Item.BuildingBlock.Emerald);
 	private static final int REDSTONE = palette.indexOf(Item.Redstone.Block);
 	private static final int QUARTZ = palette.indexOf(Item.BuildingBlock.Quartz.Normal);
+
 	private static final int[][] constructedPortal = {
 		{0, 0, 0, EMERALD},
 		{1, 0, 0, DIAMOND},
