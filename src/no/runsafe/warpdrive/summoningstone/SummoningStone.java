@@ -48,7 +48,7 @@ public class SummoningStone
 
 	public void teleportPlayer(IPlayer player)
 	{
-		player.teleport(this.location.getWorld(), this.location.getX() + 0.5, this.location.getY() + 1, this.location.getZ() + 0.5);
+		player.teleport(location.getWorld(), location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5);
 	}
 
 	private void transformPortal(int[][] data)
