@@ -4,7 +4,7 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.IContextPermissionProvider;
-import no.runsafe.framework.api.command.argument.PlayerArgument;
+import no.runsafe.framework.api.command.argument.OnlinePlayerArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IAmbiguousPlayer;
 import no.runsafe.framework.api.player.IPlayer;
@@ -19,7 +19,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	{
 		super(
 			"teleport", "Teleports you or another player to another player", null,
-			new PlayerArgument("player1", true), new PlayerArgument("player2", false)
+			new OnlinePlayerArgument("player1", true), new OnlinePlayerArgument("player2", false)
 		);
 		this.engine = engine;
 		this.server = server;
