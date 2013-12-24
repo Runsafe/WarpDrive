@@ -2,6 +2,7 @@ package no.runsafe.warpdrive.summoningstone;
 
 import com.google.common.collect.Lists;
 import no.runsafe.framework.api.ILocation;
+import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.chunk.RunsafeChunk;
@@ -107,7 +108,9 @@ public class SummoningStone
 		for (int[] bounds : SummoningStone.constructedPortal)
 		{
 			ILocation checkLocation = location.add(bounds[0], bounds[1], bounds[2]);
-			if (!checkLocation.getBlock().is(palette.get(bounds[3])))
+			IBlock locationBlock = checkLocation.getBlock();
+
+			if (!locationBlock.is(palette.get(bounds[3])))
 				return false;
 		}
 		return true;
