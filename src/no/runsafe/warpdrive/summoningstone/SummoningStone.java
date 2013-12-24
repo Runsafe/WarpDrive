@@ -113,7 +113,11 @@ public class SummoningStone
 
 			if (!locationBlock.is(paletteItem))
 			{
-				WarpDrive.debug.debugFine("Summoning portal mis-match, expected %s got %s.", paletteItem.getName(), locationBlock.getMaterial().getName());
+				WarpDrive.debug.debugFine(
+						"Summoning portal mis-match, expected %s got %s at %s",
+						paletteItem.getName(),
+						locationBlock.getMaterial().getName(),
+						location.toString());
 				return false;
 			}
 		}
