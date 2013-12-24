@@ -58,7 +58,8 @@ public class SummoningStone
 
 		for (int[] bounds : data)
 		{
-			ILocation checkLocation = location.add(bounds[0], bounds[1], bounds[2]);
+			ILocation checkLocation = location.clone();
+			checkLocation.offset(bounds[0], bounds[1], bounds[2]);
 			checkLocation.getBlock().set(palette.get(bounds[3]));
 		}
 	}
@@ -74,7 +75,9 @@ public class SummoningStone
 
 	private void loadChunkAt(int xOffset, int zOffset)
 	{
-		ILocation checkLocation = location.add(xOffset, 0, zOffset);
+		ILocation checkLocation = location.clone();
+		checkLocation.offset(xOffset, 0, zOffset);
+
 		RunsafeChunk chunk = checkLocation.getChunk();
 		if (chunk.isUnloaded())
 			chunk.load();
@@ -107,25 +110,18 @@ public class SummoningStone
 	{
 		for (int[] bounds : SummoningStone.constructedPortal)
 		{
-			try
-			{
-				ILocation checkLocation = location.clone();
-				checkLocation.offset(bounds[0], bounds[1], bounds[2]);
-				IBlock locationBlock = checkLocation.getBlock();
-				Item paletteItem = palette.get(bounds[3]);
+			ILocation checkLocation = location.clone();
+			checkLocation.offset(bounds[0], bounds[1], bounds[2]);
+			IBlock locationBlock = checkLocation.getBlock();
+			Item paletteItem = palette.get(bounds[3]);
 
-				if (!locationBlock.is(paletteItem))
-				{
-					WarpDrive.debug.debugFine(
-							"Summoning portal mis-match, expected %s got %s at %s",
-							paletteItem.getName(),
-							locationBlock.getMaterial().getName(),
-							location.toString());
-					return false;
-				}
-			}
-			catch (CloneNotSupportedException e)
+			if (!locationBlock.is(paletteItem))
 			{
+				WarpDrive.debug.debugFine(
+						"Summoning portal mis-match, expected %s got %s at %s",
+						paletteItem.getName(),
+						locationBlock.getMaterial().getName(),
+						location.toString());
 				return false;
 			}
 		}
