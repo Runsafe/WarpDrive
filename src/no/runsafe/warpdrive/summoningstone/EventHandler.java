@@ -21,7 +21,7 @@ import no.runsafe.framework.minecraft.event.player.RunsafePlayerPortalEvent;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
 import no.runsafe.framework.minecraft.item.meta.RunsafeBook;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
-import no.runsafe.warpdrive.Plugin;
+import no.runsafe.warpdrive.WarpDrive;
 import org.bukkit.Effect;
 
 public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent, IPlayerRightClickBlock, IPlayerJoinEvent
@@ -81,15 +81,15 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 		if (itemStack == null)
 			return true;
 
-		Plugin.debug.debugFine("Detected right click event from player: " + runsafePlayer.getName());
+		WarpDrive.debug.debugFine("Detected right click event from player: " + runsafePlayer.getName());
 
 		if (itemStack.is(Item.Tool.FlintAndSteel) && runsafeBlock.is(Item.BuildingBlock.Emerald))
 		{
-			Plugin.debug.debugFine("Detected FLINT_AND_STEEL click on EMERALD_BLOCK");
+			WarpDrive.debug.debugFine("Detected FLINT_AND_STEEL click on EMERALD_BLOCK");
 			ILocation stoneLocation = runsafeBlock.getLocation();
 			if (this.engine.canCreateStone(stoneLocation.getWorld()) && SummoningStone.isSummoningStone(stoneLocation))
 			{
-				Plugin.debug.debugFine("Location is safe to create a summoning stone.");
+				WarpDrive.debug.debugFine("Location is safe to create a summoning stone.");
 				int stoneID = this.repository.addSummoningStone(stoneLocation);
 				SummoningStone summoningStone = new SummoningStone(stoneLocation);
 				summoningStone.activate();
