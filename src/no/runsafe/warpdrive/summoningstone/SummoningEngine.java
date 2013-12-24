@@ -22,9 +22,9 @@ public class SummoningEngine implements IConfigurationChanged
 
 	public void registerPendingSummon(String playerName, int stoneID)
 	{
-		SummoningStone stone = this.stones.get(stoneID);
+		SummoningStone stone = stones.get(stoneID);
 		stone.setAwaitingPlayer();
-		this.pendingSummons.put(playerName, stoneID);
+		pendingSummons.put(playerName, stoneID);
 
 		IPlayer player = server.getPlayerExact(playerName);
 		if (player != null && player.isOnline())
@@ -33,15 +33,15 @@ public class SummoningEngine implements IConfigurationChanged
 
 	public boolean playerHasPendingSummon(IPlayer player)
 	{
-		return this.pendingSummons.containsKey(player.getName());
+		return pendingSummons.containsKey(player.getName());
 	}
 
 	public void acceptPlayerSummon(IPlayer player)
 	{
 		String playerName = player.getName();
-		int stoneID = this.pendingSummons.get(playerName);
+		int stoneID = pendingSummons.get(playerName);
 		WarpDrive.debug.debugFine("Player %s is accepting portal %s.", playerName, stoneID);
-		SummoningStone stone = this.stones.get(stoneID);
+		SummoningStone stone = stones.get(stoneID);
 
 		stone.setComplete();
 		stone.teleportPlayer(player);
@@ -49,17 +49,17 @@ public class SummoningEngine implements IConfigurationChanged
 		if (stone.hasTimer())
 		{
 			WarpDrive.debug.debugFine("Stone %s has a timer, cancelling it.", stoneID);
-			this.scheduler.cancelTask(stone.getTimerID());
+			scheduler.cancelTask(stone.getTimerID());
 		}
 
-		this.summoningStoneRepository.deleteSummoningStone(stoneID);
-		this.stones.remove(stoneID);
-		this.pendingSummons.remove(playerName);
+		summoningStoneRepository.deleteSummoningStone(stoneID);
+		stones.remove(stoneID);
+		pendingSummons.remove(playerName);
 	}
 
 	public int getStoneAtLocation(ILocation location)
 	{
-		for (Map.Entry<Integer, SummoningStone> stone : this.stones.entrySet())
+		for (Map.Entry<Integer, SummoningStone> stone : stones.entrySet())
 		{
 			ILocation stoneLocation = stone.getValue().getLocation();
 			if (stoneLocation.getWorld().equals(location.getWorld()) && stoneLocation.distance(location) < 2)
@@ -70,59 +70,59 @@ public class SummoningEngine implements IConfigurationChanged
 
 	public int registerExpireTimer(final int stoneID)
 	{
-		return this.scheduler.startSyncTask(new Runnable()
+		return scheduler.startSyncTask(new Runnable()
 		{
 			@Override
 			public void run()
 			{
 				summoningStoneExpire(stoneID);
 			}
-		}, this.stoneExpireTime);
+		}, stoneExpireTime);
 	}
 
 	public void registerStone(int stoneID, SummoningStone stone)
 	{
-		this.stones.put(stoneID, stone);
+		stones.put(stoneID, stone);
 	}
 
 	public void summoningStoneExpire(int stoneID)
 	{
 		// If this is false, we actually had a fault somewhere, but we check anyway.
-		if (this.stones.containsKey(stoneID))
+		if (stones.containsKey(stoneID))
 		{
 			// The stone expired, remove it from everything.
-			SummoningStone stone = this.stones.get(stoneID);
+			SummoningStone stone = stones.get(stoneID);
 			stone.remove();
-			this.summoningStoneRepository.deleteSummoningStone(stoneID);
-			this.stones.remove(stoneID);
+			summoningStoneRepository.deleteSummoningStone(stoneID);
+			stones.remove(stoneID);
 
-			for (Map.Entry<String, Integer> pendingSummon : this.pendingSummons.entrySet())
+			for (Map.Entry<String, Integer> pendingSummon : pendingSummons.entrySet())
 				if (pendingSummon.getValue() == stoneID)
-					this.pendingSummons.remove(pendingSummon.getKey());
+					pendingSummons.remove(pendingSummon.getKey());
 		}
 	}
 
 	public HashMap<Integer, SummoningStone> getLoadedStones()
 	{
-		return this.stones;
+		return stones;
 	}
 
 	public boolean isRitualWorld(IWorld world)
 	{
-		return this.ritualWorlds.contains(world.getName());
+		return ritualWorlds.contains(world.getName());
 	}
 
 	public boolean canCreateStone(IWorld world)
 	{
-		return this.stoneWorlds.contains(world.getName());
+		return stoneWorlds.contains(world.getName());
 	}
 
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
-		this.stoneExpireTime = config.getConfigValueAsInt("summoningStone.expire") * 60;
-		this.ritualWorlds = config.getConfigValueAsList("summoningStone.ritualWorlds");
-		this.stoneWorlds = config.getConfigValueAsList("summoningStone.stoneWorlds");
+		stoneExpireTime = config.getConfigValueAsInt("summoningStone.expire") * 60;
+		ritualWorlds = config.getConfigValueAsList("summoningStone.ritualWorlds");
+		stoneWorlds = config.getConfigValueAsList("summoningStone.stoneWorlds");
 	}
 
 	private int stoneExpireTime = 600;
