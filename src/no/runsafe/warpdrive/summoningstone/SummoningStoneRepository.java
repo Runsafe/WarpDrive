@@ -43,13 +43,14 @@ public class SummoningStoneRepository extends Repository
 
 	public int addSummoningStone(ILocation location)
 	{
-		Integer id = database.QueryInteger(
-			"INSERT INTO summoningStones (world, x, y, z) VALUES(?, ?, ?, ?); SELECT LAST_INSERT_ID()",
+		database.Execute(
+			"INSERT INTO summoningStones (world, x, y, z) VALUES(?, ?, ?, ?)",
 			location.getWorld().getName(),
 			location.getX(),
 			location.getY(),
 			location.getZ()
 		);
+		Integer id = database.QueryInteger("SELECT LAST_INSERT_ID() AS ID FROM summoningStones LIMIT 1");
 		return id == null ? 0 : id;
 	}
 
