@@ -2,7 +2,9 @@ package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.warpdrive.WarpDrive;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,13 +40,17 @@ public class SummoningEngine implements IConfigurationChanged
 	{
 		String playerName = player.getName();
 		int stoneID = this.pendingSummons.get(playerName);
+		WarpDrive.debug.debugFine("Player %s is accepting portal %s.", playerName, stoneID);
 		SummoningStone stone = this.stones.get(stoneID);
 
 		stone.setComplete();
 		stone.teleportPlayer(player);
 
 		if (stone.hasTimer())
+		{
+			WarpDrive.debug.debugFine("Stone %s has a timer, cancelling it.", stoneID);
 			this.scheduler.cancelTask(stone.getTimerID());
+		}
 
 		this.summoningStoneRepository.deleteSummoningStone(stoneID);
 		this.stones.remove(stoneID);

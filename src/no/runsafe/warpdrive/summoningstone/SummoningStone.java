@@ -5,6 +5,7 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.chunk.RunsafeChunk;
+import no.runsafe.warpdrive.WarpDrive;
 
 import java.util.List;
 
@@ -17,26 +18,31 @@ public class SummoningStone
 
 	public void activate()
 	{
+		WarpDrive.debug.debugFine("Portal transforming to: activatedPortal");
 		this.transformPortal(SummoningStone.activatedPortal);
 	}
 
 	public void remove()
 	{
+		WarpDrive.debug.debugFine("Portal transforming to: removedPortal");
 		this.transformPortal(SummoningStone.removedPortal);
 	}
 
 	public void setAwaitingPlayer()
 	{
+		WarpDrive.debug.debugFine("Portal transforming to: awaitingPortal");
 		this.transformPortal(SummoningStone.awaitingPortal);
 	}
 
 	public void setComplete()
 	{
+		WarpDrive.debug.debugFine("Portal transforming to: completePortal");
 		this.transformPortal(SummoningStone.completePortal);
 	}
 
 	public void reset()
 	{
+		WarpDrive.debug.debugFine("Portal transforming to: constructedPortal");
 		this.transformPortal(SummoningStone.constructedPortal);
 	}
 
