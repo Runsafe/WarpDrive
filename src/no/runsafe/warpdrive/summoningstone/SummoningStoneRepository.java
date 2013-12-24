@@ -4,6 +4,7 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.IRow;
 import no.runsafe.framework.api.database.Repository;
+import no.runsafe.warpdrive.WarpDrive;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class SummoningStoneRepository extends Repository
 
 	public void deleteSummoningStone(int ID)
 	{
+		WarpDrive.debug.debugFine("Delete stone %s from the database.", ID);
 		this.database.Execute("DELETE FROM summoningStones WHERE ID = ?", ID);
 	}
 
