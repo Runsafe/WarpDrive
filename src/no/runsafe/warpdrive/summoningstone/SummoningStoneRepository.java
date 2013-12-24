@@ -50,7 +50,7 @@ public class SummoningStoneRepository extends Repository
 			location.getY(),
 			location.getZ()
 		);
-		Integer id = database.QueryInteger("SELECT LAST_INSERT_ID() AS ID FROM summoningStones LIMIT 1");
+		Integer id = database.QueryInteger("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
 		return id == null ? 0 : id;
 	}
 
