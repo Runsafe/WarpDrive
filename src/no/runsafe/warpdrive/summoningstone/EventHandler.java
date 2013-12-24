@@ -39,7 +39,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 
 		if (from != null)
 		{
-			int stoneID = this.engine.getStoneAtLocation(from);
+			int stoneID = engine.getStoneAtLocation(from);
 			if (stoneID > -1) event.cancel();
 		}
 	}
@@ -87,25 +87,25 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 		{
 			WarpDrive.debug.debugFine("Detected FLINT_AND_STEEL click on EMERALD_BLOCK");
 			ILocation stoneLocation = runsafeBlock.getLocation();
-			if (this.engine.canCreateStone(stoneLocation.getWorld()) && SummoningStone.isSummoningStone(stoneLocation))
+			if (engine.canCreateStone(stoneLocation.getWorld()) && SummoningStone.isSummoningStone(stoneLocation))
 			{
 				WarpDrive.debug.debugFine("Location is safe to create a summoning stone.");
-				int stoneID = this.repository.addSummoningStone(stoneLocation);
+				int stoneID = repository.addSummoningStone(stoneLocation);
 				SummoningStone summoningStone = new SummoningStone(stoneLocation);
 				summoningStone.activate();
-				summoningStone.setTimerID(this.engine.registerExpireTimer(stoneID));
+				summoningStone.setTimerID(engine.registerExpireTimer(stoneID));
 
-				this.engine.registerStone(stoneID, summoningStone);
+				engine.registerStone(stoneID, summoningStone);
 				return false;
 			}
 		}
 		else if (itemStack.is(Item.Miscellaneous.EyeOfEnder) && runsafeBlock.is(Item.Decoration.EnderPortalFrame))
 		{
-			if (this.engine.isRitualWorld(runsafePlayer.getWorld()))
+			if (engine.isRitualWorld(runsafePlayer.getWorld()))
 			{
-				if (this.engine.playerHasPendingSummon(runsafePlayer))
+				if (engine.playerHasPendingSummon(runsafePlayer))
 				{
-					this.engine.acceptPlayerSummon(runsafePlayer);
+					engine.acceptPlayerSummon(runsafePlayer);
 					itemStack.remove(1);
 				}
 				else
@@ -123,7 +123,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 	public void OnPlayerJoinEvent(RunsafePlayerJoinEvent event)
 	{
 		IPlayer player = event.getPlayer();
-		if (this.engine.playerHasPendingSummon(player))
+		if (engine.playerHasPendingSummon(player))
 			player.sendColouredMessage("&3You have a pending summon, head to the ritual stone to accept.");
 	}
 
