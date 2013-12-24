@@ -50,7 +50,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 		if (event.getBlock().is(Item.Unavailable.EnderPortal))
 		{
 			ILocation location = event.getLocation();
-			int stoneID = this.engine.getStoneAtLocation(location);
+			int stoneID = engine.getStoneAtLocation(location);
 
 			if (stoneID > -1)
 			{
@@ -63,7 +63,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 					{
 						RunsafeBook book = (RunsafeBook) item;
 						IWorld world = location.getWorld();
-						this.engine.registerPendingSummon(book.getAuthor(), stoneID);
+						engine.registerPendingSummon(book.getAuthor(), stoneID);
 						((RunsafeWorld) world).playEffect(location, Effect.GHAST_SHRIEK, 0);
 						((RunsafeWorld) world).createExplosion(location.getX() + 0.5, location.getY(), location.getZ() + 0.5, 0, false, false);
 					}
