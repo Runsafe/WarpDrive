@@ -106,7 +106,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 				if (engine.playerHasPendingSummon(runsafePlayer))
 				{
 					engine.acceptPlayerSummon(runsafePlayer);
-					itemStack.remove(1);
+					runsafePlayer.removeItem(Item.Miscellaneous.EyeOfEnder, 1);
 				}
 				else
 				{
