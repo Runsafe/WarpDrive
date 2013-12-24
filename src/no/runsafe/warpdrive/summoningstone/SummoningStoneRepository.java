@@ -3,6 +3,7 @@ package no.runsafe.warpdrive.summoningstone;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.IRow;
+import no.runsafe.framework.api.database.ITransaction;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.warpdrive.WarpDrive;
 
@@ -43,14 +44,17 @@ public class SummoningStoneRepository extends Repository
 
 	public int addSummoningStone(ILocation location)
 	{
-		database.Execute(
+		ITransaction transaction = database.Isolate();
+
+		transaction.Execute(
 			"INSERT INTO summoningStones (world, x, y, z) VALUES(?, ?, ?, ?)",
 			location.getWorld().getName(),
 			location.getX(),
 			location.getY(),
 			location.getZ()
 		);
-		Integer id = database.QueryInteger("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
+		Integer id = transaction.QueryInteger("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
+		transaction.Commit();
 		return id == null ? 0 : id;
 	}
 
