@@ -83,7 +83,7 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 
 		WarpDrive.debug.debugFine("Detected right click event from player: " + runsafePlayer.getName());
 
-		if (itemStack.is(Item.Tool.FlintAndSteel) && runsafeBlock.is(Item.BuildingBlock.Emerald))
+		if ((itemStack.is(Item.Tool.FlintAndSteel) || itemStack.is(Item.Miscellaneous.FireCharge)) && runsafeBlock.is(Item.BuildingBlock.Emerald))
 		{
 			WarpDrive.debug.debugFine("Detected FLINT_AND_STEEL click on EMERALD_BLOCK");
 			ILocation stoneLocation = runsafeBlock.getLocation();
