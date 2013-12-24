@@ -107,17 +107,25 @@ public class SummoningStone
 	{
 		for (int[] bounds : SummoningStone.constructedPortal)
 		{
-			ILocation checkLocation = location.add(bounds[0], bounds[1], bounds[2]);
-			IBlock locationBlock = checkLocation.getBlock();
-			Item paletteItem = palette.get(bounds[3]);
-
-			if (!locationBlock.is(paletteItem))
+			try
 			{
-				WarpDrive.debug.debugFine(
-						"Summoning portal mis-match, expected %s got %s at %s",
-						paletteItem.getName(),
-						locationBlock.getMaterial().getName(),
-						location.toString());
+				ILocation checkLocation = location.clone();
+				checkLocation.offset(bounds[0], bounds[1], bounds[2]);
+				IBlock locationBlock = checkLocation.getBlock();
+				Item paletteItem = palette.get(bounds[3]);
+
+				if (!locationBlock.is(paletteItem))
+				{
+					WarpDrive.debug.debugFine(
+							"Summoning portal mis-match, expected %s got %s at %s",
+							paletteItem.getName(),
+							locationBlock.getMaterial().getName(),
+							location.toString());
+					return false;
+				}
+			}
+			catch (CloneNotSupportedException e)
+			{
 				return false;
 			}
 		}
