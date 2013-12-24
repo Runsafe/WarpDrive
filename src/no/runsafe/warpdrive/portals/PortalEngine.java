@@ -86,7 +86,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 	private void randomRadiusTeleport(IPlayer player, ILocation theLocation, int radius)
 	{
-		ILocation location = theLocation.add(0, 0, 0);
+		ILocation location = theLocation.clone();
 		int highX = location.getBlockX() + radius;
 		int highZ = location.getBlockZ() + radius;
 		int lowX = location.getBlockX() - radius;
