@@ -73,7 +73,7 @@ public class SummoningStone
 
 	private void loadChunkAt(int xOffset, int zOffset)
 	{
-		ILocation checkLocation = this.location.add(xOffset, 0, zOffset);
+		ILocation checkLocation = location.add(xOffset, 0, zOffset);
 		RunsafeChunk chunk = checkLocation.getChunk();
 		if (chunk.isUnloaded())
 			chunk.load();
@@ -91,12 +91,12 @@ public class SummoningStone
 
 	public boolean hasTimer()
 	{
-		return this.timerID != -1;
+		return timerID != -1;
 	}
 
 	public int getTimerID()
 	{
-		return this.timerID;
+		return timerID;
 	}
 
 	private final ILocation location;
