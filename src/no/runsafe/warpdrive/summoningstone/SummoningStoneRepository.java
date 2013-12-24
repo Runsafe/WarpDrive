@@ -32,25 +32,25 @@ public class SummoningStoneRepository extends Repository
 
 	public void wipeStoneList()
 	{
-		this.database.Execute("DELETE FROM summoningStones");
+		database.Execute("DELETE FROM summoningStones");
 	}
 
 	public void deleteSummoningStone(int ID)
 	{
 		WarpDrive.debug.debugFine("Delete stone %s from the database.", ID);
-		this.database.Execute("DELETE FROM summoningStones WHERE ID = ?", ID);
+		database.Execute("DELETE FROM summoningStones WHERE ID = ?", ID);
 	}
 
 	public int addSummoningStone(ILocation location)
 	{
-		this.database.Execute(
+		database.Execute(
 			"INSERT INTO summoningStones (world, x, y, z) VALUES(?, ?, ?, ?)",
 			location.getWorld().getName(),
 			location.getX(),
 			location.getY(),
 			location.getZ()
 		);
-		Integer id = this.database.QueryInteger("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
+		Integer id = database.QueryInteger("SELECT LAST_INSERT_ID() AS ID FROM summoningStones");
 		return id == null ? 0 : id;
 	}
 
