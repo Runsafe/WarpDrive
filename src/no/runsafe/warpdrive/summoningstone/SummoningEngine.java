@@ -2,7 +2,6 @@ package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
-import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.WarpDrive;
 
