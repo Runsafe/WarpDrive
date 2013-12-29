@@ -3,9 +3,9 @@ package no.runsafe.warpdrive.summoningstone;
 import com.google.common.collect.Lists;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.block.IBlock;
+import no.runsafe.framework.api.chunk.IChunk;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.chunk.RunsafeChunk;
 import no.runsafe.warpdrive.WarpDrive;
 
 import java.util.List;
@@ -78,7 +78,7 @@ public class SummoningStone
 		ILocation checkLocation = location.clone();
 		checkLocation.offset(xOffset, 0, zOffset);
 
-		RunsafeChunk chunk = checkLocation.getChunk();
+		IChunk chunk = checkLocation.getChunk();
 		if (chunk.isUnloaded())
 			chunk.load();
 	}

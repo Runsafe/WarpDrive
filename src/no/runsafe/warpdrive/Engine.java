@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
+import no.runsafe.framework.api.chunk.IChunk;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.chunk.RunsafeChunk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +141,7 @@ public class Engine
 
 	public boolean targetFloorIsSafe(ILocation location, boolean playerLocation)
 	{
-		RunsafeChunk chunk = location.getChunk();
+		IChunk chunk = location.getChunk();
 		if (chunk.isUnloaded())
 			chunk.load();
 		IBlock floor;
