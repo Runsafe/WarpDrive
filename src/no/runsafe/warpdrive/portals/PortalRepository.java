@@ -24,7 +24,7 @@ public class PortalRepository extends Repository
 	{
 		List<PortalWarp> warps = new ArrayList<PortalWarp>();
 
-		for (IRow row : database.Query("SELECT * FROM warpdrive_portals"))
+		for (IRow row : database.query("SELECT * FROM warpdrive_portals"))
 		{
 			String portalID = row.String("ID");
 			try
@@ -48,12 +48,12 @@ public class PortalRepository extends Repository
 
 	public void deleteWarp(String warpID)
 	{
-		database.Execute("DELETE FROM warpdrive_portals WHERE ID = ?", warpID);
+		database.execute("DELETE FROM warpdrive_portals WHERE ID = ?", warpID);
 	}
 
 	public void storeWarp(PortalWarp warp)
 	{
-		database.Execute(
+		database.execute(
 			"INSERT INTO warpdrive_portals (ID, world, x, y, z, destWorld, destX, destY, destZ, destYaw, destPitch, radius, permission) " +
 				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			warp.getID(), warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getDestinationWorldName(),
@@ -64,7 +64,7 @@ public class PortalRepository extends Repository
 
 	public void updatePortalWarp(PortalWarp warp)
 	{
-		database.Execute(
+		database.execute(
 			"UPDATE warpdrive_portals " +
 				"SET destWorld = ?, destX = ?, destY = ?, destZ = ?, destYaw = ?, destPitch = ?," +
 				"world = ?, x = ?, y = ?, z = ?, type = ?",

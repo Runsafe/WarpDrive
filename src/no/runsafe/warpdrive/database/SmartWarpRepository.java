@@ -39,13 +39,13 @@ public class SmartWarpRepository extends Repository
 
 	public int getRange(String world)
 	{
-		Integer range = database.QueryInteger("SELECT `range` FROM smartwarp_settings WHERE world=?", world);
+		Integer range = database.queryInteger("SELECT `range` FROM smartwarp_settings WHERE world=?", world);
 		return range == null ? -1 : range;
 	}
 
 	public void setProgress(String world, double progress)
 	{
-		database.Update(
+		database.update(
 			"UPDATE smartwarp_settings SET progress=? WHERE world=?",
 			progress, world
 		);
@@ -53,13 +53,13 @@ public class SmartWarpRepository extends Repository
 
 	public double getProgress(String world)
 	{
-		Double progress = database.QueryDouble("SELECT progress FROM smartwarp_settings WHERE world=?", world);
+		Double progress = database.queryDouble("SELECT progress FROM smartwarp_settings WHERE world=?", world);
 		return progress == null ? -1 : progress;
 	}
 
 	public void setRange(String world, int range)
 	{
-		database.Update(
+		database.update(
 			"INSERT INTO smartwarp_settings (`world`, `range`, `progress`) VALUES (?, ?, 0)" +
 				" ON DUPLICATE KEY UPDATE `range`=VALUES(`range`)",
 			world, range
@@ -68,7 +68,7 @@ public class SmartWarpRepository extends Repository
 
 	public List<String> getWorlds()
 	{
-		return database.QueryStrings("SELECT world FROM smartwarp_settings");
+		return database.queryStrings("SELECT world FROM smartwarp_settings");
 	}
 
 	private final IDatabase database;

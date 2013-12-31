@@ -49,7 +49,7 @@ public class WarpRepository extends Repository
 
 	public void Persist(String creator, String name, boolean publicWarp, ILocation location)
 	{
-		database.Update(
+		database.update(
 			"INSERT INTO warpdrive_locations (creator, name, `public`, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)" +
 				"ON DUPLICATE KEY UPDATE world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z), yaw=VALUES(yaw), pitch=VALUES(pitch)",
 			creator,
@@ -99,7 +99,7 @@ public class WarpRepository extends Repository
 
 	public void DelAllPrivate(String world)
 	{
-		database.Execute("DELETE FROM warpdrive_locations WHERE world=? AND public=?", world, false);
+		database.execute("DELETE FROM warpdrive_locations WHERE world=? AND public=?", world, false);
 	}
 
 	private String cacheKey(String creator, String name, boolean publicWarp)
@@ -112,9 +112,9 @@ public class WarpRepository extends Repository
 	private List<String> GetWarps(String owner, boolean publicWarp)
 	{
 		if (publicWarp)
-			return database.QueryStrings("SELECT name FROM warpdrive_locations WHERE `public`=1");
+			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=1");
 		else
-			return database.QueryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator=?", owner);
+			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator=?", owner);
 	}
 
 	private ILocation GetWarp(String owner, String name, boolean publicWarp)
@@ -125,12 +125,12 @@ public class WarpRepository extends Repository
 			return location;
 
 		if (publicWarp)
-			location = database.QueryLocation(
+			location = database.queryLocation(
 				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=1",
 				name
 			);
 		else
-			location = database.QueryLocation(
+			location = database.queryLocation(
 				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=0 AND creator=?",
 				name, owner
 			);
@@ -144,9 +144,9 @@ public class WarpRepository extends Repository
 			return false;
 		boolean success;
 		if (publicWarp)
-			success = database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=1", name);
+			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=1", name);
 		else
-			success = database.Execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator=?", name, owner);
+			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator=?", name, owner);
 		cache.Invalidate(cacheKey(owner, name, publicWarp));
 		return success;
 	}

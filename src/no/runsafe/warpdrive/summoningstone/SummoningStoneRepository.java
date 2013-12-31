@@ -26,34 +26,34 @@ public class SummoningStoneRepository extends Repository
 	public List<ILocation> getStoneList()
 	{
 		List<ILocation> stones = new ArrayList<ILocation>();
-		for (IRow node : database.Query("SELECT world, x, y, z FROM summoningStones"))
+		for (IRow node : database.query("SELECT world, x, y, z FROM summoningStones"))
 			stones.add(node.Location());
 		return stones;
 	}
 
 	public void wipeStoneList()
 	{
-		database.Execute("DELETE FROM summoningStones");
+		database.execute("DELETE FROM summoningStones");
 	}
 
 	public void deleteSummoningStone(int ID)
 	{
 		WarpDrive.debug.debugFine("Delete stone %s from the database.", ID);
-		database.Execute("DELETE FROM summoningStones WHERE ID = ?", ID);
+		database.execute("DELETE FROM summoningStones WHERE ID = ?", ID);
 	}
 
 	public int addSummoningStone(ILocation location)
 	{
-		ITransaction transaction = database.Isolate();
+		ITransaction transaction = database.isolate();
 
-		transaction.Execute(
+		transaction.execute(
 			"INSERT INTO summoningStones (world, x, y, z) VALUES(?, ?, ?, ?)",
 			location.getWorld().getName(),
 			location.getX(),
 			location.getY(),
 			location.getZ()
 		);
-		Integer id = transaction.QueryInteger("SELECT LAST_INSERT_ID()");
+		Integer id = transaction.queryInteger("SELECT LAST_INSERT_ID()");
 		transaction.Commit();
 		return id == null ? 0 : id;
 	}

@@ -44,7 +44,7 @@ public class SmartWarpChunkRepository extends Repository
 
 	public ILocation getTarget(IWorld world, boolean cave)
 	{
-		return database.QueryLocation(
+		return database.queryLocation(
 			"SELECT world, x, y, z FROM smartwarp_targets WHERE world=? AND safe=true AND cave=? ORDER BY RAND() LIMIT 1",
 			world.getName(), cave
 		);
@@ -52,7 +52,7 @@ public class SmartWarpChunkRepository extends Repository
 
 	public void setUnsafe(ILocation candidate)
 	{
-		database.Update(
+		database.update(
 			"UPDATE smartwarp_targets SET safe=false WHERE world=? AND x=? AND y=? AND z=?",
 			candidate.getWorld().getName(),
 			candidate.getBlockX(), candidate.getBlockY(), candidate.getBlockZ()
@@ -61,7 +61,7 @@ public class SmartWarpChunkRepository extends Repository
 
 	public void saveTarget(ILocation target, boolean safe, boolean cave)
 	{
-		database.Update(
+		database.update(
 			"INSERT INTO smartwarp_targets (world, x, y, z, safe, cave) VALUES (?, ?, ?, ?, ?, ?)" +
 				" ON DUPLICATE KEY UPDATE safe=VALUES(safe), cave=VALUES(cave)",
 			target.getWorld().getName(),
