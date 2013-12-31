@@ -2,9 +2,10 @@ package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IWorld;
-import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
+import no.runsafe.framework.api.command.argument.WorldArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.portals.PortalEngine;
@@ -15,71 +16,47 @@ import java.util.Map;
 
 public class SetPortal extends PlayerAsyncCommand
 {
-	// ToDo: Add support for permissions.
-	// ToDo: Add support for radius.
-
-	public SetPortal(IScheduler scheduler, PortalEngine engine)
+	public SetPortal(IScheduler scheduler, PortalEngine engine, IServer server)
 	{
 		super(
 			"setportal",
-			"Sets your current location as a portal",
+			"Hook your current location to a portal",
 			"runsafe.portal.set",
 			scheduler,
-			new RequiredArgument("portalID"),
-			new RequiredArgument("portalType"),
-			new OptionalArgument("destination")
+			new WorldArgument(true),
+			new RequiredArgument("name")
 		);
 		this.engine = engine;
+		this.server = server;
 	}
 
 	@Override
 	public String OnAsyncExecute(IPlayer player, Map<String, String> parameters)
 	{
-		IWorld playerWorld = player.getWorld();
-		if (playerWorld == null)
-			return "Invalid world."; // Player's world is null, return with an error.
+		IWorld portalWorld = server.getWorld(parameters.get("world"));
+		if (portalWorld == null)
+			return "Invalid world.";
 
-		String portalName = parameters.get("portalID"); // The ID of the portal.
-		PortalWarp warp = engine.getWarp(playerWorld, portalName); // Grab the portal warp.
-		boolean setDestination = parameters.containsKey("destination"); // Should we be setting it as a destination.
-		ILocation playerLocation = player.getLocation(); // Location of the player.
+		String portalName = parameters.get("name");
+		PortalWarp warp = engine.getWarp(portalWorld, portalName);
+		ILocation playerLocation = player.getLocation();
 
 		if (playerLocation == null)
 			return "Invalid location.";
 
 		if (warp != null)
 		{
-			// The portal exists, edit it.
-			if (setDestination)
-				warp.setDestination(playerLocation); // Set the warps destination.
-			else
-				warp.setLocation(playerLocation); // Set the warps location (entry-point).
-
-			engine.updateWarp(warp); // Update the warp.
-			return "Warp modified at " + playerLocation.toString();
+			warp.setDestination(playerLocation);
+			engine.updateWarp(warp);
+			return "Portal " + portalName + " now connects to " + playerLocation.toString();
 		}
 		else
 		{
-			ILocation worldStart = playerWorld.getLocation(0.0, 0.0, 0.0); // Placeholder location.
-
-			// Create the new warp in the engine.
-			try
-			{
-				engine.createWarp(
-					portalName,
-					setDestination ? worldStart : playerLocation,
-					setDestination ? playerLocation : worldStart,
-					PortalType.getPortalType(Integer.parseInt(parameters.get("portalType")))
-				);
-			}
-			catch (NullPointerException e)
-			{
-				return "Error: " + e.getMessage();
-			}
-
-			return "Warp created at " + playerLocation.toString();
+			engine.createWarp(player, portalName, playerLocation, PortalType.NORMAL);
+			return "Now walk through the portal to connect to " + playerLocation.toString();
 		}
 	}
 
 	private final PortalEngine engine;
+	private final IServer server;
 }

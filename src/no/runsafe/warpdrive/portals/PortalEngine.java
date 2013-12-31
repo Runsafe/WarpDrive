@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent
 {
@@ -142,6 +143,11 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 				}
 			}
 		}
+		if (pending.containsKey(player.getName()))
+		{
+			finalizeWarp(player);
+			return OnPlayerPortal(player, from, to);
+		}
 		return true;
 	}
 
@@ -164,13 +170,21 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		return null;
 	}
 
-	public void createWarp(String portalName, ILocation location, ILocation destination, PortalType type) throws NullPointerException
+	public void createWarp(IPlayer creator, String portalName, ILocation destination, PortalType type) throws NullPointerException
 	{
-		String worldName = location.getWorld().getName();
+		PortalWarp warp = new PortalWarp(portalName, null, destination, type, -1, null); // Create new warp.
+		pending.put(creator.getName(), warp);
+	}
+
+	public void finalizeWarp(IPlayer player)
+	{
+		PortalWarp warp = pending.get(player.getName());
+		warp.setLocation(player.getLocation());
+		pending.remove(player.getName());
+		String worldName = warp.getWorldName();
 		if (!portals.containsKey(worldName)) // Check if we're missing a container for this world.
 			portals.put(worldName, new ArrayList<PortalWarp>()); // Create a new warp container.
 
-		PortalWarp warp = new PortalWarp(portalName, location, destination, type, -1, null); // Create new warp.
 		repository.storeWarp(warp); // Store the warp in the database.
 		portals.get(worldName).add(warp); // Add to the in-memory warp storage.
 	}
@@ -196,6 +210,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		}
 	}
 
+	private final Map<String, PortalWarp> pending = new ConcurrentHashMap<String, PortalWarp>();
 	private final Map<String, List<PortalWarp>> portals = new HashMap<String, List<PortalWarp>>();
 	private final PortalRepository repository;
 	private final SmartWarpDrive smartWarpDrive;
