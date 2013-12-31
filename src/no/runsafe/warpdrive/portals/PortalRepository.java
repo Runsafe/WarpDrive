@@ -67,10 +67,12 @@ public class PortalRepository extends Repository
 		database.execute(
 			"UPDATE warpdrive_portals " +
 				"SET destWorld = ?, destX = ?, destY = ?, destZ = ?, destYaw = ?, destPitch = ?," +
-				"world = ?, x = ?, y = ?, z = ?, type = ?",
+				"world = ?, x = ?, y = ?, z = ?, type = ? " +
+				"WHERE world=? AND ID=?",
 			warp.getDestinationWorldName(), warp.getDestinationX(), warp.getDestinationY(),
 			warp.getDestinationZ(), warp.getDestinationYaw(), warp.getDestinationPitch(),
-			warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getType().ordinal()
+			warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getType().ordinal(),
+			warp.getWorldName(), warp.getID()
 		);
 	}
 
