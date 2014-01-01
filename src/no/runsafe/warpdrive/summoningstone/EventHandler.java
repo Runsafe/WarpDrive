@@ -10,7 +10,6 @@ import no.runsafe.framework.api.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.PassiveEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
@@ -64,8 +63,10 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 						RunsafeBook book = (RunsafeBook) item;
 						IWorld world = location.getWorld();
 						engine.registerPendingSummon(book.getAuthor(), stoneID);
-						((RunsafeWorld) world).playEffect(location, Effect.GHAST_SHRIEK, 0);
-						((RunsafeWorld) world).createExplosion(location.getX() + 0.5, location.getY(), location.getZ() + 0.5, 0, false, false);
+						world.playEffect(location, Effect.GHAST_SHRIEK, 0);
+						ILocation target = location.clone();
+						target.offset(0.5, 0, 0.5);
+						world.createExplosion(target, 0, false, false);
 					}
 				}
 
