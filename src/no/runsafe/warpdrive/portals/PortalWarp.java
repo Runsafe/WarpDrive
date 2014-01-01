@@ -3,9 +3,12 @@ package no.runsafe.warpdrive.portals;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.vector.IRegion3D;
 
 public class PortalWarp
 {
+	private IRegion3D region;
+
 	public PortalWarp(String id, ILocation location, ILocation destination, PortalType type, int radius, String permission) throws NullPointerException
 	{
 		this.id = id;
@@ -67,6 +70,8 @@ public class PortalWarp
 
 	public boolean isInPortal(IPlayer player)
 	{
+		if(region != null)
+			return region.contains(player.getLocation().getPoint());
 		return player.getLocation().distance(this.location) < 2;
 	}
 
@@ -144,6 +149,16 @@ public class PortalWarp
 	{
 		destination = location;
 		destinationWorld = location.getWorld();
+	}
+
+	public void setRegion(IRegion3D region)
+	{
+		this.region = region;
+	}
+
+	public IRegion3D getRegion()
+	{
+		return region;
 	}
 
 	private final String id;

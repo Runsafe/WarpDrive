@@ -54,11 +54,11 @@ public class PortalRepository extends Repository
 	public void storeWarp(PortalWarp warp)
 	{
 		database.execute(
-			"INSERT INTO warpdrive_portals (ID, world, x, y, z, destWorld, destX, destY, destZ, destYaw, destPitch, radius, permission) " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO warpdrive_portals (ID, world, x, y, z, destWorld, destX, destY, destZ, destYaw, destPitch, radius, permission, portal_field) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			warp.getID(), warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getDestinationWorldName(),
 			warp.getDestinationX(), warp.getDestinationY(), warp.getDestinationZ(), warp.getDestinationYaw(),
-			warp.getDestinationPitch(), null, ""
+			warp.getDestinationPitch(), null, "", warp.getRegion()
 		);
 	}
 
@@ -67,11 +67,12 @@ public class PortalRepository extends Repository
 		database.execute(
 			"UPDATE warpdrive_portals " +
 				"SET destWorld = ?, destX = ?, destY = ?, destZ = ?, destYaw = ?, destPitch = ?," +
-				"world = ?, x = ?, y = ?, z = ?, type = ? " +
+				"world = ?, x = ?, y = ?, z = ?, type = ?, portal_field = ? " +
 				"WHERE world=? AND ID=?",
 			warp.getDestinationWorldName(), warp.getDestinationX(), warp.getDestinationY(),
 			warp.getDestinationZ(), warp.getDestinationYaw(), warp.getDestinationPitch(),
 			warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getType().ordinal(),
+			warp.getRegion(),
 			warp.getWorldName(), warp.getID()
 		);
 	}
@@ -80,7 +81,7 @@ public class PortalRepository extends Repository
 	public HashMap<Integer, List<String>> getSchemaUpdateQueries()
 	{
 		HashMap<Integer, List<String>> queries = new HashMap<Integer, List<String>>();
-		ArrayList<String> sql = new ArrayList<String>();
+		ArrayList<String> sql = new ArrayList<String>(1);
 		sql.add(
 			"CREATE TABLE `warpdrive_portals` (" +
 				"`ID` VARCHAR(50) NOT NULL," +
@@ -101,10 +102,15 @@ public class PortalRepository extends Repository
 		);
 		queries.put(1, sql);
 
-		sql.clear();
+		sql = new ArrayList<String>(1);
 		sql.add("ALTER TABLE `warpdrive_portals`" +
 			"ADD COLUMN `radius` INT UNSIGNED NULL DEFAULT NULL AFTER `destPitch`;");
 		queries.put(2, sql);
+
+		sql = new ArrayList<String>(1);
+		sql.add("ALTER TABLE `warpdrive_portals`" +
+			"ADD COLUMN `portal_field` VARCHAR(255) NULL;");
+		queries.put(3, sql);
 
 		return queries;
 	}

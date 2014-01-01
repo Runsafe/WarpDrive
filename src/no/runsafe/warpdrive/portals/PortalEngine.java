@@ -10,14 +10,14 @@ import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.vector.IRegion3D;
+import no.runsafe.framework.internal.vector.Point3D;
+import no.runsafe.framework.internal.vector.Region3D;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.warpdrive.SmartWarpDrive;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent
@@ -123,7 +123,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	@Override
 	public boolean OnPlayerPortal(IPlayer player, ILocation from, ILocation to)
 	{
-		this.debugger.debugFine("Portal event detected: " + player.getName());
+		this.debugger.debugFiner("Portal event detected: " + player.getName());
 		IWorld playerWorld = player.getWorld();
 		if (playerWorld == null)
 			return false;
@@ -135,6 +135,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			{
 				if (portal.isInPortal(player))
 				{
+					debugger.debugFine("Player %s using portal %s in world %s.", player.getName(), portal.getID(), portal.getWorldName());
 					if (portal.canTeleport(player))
 						this.teleportPlayer(portal, player);
 					else
@@ -178,8 +179,9 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 	public void finalizeWarp(IPlayer player)
 	{
+		IRegion3D portalArea = scanArea(player.getLocation());
 		PortalWarp warp = pending.get(player.getName());
-		warp.setLocation(player.getLocation());
+		warp.setRegion(portalArea);
 		pending.remove(player.getName());
 		String worldName = warp.getWorldName();
 		if (!portals.containsKey(worldName)) // Check if we're missing a container for this world.
@@ -187,6 +189,64 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 		repository.storeWarp(warp); // Store the warp in the database.
 		portals.get(worldName).add(warp); // Add to the in-memory warp storage.
+	}
+
+	private IRegion3D scanArea(ILocation location)
+	{
+		Map<Integer, Map<Integer, Map<Integer, Boolean>>> portalMap = new HashMap<Integer, Map<Integer, Map<Integer, Boolean>>>();
+		getNeighbouringPortalBlocks(location, portalMap);
+		int xMin = Collections.min(portalMap.keySet());
+		int xMax = Collections.max(portalMap.keySet());
+		int yMin = Integer.MAX_VALUE;
+		int yMax = Integer.MIN_VALUE;
+		int zMin = Integer.MAX_VALUE;
+		int zMax = Integer.MIN_VALUE;
+		for (Integer x : portalMap.keySet())
+		{
+			yMin = Math.min(yMin, Collections.min(portalMap.get(x).keySet()));
+			yMax = Math.min(yMax, Collections.max(portalMap.get(x).keySet()));
+			for (Integer y : portalMap.get(x).keySet())
+			{
+				zMin = Math.min(zMin, Collections.min(portalMap.get(x).get(y).keySet()));
+				zMax = Math.min(zMax, Collections.max(portalMap.get(x).get(y).keySet()));
+			}
+		}
+		return new Region3D(new Point3D(xMin, yMin, zMin), new Point3D(xMax + 1, yMax + 1, zMax + 1));
+	}
+
+	private void getNeighbouringPortalBlocks(ILocation location, Map<Integer, Map<Integer, Map<Integer, Boolean>>> portalMap)
+	{
+		int x = location.getBlockX();
+		int y = location.getBlockY();
+		int z = location.getBlockZ();
+		if (!portalMap.containsKey(x))
+			portalMap.put(x, new HashMap<Integer, Map<Integer, Boolean>>());
+		if (!portalMap.get(x).containsKey(y))
+			portalMap.get(x).put(y, new HashMap<Integer, Boolean>());
+		if (!portalMap.get(x).get(y).containsKey(z))
+			portalMap.get(x).get(y).put(z, true);
+		else
+			return;
+
+		ILocation neighbour = location.clone();
+		neighbour.offset(-1, 0, 0);
+		if (neighbour.getBlock().is(Item.Unavailable.Portal))
+			getNeighbouringPortalBlocks(neighbour, portalMap);
+		neighbour.offset(2, 0, 0);
+		if (neighbour.getBlock().is(Item.Unavailable.Portal))
+			getNeighbouringPortalBlocks(neighbour, portalMap);
+		neighbour.offset(-1, -1, 0);
+		if (neighbour.getBlock().is(Item.Unavailable.Portal))
+			getNeighbouringPortalBlocks(neighbour, portalMap);
+		neighbour.offset(0, 2, 0);
+		if (neighbour.getBlock().is(Item.Unavailable.Portal))
+			getNeighbouringPortalBlocks(neighbour, portalMap);
+		neighbour.offset(0, -1, -1);
+		if (neighbour.getBlock().is(Item.Unavailable.Portal))
+			getNeighbouringPortalBlocks(neighbour, portalMap);
+		neighbour.offset(0, 0, 2);
+		if (neighbour.getBlock().is(Item.Unavailable.Portal))
+			getNeighbouringPortalBlocks(neighbour, portalMap);
 	}
 
 	public void updateWarp(PortalWarp warp)
