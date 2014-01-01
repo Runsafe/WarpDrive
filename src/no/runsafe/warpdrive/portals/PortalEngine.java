@@ -183,7 +183,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		PortalWarp warp = pending.get(player.getName());
 		warp.setRegion(portalArea);
 		pending.remove(player.getName());
-		String worldName = warp.getWorldName();
+		String worldName = player.getWorldName();
 		if (!portals.containsKey(worldName)) // Check if we're missing a container for this world.
 			portals.put(worldName, new ArrayList<PortalWarp>()); // Create a new warp container.
 
