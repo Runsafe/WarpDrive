@@ -199,9 +199,9 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		int xMin = Collections.min(portalMap.keySet());
 		int xMax = Collections.max(portalMap.keySet());
 		int yMin = Integer.MAX_VALUE;
-		int yMax = Integer.MIN_VALUE;
+		int yMax = -Integer.MAX_VALUE;
 		int zMin = Integer.MAX_VALUE;
-		int zMax = Integer.MIN_VALUE;
+		int zMax = -Integer.MAX_VALUE;
 		for (Integer x : portalMap.keySet())
 		{
 			yMin = Math.min(yMin, Collections.min(portalMap.get(x).keySet()));
