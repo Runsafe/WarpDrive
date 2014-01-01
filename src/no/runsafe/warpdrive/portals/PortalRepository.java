@@ -3,6 +3,7 @@ package no.runsafe.warpdrive.portals;
 import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.IRow;
 import no.runsafe.framework.api.database.Repository;
+import no.runsafe.framework.internal.vector.Region3D;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +36,8 @@ public class PortalRepository extends Repository
 					row.Location("destWorld", "destX", "destY", "destZ", "destYaw", "destPitch"),
 					PortalType.getPortalType(row.Integer("type")),
 					(row.Integer("radius") == null ? 0 : row.Integer("radius")),
-					row.String("permission")
+					row.String("permission"),
+					Region3D.fromString(row.String("portal_field"))
 				));
 			}
 			catch (NullPointerException e)
@@ -58,7 +60,7 @@ public class PortalRepository extends Repository
 				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			warp.getID(), warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getDestinationWorldName(),
 			warp.getDestinationX(), warp.getDestinationY(), warp.getDestinationZ(), warp.getDestinationYaw(),
-			warp.getDestinationPitch(), null, "", warp.getRegion()
+			warp.getDestinationPitch(), null, "", warp.getRegion() == null ? null : warp.getRegion().toString()
 		);
 	}
 
@@ -72,7 +74,7 @@ public class PortalRepository extends Repository
 			warp.getDestinationWorldName(), warp.getDestinationX(), warp.getDestinationY(),
 			warp.getDestinationZ(), warp.getDestinationYaw(), warp.getDestinationPitch(),
 			warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getType().ordinal(),
-			warp.getRegion(),
+			warp.getRegion() == null ? null : warp.getRegion().toString(),
 			warp.getWorldName(), warp.getID()
 		);
 	}

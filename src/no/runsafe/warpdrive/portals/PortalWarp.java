@@ -9,10 +9,11 @@ public class PortalWarp
 {
 	private IRegion3D region;
 
-	public PortalWarp(String id, ILocation location, ILocation destination, PortalType type, int radius, String permission) throws NullPointerException
+	public PortalWarp(String id, ILocation location, ILocation destination, PortalType type, int radius, String permission, IRegion3D region) throws NullPointerException
 	{
 		this.id = id;
 		this.location = location;
+		this.region = region;
 		this.type = type;
 
 		if (destination == null || destination.getWorld() == null)

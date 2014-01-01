@@ -173,7 +173,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 	public void createWarp(IPlayer creator, String portalName, ILocation destination, PortalType type) throws NullPointerException
 	{
-		PortalWarp warp = new PortalWarp(portalName, null, destination, type, -1, null); // Create new warp.
+		PortalWarp warp = new PortalWarp(portalName, null, destination, type, -1, null, null); // Create new warp.
 		pending.put(creator.getName(), warp);
 	}
 
