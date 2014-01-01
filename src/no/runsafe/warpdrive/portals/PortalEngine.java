@@ -38,10 +38,10 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		{
 			String portalWorldName = portal.getPortalWorld().getName();
 			if (!portals.containsKey(portalWorldName))
-				portals.put(portalWorldName, new ArrayList<PortalWarp>());
+				portals.put(portalWorldName, new HashMap<String, PortalWarp>());
 
 			portalCount += 1;
-			portals.get(portalWorldName).add(portal);
+			portals.get(portalWorldName).put(portal.getID(), portal);
 		}
 		this.console.logInformation("%d portals loaded in %d worlds.", portalCount, portals.size());
 	}
@@ -77,7 +77,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 			if (world != null && portals.containsKey(world.getName()))
 			{
-				List<PortalWarp> portalList = portals.get(world.getName());
+				Collection<PortalWarp> portalList = portals.get(world.getName()).values();
 				for (PortalWarp warp : portalList)
 					if (warp.getPortalLocation().distance(block.getLocation()) < 5)
 						warp.setLocked(true);
@@ -131,7 +131,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		String worldName = playerWorld.getName();
 		if (portals.containsKey(worldName))
 		{
-			for (PortalWarp portal : this.portals.get(worldName))
+			for (PortalWarp portal : this.portals.get(worldName).values())
 			{
 				if (portal.isInPortal(player))
 				{
@@ -161,13 +161,8 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	public PortalWarp getWarp(IWorld world, String portalName)
 	{
 		String worldName = world.getName();
-		if (portals.containsKey(worldName))
-		{
-			List<PortalWarp> worldPortals = portals.get(worldName);
-			for (PortalWarp warp : worldPortals)
-				if (warp.getID().equalsIgnoreCase(portalName))
-					return warp;
-		}
+		if (portals.containsKey(worldName) && portals.get(worldName).containsKey(portalName))
+			return portals.get(worldName).get(portalName);
 		return null;
 	}
 
@@ -186,10 +181,10 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		pending.remove(player.getName());
 		String worldName = player.getWorldName();
 		if (!portals.containsKey(worldName)) // Check if we're missing a container for this world.
-			portals.put(worldName, new ArrayList<PortalWarp>()); // Create a new warp container.
+			portals.put(worldName, new HashMap<String, PortalWarp>()); // Create a new warp container.
 
 		repository.storeWarp(warp); // Store the warp in the database.
-		portals.get(worldName).add(warp); // Add to the in-memory warp storage.
+		portals.get(worldName).put(warp.getID(), warp); // Add to the in-memory warp storage.
 	}
 
 	private IRegion3D scanArea(ILocation location)
@@ -254,25 +249,14 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	{
 		String worldName = warp.getWorldName();
 		if (!portals.containsKey(worldName))
-			portals.put(worldName, new ArrayList<PortalWarp>());
+			portals.put(worldName, new HashMap<String, PortalWarp>());
 
 		repository.updatePortalWarp(warp); // Store changes in the database.
-
-		int index = 0;
-		for (PortalWarp portalWarp : portals.get(worldName))
-		{
-			if (portalWarp.getID().equalsIgnoreCase(warp.getID()))
-			{
-				portals.get(worldName).remove(index); // Remove the old warp.
-				portals.get(worldName).add(warp); // Insert the updated warp.
-				return;
-			}
-			index++;
-		}
+		portals.get(worldName).put(warp.getID(), warp);
 	}
 
 	private final Map<String, PortalWarp> pending = new ConcurrentHashMap<String, PortalWarp>();
-	private final Map<String, List<PortalWarp>> portals = new HashMap<String, List<PortalWarp>>();
+	private final Map<String, Map<String, PortalWarp>> portals = new HashMap<String, Map<String, PortalWarp>>();
 	private final PortalRepository repository;
 	private final SmartWarpDrive smartWarpDrive;
 	private final IDebug debugger;
