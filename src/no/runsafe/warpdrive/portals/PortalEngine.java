@@ -199,17 +199,17 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		int xMin = Collections.min(portalMap.keySet());
 		int xMax = Collections.max(portalMap.keySet());
 		int yMin = Integer.MAX_VALUE;
-		int yMax = -Integer.MAX_VALUE;
+		int yMax = Integer.MIN_VALUE;
 		int zMin = Integer.MAX_VALUE;
-		int zMax = -Integer.MAX_VALUE;
+		int zMax = Integer.MIN_VALUE;
 		for (Integer x : portalMap.keySet())
 		{
 			yMin = Math.min(yMin, Collections.min(portalMap.get(x).keySet()));
-			yMax = Math.min(yMax, Collections.max(portalMap.get(x).keySet()));
+			yMax = Math.max(yMax, Collections.max(portalMap.get(x).keySet()));
 			for (Integer y : portalMap.get(x).keySet())
 			{
 				zMin = Math.min(zMin, Collections.min(portalMap.get(x).get(y).keySet()));
-				zMax = Math.min(zMax, Collections.max(portalMap.get(x).get(y).keySet()));
+				zMax = Math.max(zMax, Collections.max(portalMap.get(x).get(y).keySet()));
 			}
 		}
 		return new Region3D(new Point3D(xMin, yMin, zMin), new Point3D(xMax + 1, yMax + 1, zMax + 1));
