@@ -4,6 +4,7 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.api.vector.IRegion3D;
+import no.runsafe.warpdrive.WarpDrive;
 
 public class PortalWarp
 {
@@ -71,8 +72,12 @@ public class PortalWarp
 
 	public boolean isInPortal(IPlayer player)
 	{
-		if(region != null)
+		if (region != null)
+		{
+			WarpDrive.debug.debugFine("Checking if %s is within %s", player.getLocation(), region);
 			return region.contains(player.getLocation().getPoint());
+		}
+		WarpDrive.debug.debugFine("Checking if %s is close to %s", player.getLocation(), location);
 		return player.getLocation().distance(this.location) < 2;
 	}
 
