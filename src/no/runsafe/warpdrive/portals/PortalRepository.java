@@ -4,6 +4,7 @@ import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.IRow;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.internal.vector.Region3D;
+import no.runsafe.warpdrive.WarpDrive;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ public class PortalRepository extends Repository
 			String portalID = row.String("ID");
 			try
 			{
+				WarpDrive.debug.debugFine("%s gives: %s", row.String("portal_field"), Region3D.fromString(row.String("portal_field")));
 				warps.add(new PortalWarp(
 					portalID,
 					row.Location(),
