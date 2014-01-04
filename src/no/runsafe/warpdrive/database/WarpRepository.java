@@ -3,12 +3,11 @@ package no.runsafe.warpdrive.database;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.database.IDatabase;
+import no.runsafe.framework.api.database.ISchemaUpdate;
 import no.runsafe.framework.api.database.Repository;
+import no.runsafe.framework.api.database.SchemaUpdate;
 import no.runsafe.framework.timer.TimedCache;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class WarpRepository extends Repository
@@ -26,11 +25,11 @@ public class WarpRepository extends Repository
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSchemaUpdateQueries()
+	public ISchemaUpdate getSchemaUpdateQueries()
 	{
-		HashMap<Integer, List<String>> queries = new LinkedHashMap<Integer, List<String>>(1);
-		ArrayList<String> sql = new ArrayList<String>();
-		sql.add(
+		ISchemaUpdate update = new SchemaUpdate();
+
+		update.addQueries(
 			"CREATE TABLE warpdrive_locations (" +
 				"`creator` varchar(255) NOT NULL," +
 				"`name` varchar(255) NOT NULL," +
@@ -42,10 +41,10 @@ public class WarpRepository extends Repository
 				"`yaw` double NOT NULL," +
 				"`pitch` double NOT NULL," +
 				"PRIMARY KEY(`creator`,`name`,`public`)" +
-				")"
+			")"
 		);
-		queries.put(1, sql);
-		return queries;
+
+		return update;
 	}
 
 	public void Persist(String creator, String name, boolean publicWarp, ILocation location)

@@ -1,15 +1,10 @@
 package no.runsafe.warpdrive.summoningstone;
 
 import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.database.IDatabase;
-import no.runsafe.framework.api.database.IRow;
-import no.runsafe.framework.api.database.ITransaction;
-import no.runsafe.framework.api.database.Repository;
+import no.runsafe.framework.api.database.*;
 import no.runsafe.warpdrive.WarpDrive;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class SummoningStoneRepository extends Repository
@@ -60,11 +55,11 @@ public class SummoningStoneRepository extends Repository
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSchemaUpdateQueries()
+	public ISchemaUpdate getSchemaUpdateQueries()
 	{
-		HashMap<Integer, List<String>> queries = new LinkedHashMap<Integer, List<String>>(1);
-		ArrayList<String> sql = new ArrayList<String>();
-		sql.add(
+		ISchemaUpdate update = new SchemaUpdate();
+
+		update.addQueries(
 			"CREATE TABLE `summoningStones` (" +
 				"`ID` int(10) NOT NULL AUTO_INCREMENT," +
 				"`world` VARCHAR(255) NOT NULL," +
@@ -72,10 +67,10 @@ public class SummoningStoneRepository extends Repository
 				"`y` DOUBLE NOT NULL," +
 				"`z` DOUBLE NOT NULL," +
 				"PRIMARY KEY (`ID`)" +
-				")"
+			")"
 		);
-		queries.put(1, sql);
-		return queries;
+
+		return update;
 	}
 
 	private final IDatabase database;

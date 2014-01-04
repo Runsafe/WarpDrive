@@ -1,14 +1,10 @@
 package no.runsafe.warpdrive.portals;
 
-import no.runsafe.framework.api.database.IDatabase;
-import no.runsafe.framework.api.database.IRow;
-import no.runsafe.framework.api.database.Repository;
+import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.internal.vector.Region3D;
 import no.runsafe.warpdrive.WarpDrive;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class PortalRepository extends Repository
@@ -83,11 +79,11 @@ public class PortalRepository extends Repository
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSchemaUpdateQueries()
+	public ISchemaUpdate getSchemaUpdateQueries()
 	{
-		HashMap<Integer, List<String>> queries = new LinkedHashMap<Integer, List<String>>(3);
-		ArrayList<String> sql = new ArrayList<String>(1);
-		sql.add(
+		ISchemaUpdate update = new SchemaUpdate();
+
+		update.addQueries(
 			"CREATE TABLE `warpdrive_portals` (" +
 				"`ID` VARCHAR(50) NOT NULL," +
 				"`permission` VARCHAR(255) NOT NULL DEFAULT ''," +
@@ -103,21 +99,16 @@ public class PortalRepository extends Repository
 				"`destYaw` DOUBLE NULL," +
 				"`destPitch` DOUBLE NULL," +
 				"PRIMARY KEY (`ID`)" +
-				")"
+			")"
 		);
-		queries.put(1, sql);
 
-		sql = new ArrayList<String>(1);
-		sql.add("ALTER TABLE `warpdrive_portals`" +
-			"ADD COLUMN `radius` INT UNSIGNED NULL DEFAULT NULL AFTER `destPitch`;");
-		queries.put(2, sql);
+		update.addQueries("ALTER TABLE `warpdrive_portals`" +
+				"ADD COLUMN `radius` INT UNSIGNED NULL DEFAULT NULL AFTER `destPitch`;");
 
-		sql = new ArrayList<String>(1);
-		sql.add("ALTER TABLE `warpdrive_portals`" +
-			"ADD COLUMN `portal_field` VARCHAR(255) NULL;");
-		queries.put(3, sql);
+		update.addQueries("ALTER TABLE `warpdrive_portals`" +
+				"ADD COLUMN `portal_field` VARCHAR(255) NULL;");
 
-		return queries;
+		return update;
 	}
 
 	private final IDatabase database;

@@ -3,12 +3,9 @@ package no.runsafe.warpdrive.database;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.database.IDatabase;
+import no.runsafe.framework.api.database.ISchemaUpdate;
 import no.runsafe.framework.api.database.Repository;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import no.runsafe.framework.api.database.SchemaUpdate;
 
 public class SmartWarpChunkRepository extends Repository
 {
@@ -24,11 +21,11 @@ public class SmartWarpChunkRepository extends Repository
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSchemaUpdateQueries()
+	public ISchemaUpdate getSchemaUpdateQueries()
 	{
-		HashMap<Integer, List<String>> queries = new LinkedHashMap<Integer, List<String>>(1);
-		ArrayList<String> sql = new ArrayList<String>();
-		sql.add(
+		ISchemaUpdate update = new SchemaUpdate();
+
+		update.addQueries(
 			"CREATE TABLE smartwarp_targets (" +
 				"`world` varchar(255) NOT NULL," +
 				"`x` int NOT NULL," +
@@ -37,10 +34,10 @@ public class SmartWarpChunkRepository extends Repository
 				"`safe` bit NOT NULL," +
 				"`cave` bit NOT NULL," +
 				"PRIMARY KEY(`world`,`x`,`y`,`z`)" +
-				")"
+			")"
 		);
-		queries.put(1, sql);
-		return queries;
+
+		return update;
 	}
 
 	public ILocation getTarget(IWorld world, boolean cave)
