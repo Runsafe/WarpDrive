@@ -4,6 +4,7 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.argument.WorldArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
@@ -11,8 +12,6 @@ import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.portals.PortalEngine;
 import no.runsafe.warpdrive.portals.PortalType;
 import no.runsafe.warpdrive.portals.PortalWarp;
-
-import java.util.Map;
 
 public class SetPortal extends PlayerAsyncCommand
 {
@@ -31,7 +30,7 @@ public class SetPortal extends PlayerAsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(IPlayer player, Map<String, String> parameters)
+	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
 		IWorld portalWorld = server.getWorld(parameters.get("world"));
 		if (portalWorld == null)

@@ -1,9 +1,9 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.IContextPermissionProvider;
+import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.OnlinePlayerArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IAmbiguousPlayer;
@@ -11,32 +11,28 @@ import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 import no.runsafe.warpdrive.Engine;
 
-import java.util.Map;
-
 public class Teleport extends PlayerCommand implements IContextPermissionProvider
 {
-	public Teleport(Engine engine, IScheduler scheduler, IServer server)
+	public Teleport(Engine engine, IScheduler scheduler)
 	{
 		super(
 			"teleport", "Teleports you or another player to another player", null,
 			new OnlinePlayerArgument("player1", true), new OnlinePlayerArgument("player2", false)
 		);
 		this.engine = engine;
-		this.server = server;
 		this.warned = new TimedCache<String, String>(scheduler, 10);
 	}
 
 	@Override
-	public String getPermission(ICommandExecutor executor, Map<String, String> parameters, String[] args)
+	public String getPermission(ICommandExecutor executor, IArgumentList parameters, String[] args)
 	{
 		if (executor instanceof IPlayer)
 		{
-			IPlayer teleporter = (IPlayer) executor;
 			IPlayer target;
 			if (!parameters.containsKey("player2"))
-				target = server.getOnlinePlayer(teleporter, parameters.get("player1"));
+				target = parameters.getPlayer("player1");
 			else
-				target = server.getOnlinePlayer(teleporter, parameters.get("player2"));
+				target = parameters.getPlayer("player2");
 			if (target == null)
 				return null;
 
@@ -46,25 +42,25 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 	}
 
 	@Override
-	public String OnExecute(IPlayer player, Map<String, String> parameters)
+	public String OnExecute(IPlayer player, IArgumentList parameters)
 	{
 		String movePlayer;
-		IPlayer move;
 		String toPlayer;
+		IPlayer move;
 		IPlayer to;
 		if (parameters.containsKey("player2"))
 		{
 			movePlayer = parameters.get("player1");
-			move = server.getOnlinePlayer(player, movePlayer);
+			move = parameters.getPlayer("player1");
 			toPlayer = parameters.get("player2");
-			to = server.getOnlinePlayer(player, toPlayer);
+			to = parameters.getPlayer("player2");
 		}
 		else
 		{
 			movePlayer = player.getName();
 			move = player;
 			toPlayer = parameters.get("player1");
-			to = server.getOnlinePlayer(player, toPlayer);
+			to = parameters.getPlayer("player1");
 		}
 
 		if (move instanceof IAmbiguousPlayer)
@@ -74,7 +70,7 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 			return to.toString();
 
 		if (move == null || !move.isOnline() || player.shouldNotSee(move))
-			return String.format("Could not find player %s to teleport.", movePlayer);
+			return String.format("Could not find player %s to teleport", movePlayer);
 
 		if (to == null || !to.isOnline() || player.shouldNotSee(to))
 			return String.format("Could not find destination player %s.", toPlayer);
@@ -104,5 +100,4 @@ public class Teleport extends PlayerCommand implements IContextPermissionProvide
 
 	private final Engine engine;
 	private final TimedCache<String, String> warned;
-	private final IServer server;
 }

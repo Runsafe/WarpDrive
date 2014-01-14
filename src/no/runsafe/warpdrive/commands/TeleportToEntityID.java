@@ -1,11 +1,10 @@
 package no.runsafe.warpdrive.commands;
 
+import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.entity.IEntity;
 import no.runsafe.framework.api.player.IPlayer;
-
-import java.util.Map;
 
 public class TeleportToEntityID extends PlayerCommand
 {
@@ -19,7 +18,7 @@ public class TeleportToEntityID extends PlayerCommand
 
 	@SuppressWarnings("ConstantConditions")
 	@Override
-	public String OnExecute(IPlayer player, Map<String, String> parameters)
+	public String OnExecute(IPlayer player, IArgumentList parameters)
 	{
 		String entityId = parameters.get("entityid");
 		int id = Integer.parseInt(entityId);

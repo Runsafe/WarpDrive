@@ -1,6 +1,7 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.ITabComplete;
 import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.player.IPlayer;
@@ -10,7 +11,6 @@ import no.runsafe.warpdrive.database.WarpRepository;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
-import java.util.Map;
 
 public class Home extends PlayerTeleportCommand
 {
@@ -38,7 +38,7 @@ public class Home extends PlayerTeleportCommand
 	}
 
 	@Override
-	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(IPlayer player, Map<String, String> params)
+	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(IPlayer player, IArgumentList params)
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.player = player;

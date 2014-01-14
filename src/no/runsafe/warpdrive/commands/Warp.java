@@ -4,6 +4,7 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.block.ISign;
 import no.runsafe.framework.api.command.ICommandExecutor;
+import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.api.log.IConsole;
@@ -17,7 +18,6 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 {
@@ -32,7 +32,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	}
 
 	@Override
-	public PlayerTeleport OnAsyncExecute(IPlayer player, Map<String, String> parameters)
+	public PlayerTeleport OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.force = true;
