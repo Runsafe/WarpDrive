@@ -7,7 +7,6 @@ import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.IContextPermissionProvider;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.OnlinePlayerRequired;
-import no.runsafe.framework.api.command.argument.SelfOrOnlinePlayer;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 import no.runsafe.warpdrive.Engine;
@@ -18,7 +17,7 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 	{
 		super(
 			"teleport", "Teleports you or another player to another player", null,
-			new SelfOrOnlinePlayer("player1"), new OnlinePlayerRequired("player2")
+			new OnlinePlayerRequired("player1"), new OnlinePlayerRequired("player2")
 		);
 		this.engine = engine;
 		this.warned = new TimedCache<String, String>(scheduler, 10);
