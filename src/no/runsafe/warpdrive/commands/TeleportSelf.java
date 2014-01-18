@@ -16,7 +16,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 	public TeleportSelf(Engine engine, IScheduler scheduler)
 	{
 		super(
-			"teleport", "Teleports you to another player", null,
+			"teleport", "Teleport to another player", null,
 			new OnlinePlayerRequired("player")
 		);
 		this.engine = engine;

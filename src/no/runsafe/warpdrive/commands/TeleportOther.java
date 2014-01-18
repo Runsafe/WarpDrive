@@ -16,7 +16,7 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 	public TeleportOther(Engine engine, IScheduler scheduler)
 	{
 		super(
-			"teleport", "Teleports you or another player to another player", null,
+			"teleport", "Teleport player1 to player2", null,
 			new OnlinePlayerRequired("player1"), new OnlinePlayerRequired("player2")
 		);
 		this.engine = engine;
