@@ -49,7 +49,7 @@ public class WarpDrive extends RunsafeConfigurablePlugin
 		addComponent(Home.class);
 		addComponent(Top.class);
 		addComponent(TeleportPos.class);
-		addComponent(Teleport.class);
+		addComponent(TeleportSelf.class);
 		addComponent(WipeHomes.class);
 		addComponent(TeleportToEntityID.class);
 		addComponent(SmartWarp.class);
