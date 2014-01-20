@@ -10,7 +10,7 @@ public class PortalWarp
 {
 	private IRegion3D region;
 
-	public PortalWarp(String id, ILocation location, ILocation destination, PortalType type, int radius, String permission, IRegion3D region) throws NullPointerException
+	public PortalWarp(String id, ILocation location, ILocation destination, PortalType type, int radius, String permission, IRegion3D region, String enterRegion) throws NullPointerException
 	{
 		this.id = id;
 		this.location = location;
@@ -28,6 +28,8 @@ public class PortalWarp
 
 		if (this.type == PortalType.NORMAL || this.type == PortalType.RANDOM_RADIUS)
 			this.destination = destination;
+
+		this.enterRegion = enterRegion;
 	}
 
 	public String getID()
@@ -167,6 +169,16 @@ public class PortalWarp
 		return region;
 	}
 
+	public String getEnterRegion()
+	{
+		return enterRegion;
+	}
+
+	public boolean hasEnterRegion()
+	{
+		return enterRegion != null;
+	}
+
 	private final String id;
 	private String perm;
 	private final PortalType type;
@@ -175,4 +187,5 @@ public class PortalWarp
 	private IWorld destinationWorld;
 	private int radius;
 	private boolean locked = false;
+	private String enterRegion;
 }
