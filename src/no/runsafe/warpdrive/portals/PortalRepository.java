@@ -29,6 +29,10 @@ public class PortalRepository extends Repository
 			try
 			{
 				WarpDrive.debug.debugFine("%s gives: %s", row.String("portal_field"), Region3D.fromString(row.String("portal_field")));
+
+				if (row.String("region") != null)
+					WarpDrive.debug.debugFine("Portal %s has region: %s", portalID, row.String("region"));
+
 				warps.add(new PortalWarp(
 					portalID,
 					row.Location(),
