@@ -61,7 +61,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation> implemen
 		if (skyFall && fallen.contains(playerName))
 		{
 			target.setY(300);
-			target.setPitch(-90);
+			target.setPitch(90);
 		}
 		if(!player.teleport(target))
 			fallen.remove(playerName);
