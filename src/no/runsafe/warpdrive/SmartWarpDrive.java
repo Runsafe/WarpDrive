@@ -46,7 +46,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation> implemen
 			smartWarpChunks.setUnsafe(candidate);
 		}
 		Push(player.getName(), candidate);
-		if (!cave)
+		if (!cave && skyFall)
 			fallen.add(player.getName());
 	}
 
