@@ -7,6 +7,8 @@ import no.runsafe.framework.api.event.player.IPlayerCommandPreprocessEvent;
 import no.runsafe.framework.api.event.player.IPlayerDamageEvent;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.event.plugin.IPluginDisabled;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDamageEvent;
@@ -24,14 +26,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
-	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged, IPlayerDamageEvent, IPlayerCommandPreprocessEvent
+	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged, IPlayerDamageEvent, IPlayerCommandPreprocessEvent, IPluginDisabled
 {
-	public SnazzyWarp(IScheduler scheduler, Engine engine, IDebug output, IServer server)
+	public SnazzyWarp(IScheduler scheduler, Engine engine, IDebug output, IServer server, IConsole console)
 	{
 		super(scheduler, 2);
 		this.engine = engine;
 		debugger = output;
 		this.server = server;
+		this.console = console;
 	}
 
 	@Override
@@ -96,6 +99,19 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	{
 		if (fallen.contains(event.getPlayer().getName()))
 			event.cancel();
+	}
+
+	@Override
+	public void OnPluginDisabled()
+	{
+		if (!fallen.isEmpty())
+			console.logInformation("Teleporting %d falling players due to plugin shutdown.", fallen.size());
+		for (String playerName : fallen)
+		{
+			IPlayer player = server.getPlayerExact(playerName);
+			if (player != null)
+				player.teleport(player.getLocation().findTop());
+		}
 	}
 
 	private final Engine engine;
@@ -172,6 +188,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	private final List<String> fallen = new ArrayList<String>(0);
 	private final IDebug debugger;
 	private final IServer server;
+	private final IConsole console;
 	private Duration change_after;
 	private boolean skyFall = false;
 	public static final String signHeader = ChatColour.DARK_BLUE.toBukkit() + "[Snazzy Warp]";

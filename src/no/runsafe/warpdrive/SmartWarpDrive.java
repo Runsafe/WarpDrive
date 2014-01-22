@@ -4,6 +4,8 @@ import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.player.IPlayerCommandPreprocessEvent;
 import no.runsafe.framework.api.event.player.IPlayerDamageEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.event.plugin.IPluginDisabled;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDamageEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerCommandPreprocessEvent;
@@ -13,15 +15,17 @@ import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SmartWarpDrive extends ForegroundWorker<String, ILocation> implements IPlayerDamageEvent, IPlayerCommandPreprocessEvent, IConfigurationChanged
+public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
+	implements IPlayerDamageEvent, IPlayerCommandPreprocessEvent, IConfigurationChanged, IPluginDisabled
 {
-	public SmartWarpDrive(IScheduler scheduler, SmartWarpChunkRepository smartWarpChunks, Engine engine, IServer server)
+	public SmartWarpDrive(IScheduler scheduler, SmartWarpChunkRepository smartWarpChunks, Engine engine, IServer server, IConsole console)
 	{
 		super(scheduler);
 		this.scheduler = scheduler;
 		this.smartWarpChunks = smartWarpChunks;
 		this.engine = engine;
 		this.server = server;
+		this.console = console;
 		setInterval(10);
 	}
 
@@ -107,6 +111,19 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation> implemen
 			event.cancel();
 	}
 
+	@Override
+	public void OnPluginDisabled()
+	{
+		if (!fallen.isEmpty())
+			console.logInformation("Teleporting %d falling players due to plugin shutdown.", fallen.size());
+		for (String playerName : fallen)
+		{
+			IPlayer player = server.getPlayerExact(playerName);
+			if (player != null)
+				player.teleport(player.getLocation().findTop());
+		}
+	}
+
 	private void unlock()
 	{
 		lockedLocation = null;
@@ -120,4 +137,5 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation> implemen
 	private final SmartWarpChunkRepository smartWarpChunks;
 	private final Engine engine;
 	private final IServer server;
+	private final IConsole console;
 }
