@@ -64,7 +64,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		}
 		if (target != null && target.isOnline() && destination != null)
 		{
-			if(target.teleport(destination))
+			if (target.teleport(destination))
 				fallen.add(target.getName());
 		}
 		else
@@ -77,8 +77,6 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		change_after = Duration.standardSeconds(configuration.getConfigValueAsInt("snazzy.timeout"));
 		skyFall = configuration.getConfigValueAsBoolean("snazzy.skyfall");
 	}
-
-	private final Engine engine;
 
 	@Override
 	public void OnPlayerDamage(IPlayer player, RunsafeEntityDamageEvent event)
@@ -99,6 +97,8 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		if (fallen.contains(event.getPlayer().getName()))
 			event.cancel();
 	}
+
+	private final Engine engine;
 
 	class WarpParameters
 	{

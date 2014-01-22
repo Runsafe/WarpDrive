@@ -1,14 +1,19 @@
 package no.runsafe.warpdrive;
 
-import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IServer;
-import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.*;
+import no.runsafe.framework.api.event.player.IPlayerCommandPreprocessEvent;
+import no.runsafe.framework.api.event.player.IPlayerDamageEvent;
+import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDamageEvent;
+import no.runsafe.framework.minecraft.event.player.RunsafePlayerCommandPreprocessEvent;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 
-public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
+import java.util.ArrayList;
+import java.util.List;
+
+public class SmartWarpDrive extends ForegroundWorker<String, ILocation> implements IPlayerDamageEvent, IPlayerCommandPreprocessEvent, IConfigurationChanged
 {
 	public SmartWarpDrive(IScheduler scheduler, SmartWarpChunkRepository smartWarpChunks, Engine engine, IServer server)
 	{
@@ -51,7 +56,13 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 			return;
 		target.incrementX(0.5);
 		target.incrementZ(0.5);
-		player.teleport(target);
+		if (skyFall)
+		{
+			target.setY(300);
+			target.setPitch(0);
+		}
+		if(player.teleport(target))
+			fallen.add(playerName);
 
 		if (shouldLock)
 		{
@@ -68,13 +79,41 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 		}
 	}
 
+	@Override
+	public void OnConfigurationChanged(IConfiguration configuration)
+	{
+		skyFall = configuration.getConfigValueAsBoolean("smart.skyfall");
+	}
+
+	@Override
+	public void OnPlayerDamage(IPlayer player, RunsafeEntityDamageEvent event)
+	{
+		if (event.getCause() == RunsafeEntityDamageEvent.RunsafeDamageCause.FALL)
+		{
+			if (fallen.contains(player.getName()))
+			{
+				event.cancel();
+				fallen.remove(player.getName());
+			}
+		}
+	}
+
+	@Override
+	public void OnBeforePlayerCommand(RunsafePlayerCommandPreprocessEvent event)
+	{
+		if (fallen.contains(event.getPlayer().getName()))
+			event.cancel();
+	}
+
 	private void unlock()
 	{
 		lockedLocation = null;
 	}
 
+	private boolean skyFall = false;
 	private boolean shouldLock = false;
 	private ILocation lockedLocation;
+	private final List<String> fallen = new ArrayList<String>(0);
 	private final IScheduler scheduler;
 	private final SmartWarpChunkRepository smartWarpChunks;
 	private final Engine engine;

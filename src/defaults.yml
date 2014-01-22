@@ -1,5 +1,6 @@
 private.max.default: 5
 private.max.admin: 10
+smart.skyfall: false
 snazzy.skyfall: false
 snazzy.timeout: 60
 summoningStone.expire: 10
