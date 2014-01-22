@@ -29,6 +29,10 @@ public class PortalRepository extends Repository
 			try
 			{
 				WarpDrive.debug.debugFine("%s gives: %s", row.String("portal_field"), Region3D.fromString(row.String("portal_field")));
+
+				if (row.String("region") != null)
+					WarpDrive.debug.debugFine("Portal %s has region: %s", portalID, row.String("region"));
+
 				warps.add(new PortalWarp(
 					portalID,
 					row.Location(),
@@ -36,7 +40,8 @@ public class PortalRepository extends Repository
 					PortalType.getPortalType(row.Integer("type")),
 					(row.Integer("radius") == null ? 0 : row.Integer("radius")),
 					row.String("permission"),
-					Region3D.fromString(row.String("portal_field"))
+					Region3D.fromString(row.String("portal_field")),
+					row.String("region")
 				));
 			}
 			catch (NullPointerException e)
@@ -107,6 +112,9 @@ public class PortalRepository extends Repository
 
 		update.addQueries("ALTER TABLE `warpdrive_portals`" +
 				"ADD COLUMN `portal_field` VARCHAR(255) NULL;");
+
+		update.addQueries("ALTER TABLE `warpdrive_portals`" +
+				"ADD COLUMN `region` VARCHAR(50) NULL DEFAULT NULL AFTER `portal_field`;");
 
 		return update;
 	}

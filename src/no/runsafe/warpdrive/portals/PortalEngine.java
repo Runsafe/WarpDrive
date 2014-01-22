@@ -4,6 +4,7 @@ import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
+import no.runsafe.framework.api.event.player.IPlayerCustomEvent;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.player.IPlayerPortal;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
@@ -14,13 +15,14 @@ import no.runsafe.framework.api.vector.IRegion3D;
 import no.runsafe.framework.internal.vector.Point3D;
 import no.runsafe.framework.internal.vector.Region3D;
 import no.runsafe.framework.minecraft.Item;
+import no.runsafe.framework.minecraft.event.player.RunsafeCustomEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.warpdrive.SmartWarpDrive;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent
+public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent, IPlayerCustomEvent
 {
 	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console)
 	{
@@ -168,7 +170,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 	public void createWarp(IPlayer creator, String portalName, ILocation destination, PortalType type) throws NullPointerException
 	{
-		PortalWarp warp = new PortalWarp(portalName, null, destination, type, -1, null, null); // Create new warp.
+		PortalWarp warp = new PortalWarp(portalName, null, destination, type, -1, null, null, null); // Create new warp.
 		pending.put(creator.getName(), warp);
 	}
 
@@ -253,6 +255,41 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 		repository.updatePortalWarp(warp); // Store changes in the database.
 		portals.get(worldName).put(warp.getID(), warp);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void OnPlayerCustomEvent(RunsafeCustomEvent event)
+	{
+		if (event.getEvent().equals("region.enter"))
+		{
+			IPlayer player = event.getPlayer();
+			IWorld playerWorld = player.getWorld();
+
+			if (playerWorld == null)
+				return;
+
+			Map<String, String> data = (Map<String, String>) event.getData();
+			String regionName = data.get("region");
+
+
+			String playerWorldName = playerWorld.getName();
+			if (portals.containsKey(playerWorldName))
+			{
+				for (PortalWarp portal : portals.get(playerWorldName).values())
+				{
+					if (portal.hasEnterRegion() && portal.getEnterRegion().equals(regionName))
+					{
+						if (portal.canTeleport(player))
+							this.teleportPlayer(portal, player);
+						else
+							player.sendColouredMessage("&cYou do not have permission to use this portal.");
+
+						return;
+					}
+				}
+			}
+		}
 	}
 
 	private final Map<String, PortalWarp> pending = new ConcurrentHashMap<String, PortalWarp>();
