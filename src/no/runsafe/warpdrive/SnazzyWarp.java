@@ -3,22 +3,28 @@ package no.runsafe.warpdrive;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.block.ISign;
 import no.runsafe.framework.api.event.IAsyncEvent;
+import no.runsafe.framework.api.event.player.IPlayerCommandPreprocessEvent;
+import no.runsafe.framework.api.event.player.IPlayerDamageEvent;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDamageEvent;
+import no.runsafe.framework.minecraft.event.player.RunsafePlayerCommandPreprocessEvent;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import no.runsafe.framework.text.ChatColour;
 import no.runsafe.framework.timer.ForegroundWorker;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
-	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged
+	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged, IPlayerDamageEvent, IPlayerCommandPreprocessEvent
 {
 	public SnazzyWarp(IScheduler scheduler, Engine engine, IDebug output, IServer server)
 	{
@@ -51,8 +57,16 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		debugger.outputDebugToConsole(String.format("Player %s teleporting", player), Level.FINE);
 		IPlayer target = server.getPlayer(player);
 		ILocation destination = parameters.getTarget();
+		if (skyFall)
+		{
+			destination.setY(300);
+			destination.setPitch(0);
+		}
 		if (target != null && target.isOnline() && destination != null)
-			target.teleport(destination);
+		{
+			if(target.teleport(destination))
+				fallen.add(target.getName());
+		}
 		else
 			debugger.outputDebugToConsole("Unable to find destination..", Level.FINE);
 	}
@@ -61,9 +75,30 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
 		change_after = Duration.standardSeconds(configuration.getConfigValueAsInt("snazzy.timeout"));
+		skyFall = configuration.getConfigValueAsBoolean("snazzy.skyfall");
 	}
 
 	private final Engine engine;
+
+	@Override
+	public void OnPlayerDamage(IPlayer player, RunsafeEntityDamageEvent event)
+	{
+		if (event.getCause() == RunsafeEntityDamageEvent.RunsafeDamageCause.FALL)
+		{
+			if (fallen.contains(player.getName()))
+			{
+				event.cancel();
+				fallen.remove(player.getName());
+			}
+		}
+	}
+
+	@Override
+	public void OnBeforePlayerCommand(RunsafePlayerCommandPreprocessEvent event)
+	{
+		if (fallen.contains(event.getPlayer().getName()))
+			event.cancel();
+	}
 
 	class WarpParameters
 	{
@@ -134,9 +169,11 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	}
 
 	private final ConcurrentHashMap<String, WarpParameters> snazzyWarps = new ConcurrentHashMap<String, WarpParameters>();
+	private final List<String> fallen = new ArrayList<String>(0);
 	private final IDebug debugger;
 	private final IServer server;
 	private Duration change_after;
+	private boolean skyFall = false;
 	public static final String signHeader = ChatColour.DARK_BLUE.toBukkit() + "[Snazzy Warp]";
 	public static final String signTag = "[snazzy warp]";
 }
