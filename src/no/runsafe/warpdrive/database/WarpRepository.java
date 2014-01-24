@@ -31,7 +31,7 @@ public class WarpRepository extends Repository
 
 		update.addQueries(
 			"CREATE TABLE warpdrive_locations (" +
-				"`creator` varchar(255) NOT NULL," +
+				"`creator` varchar(20) NOT NULL," +
 				"`name` varchar(255) NOT NULL," +
 				"`public` bit NOT NULL," +
 				"`world` varchar(255) NOT NULL," +
