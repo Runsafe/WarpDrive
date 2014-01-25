@@ -9,11 +9,6 @@ import java.util.List;
 
 public class SmartWarpRepository extends Repository
 {
-	public SmartWarpRepository(IDatabase database)
-	{
-		this.database = database;
-	}
-
 	@Override
 	public String getTableName()
 	{
@@ -70,6 +65,4 @@ public class SmartWarpRepository extends Repository
 	{
 		return database.queryStrings("SELECT world FROM smartwarp_settings");
 	}
-
-	private final IDatabase database;
 }

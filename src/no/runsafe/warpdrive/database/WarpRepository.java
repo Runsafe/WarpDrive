@@ -12,9 +12,8 @@ import java.util.List;
 
 public class WarpRepository extends Repository
 {
-	public WarpRepository(IDatabase db, IScheduler scheduler)
+	public WarpRepository(IScheduler scheduler)
 	{
-		database = db;
 		cache = new TimedCache<String, ILocation>(scheduler);
 	}
 
@@ -151,6 +150,5 @@ public class WarpRepository extends Repository
 		return success;
 	}
 
-	private final IDatabase database;
 	private final TimedCache<String, ILocation> cache;
 }

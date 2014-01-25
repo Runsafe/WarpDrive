@@ -9,11 +9,6 @@ import java.util.List;
 
 public class SummoningStoneRepository extends Repository
 {
-	public SummoningStoneRepository(IDatabase database)
-	{
-		this.database = database;
-	}
-
 	public String getTableName()
 	{
 		return "summoningStones";
@@ -72,6 +67,4 @@ public class SummoningStoneRepository extends Repository
 
 		return update;
 	}
-
-	private final IDatabase database;
 }

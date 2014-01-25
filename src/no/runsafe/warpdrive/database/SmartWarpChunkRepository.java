@@ -9,11 +9,6 @@ import no.runsafe.framework.api.database.SchemaUpdate;
 
 public class SmartWarpChunkRepository extends Repository
 {
-	public SmartWarpChunkRepository(IDatabase database)
-	{
-		this.database = database;
-	}
-
 	@Override
 	public String getTableName()
 	{
@@ -67,6 +62,4 @@ public class SmartWarpChunkRepository extends Repository
 			safe, cave
 		);
 	}
-
-	private final IDatabase database;
 }

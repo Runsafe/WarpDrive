@@ -9,11 +9,6 @@ import java.util.List;
 
 public class PortalRepository extends Repository
 {
-	public PortalRepository(IDatabase database)
-	{
-		this.database = database;
-	}
-
 	public String getTableName()
 	{
 		return "warpdrive_portals";
@@ -118,6 +113,4 @@ public class PortalRepository extends Repository
 
 		return update;
 	}
-
-	private final IDatabase database;
 }
