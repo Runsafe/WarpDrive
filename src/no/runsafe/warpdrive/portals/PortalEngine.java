@@ -2,6 +2,7 @@ package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.ILocation;
+import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerCustomEvent;
@@ -19,17 +20,21 @@ import no.runsafe.framework.minecraft.event.player.RunsafeCustomEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.warpdrive.SmartWarpDrive;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent, IPlayerCustomEvent
 {
-	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console)
+	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console, IScheduler scheduler)
 	{
 		this.repository = repository;
 		this.smartWarpDrive = smartWarpDrive;
 		this.debugger = debugger;
 		this.console = console;
+		this.scheduler = scheduler;
 	}
 
 	public void reloadPortals()
@@ -263,7 +268,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	{
 		if (event.getEvent().equals("region.enter"))
 		{
-			IPlayer player = event.getPlayer();
+			final IPlayer player = event.getPlayer();
 			IWorld playerWorld = player.getWorld();
 
 			if (playerWorld == null)
@@ -281,7 +286,21 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 					if (portal.hasEnterRegion() && portal.getEnterRegion().equals(regionName))
 					{
 						if (portal.canTeleport(player))
-							this.teleportPlayer(portal, player);
+						{
+							final PortalEngine teleporter = this;
+							final PortalWarp sourcePortal = portal;
+							scheduler.startSyncTask(
+								new Runnable()
+								{
+									@Override
+									public void run()
+									{
+										teleporter.teleportPlayer(sourcePortal, player);
+									}
+								},
+								0
+							);
+						}
 						else
 							player.sendColouredMessage("&cYou do not have permission to use this portal.");
 
@@ -298,4 +317,5 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private final SmartWarpDrive smartWarpDrive;
 	private final IDebug debugger;
 	private final IConsole console;
+	private final IScheduler scheduler;
 }
