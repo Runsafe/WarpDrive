@@ -178,6 +178,13 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		pending.put(creator.getName(), warp);
 	}
 
+	public void createRegionWarp(IWorld portalWorld, String region, String portalName, ILocation destination, String permission)
+	{
+		PortalWarp warp = new PortalWarp(portalName, portalWorld.getLocation(0.0,0.0,0.0), destination, PortalType.NORMAL, 0, permission, null, region);
+		repository.storeWarp(warp);
+		portals.get(portalWorld.getName()).put(warp.getID(), warp);
+	}
+
 	public void finalizeWarp(IPlayer player)
 	{
 		IRegion3D portalArea = scanArea(player.getLocation());

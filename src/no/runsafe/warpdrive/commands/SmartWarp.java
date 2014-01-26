@@ -8,8 +8,6 @@ import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.argument.WorldArgument;
 import no.runsafe.warpdrive.SmartWarpScanner;
 
-import java.util.Map;
-
 public class SmartWarp extends ExecutableCommand
 {
 	public SmartWarp(SmartWarpScanner scanner, IServer server)
@@ -25,7 +23,7 @@ public class SmartWarp extends ExecutableCommand
 	@Override
 	public String OnExecute(ICommandExecutor iCommandExecutor, IArgumentList param)
 	{
-		scanner.Setup(server.getWorld(param.get("world")), param.get("radius"));
+		scanner.Setup(server.getWorld(param.get("world")), param.get("radius"), false);
 		return "&2Smart-warp scan started";
 	}
 

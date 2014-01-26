@@ -35,6 +35,11 @@ public class SmartWarpChunkRepository extends Repository
 		return update;
 	}
 
+	public void clear(IWorld world)
+	{
+		database.execute("DELETE FROM smartwarp_targets WHERE world=?", world.getName());
+	}
+
 	public ILocation getTarget(IWorld world, boolean cave)
 	{
 		return database.queryLocation(

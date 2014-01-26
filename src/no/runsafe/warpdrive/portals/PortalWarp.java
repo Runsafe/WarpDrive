@@ -169,6 +169,11 @@ public class PortalWarp
 		return region;
 	}
 
+	public void setEnterRegion(String region)
+	{
+		enterRegion = region;
+	}
+
 	public String getEnterRegion()
 	{
 		return enterRegion;

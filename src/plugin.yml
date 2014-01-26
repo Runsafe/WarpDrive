@@ -31,5 +31,11 @@ commands:
     aliases: [etp]
   smartwarp:
     description: Create a smart warp for a world and start scanning it for locations
+  rescansmartwarp:
+    description: Rescans a smart warp for a world.
   setportal:
     description: Allows setting/editing of portals in-game.
+    aliases: [setp]
+  setregionportal:
+    description: Allows setting/editing of region-based portals in-game.
+    aliases: [setrp]

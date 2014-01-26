@@ -1,6 +1,9 @@
 package no.runsafe.warpdrive.portals;
 
-import no.runsafe.framework.api.database.*;
+import no.runsafe.framework.api.database.IRow;
+import no.runsafe.framework.api.database.ISchemaUpdate;
+import no.runsafe.framework.api.database.Repository;
+import no.runsafe.framework.api.database.SchemaUpdate;
 import no.runsafe.framework.internal.vector.Region3D;
 import no.runsafe.warpdrive.WarpDrive;
 
@@ -55,11 +58,12 @@ public class PortalRepository extends Repository
 	public void storeWarp(PortalWarp warp)
 	{
 		database.execute(
-			"INSERT INTO warpdrive_portals (ID, world, x, y, z, destWorld, destX, destY, destZ, destYaw, destPitch, radius, permission, portal_field) " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO warpdrive_portals (ID, world, x, y, z, destWorld, destX, destY, destZ, destYaw, destPitch, radius, permission, portal_field, region) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			warp.getID(), warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getDestinationWorldName(),
 			warp.getDestinationX(), warp.getDestinationY(), warp.getDestinationZ(), warp.getDestinationYaw(),
-			warp.getDestinationPitch(), null, "", warp.getRegion() == null ? null : warp.getRegion().toString()
+			warp.getDestinationPitch(), null, "", warp.getRegion() == null ? null : warp.getRegion().toString(),
+			warp.getEnterRegion()
 		);
 	}
 
@@ -68,12 +72,13 @@ public class PortalRepository extends Repository
 		database.execute(
 			"UPDATE warpdrive_portals " +
 				"SET destWorld = ?, destX = ?, destY = ?, destZ = ?, destYaw = ?, destPitch = ?," +
-				"world = ?, x = ?, y = ?, z = ?, type = ?, portal_field = ? " +
+				"world = ?, x = ?, y = ?, z = ?, type = ?, portal_field = ?, region = ? " +
 				"WHERE world=? AND ID=?",
 			warp.getDestinationWorldName(), warp.getDestinationX(), warp.getDestinationY(),
 			warp.getDestinationZ(), warp.getDestinationYaw(), warp.getDestinationPitch(),
 			warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getType().ordinal(),
 			warp.getRegion() == null ? null : warp.getRegion().toString(),
+			warp.getEnterRegion(),
 			warp.getWorldName(), warp.getID()
 		);
 	}
@@ -99,17 +104,17 @@ public class PortalRepository extends Repository
 				"`destYaw` DOUBLE NULL," +
 				"`destPitch` DOUBLE NULL," +
 				"PRIMARY KEY (`ID`)" +
-			")"
+				")"
 		);
 
 		update.addQueries("ALTER TABLE `warpdrive_portals`" +
-				"ADD COLUMN `radius` INT UNSIGNED NULL DEFAULT NULL AFTER `destPitch`;");
+			"ADD COLUMN `radius` INT UNSIGNED NULL DEFAULT NULL AFTER `destPitch`;");
 
 		update.addQueries("ALTER TABLE `warpdrive_portals`" +
-				"ADD COLUMN `portal_field` VARCHAR(255) NULL;");
+			"ADD COLUMN `portal_field` VARCHAR(255) NULL;");
 
 		update.addQueries("ALTER TABLE `warpdrive_portals`" +
-				"ADD COLUMN `region` VARCHAR(50) NULL DEFAULT NULL AFTER `portal_field`;");
+			"ADD COLUMN `region` VARCHAR(50) NULL DEFAULT NULL AFTER `portal_field`;");
 
 		return update;
 	}

@@ -26,8 +26,13 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 		this.setInterval(10);
 	}
 
-	public void Setup(IWorld world, String radius)
+	public void Setup(IWorld world, String radius, boolean restart)
 	{
+		if (restart)
+		{
+			chunkRepository.clear(world);
+			progress.put(world.getName(), 0D);
+		}
 		int r = Integer.valueOf(radius);
 		warpRepository.setRange(world.getName(), r);
 		range.put(world.getName(), r);
