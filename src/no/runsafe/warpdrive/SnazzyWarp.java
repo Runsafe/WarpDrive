@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
-	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged, IPlayerDamageEvent, IPlayerCommandPreprocessEvent, IPluginDisabled
+	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged, IPlayerDamageEvent, IPluginDisabled
 {
 	public SnazzyWarp(IScheduler scheduler, Engine engine, IDebug output, IServer server, IConsole console)
 	{
@@ -92,13 +92,6 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 				fallen.remove(player.getName());
 			}
 		}
-	}
-
-	@Override
-	public void OnBeforePlayerCommand(RunsafePlayerCommandPreprocessEvent event)
-	{
-		if (fallen.contains(event.getPlayer().getName()))
-			event.cancel();
 	}
 
 	@Override

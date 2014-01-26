@@ -1,14 +1,12 @@
 package no.runsafe.warpdrive;
 
 import no.runsafe.framework.api.*;
-import no.runsafe.framework.api.event.player.IPlayerCommandPreprocessEvent;
 import no.runsafe.framework.api.event.player.IPlayerDamageEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginDisabled;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDamageEvent;
-import no.runsafe.framework.minecraft.event.player.RunsafePlayerCommandPreprocessEvent;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 
@@ -16,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
-	implements IPlayerDamageEvent, IPlayerCommandPreprocessEvent, IConfigurationChanged, IPluginDisabled
+	implements IPlayerDamageEvent, IConfigurationChanged, IPluginDisabled
 {
 	public SmartWarpDrive(IScheduler scheduler, SmartWarpChunkRepository smartWarpChunks, Engine engine, IServer server, IConsole console)
 	{
@@ -115,13 +113,6 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 				fallen.remove(player.getName());
 			}
 		}
-	}
-
-	@Override
-	public void OnBeforePlayerCommand(RunsafePlayerCommandPreprocessEvent event)
-	{
-		if (fallen.contains(event.getPlayer().getName()))
-			event.cancel();
 	}
 
 	@Override
