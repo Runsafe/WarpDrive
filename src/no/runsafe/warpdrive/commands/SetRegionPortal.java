@@ -13,7 +13,7 @@ import no.runsafe.warpdrive.portals.PortalWarp;
 
 public class SetRegionPortal extends PlayerAsyncCommand
 {
-	protected SetRegionPortal(IScheduler scheduler, PortalEngine engine)
+	public SetRegionPortal(IScheduler scheduler, PortalEngine engine)
 	{
 		super("setregionportal", "Hooks up your current location to a region based portal", "runsafe.portal.set",
 			scheduler,
