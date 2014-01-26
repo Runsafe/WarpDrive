@@ -28,13 +28,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent, IPlayerCustomEvent
 {
-	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console, IScheduler scheduler)
+	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console)
 	{
 		this.repository = repository;
 		this.smartWarpDrive = smartWarpDrive;
 		this.debugger = debugger;
 		this.console = console;
-		this.scheduler = scheduler;
 	}
 
 	public void reloadPortals()
@@ -62,10 +61,10 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			player.teleport(portal.getLocation());
 
 		if (portal.getType() == PortalType.RANDOM_SURFACE)
-			this.smartWarpDrive.Engage(player, portal.getWorld(), false, portal.isLocked());
+			this.smartWarpDrive.EngageSurface(player, portal.getWorld(), portal.isLocked());
 
 		if (portal.getType() == PortalType.RANDOM_CAVE)
-			this.smartWarpDrive.Engage(player, portal.getWorld(), true, portal.isLocked());
+			this.smartWarpDrive.EngageCave(player, portal.getWorld(), portal.isLocked());
 
 		if (portal.getType() == PortalType.RANDOM_RADIUS)
 			this.randomRadiusTeleport(player, portal.getLocation(), portal.getRadius());
@@ -269,7 +268,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		if (event.getEvent().equals("region.enter"))
 		{
 			final IPlayer player = event.getPlayer();
-			IWorld playerWorld = player.getWorld();
+			String playerWorld = player.getWorldName();
 
 			if (playerWorld == null)
 				return;
@@ -277,33 +276,16 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			Map<String, String> data = (Map<String, String>) event.getData();
 			String regionName = data.get("region");
 
-
-			String playerWorldName = playerWorld.getName();
-			if (portals.containsKey(playerWorldName))
+			if (portals.containsKey(playerWorld))
 			{
-				for (PortalWarp portal : portals.get(playerWorldName).values())
+				for (PortalWarp portal : portals.get(playerWorld).values())
 				{
 					if (portal.hasEnterRegion() && portal.getEnterRegion().equals(regionName))
 					{
 						if (portal.canTeleport(player))
-						{
-							final PortalEngine teleporter = this;
-							final PortalWarp sourcePortal = portal;
-							scheduler.startSyncTask(
-								new Runnable()
-								{
-									@Override
-									public void run()
-									{
-										teleporter.teleportPlayer(sourcePortal, player);
-									}
-								},
-								0
-							);
-						}
+							teleportPlayer(portal, player);
 						else
 							player.sendColouredMessage("&cYou do not have permission to use this portal.");
-
 						return;
 					}
 				}
@@ -317,5 +299,4 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private final SmartWarpDrive smartWarpDrive;
 	private final IDebug debugger;
 	private final IConsole console;
-	private final IScheduler scheduler;
 }

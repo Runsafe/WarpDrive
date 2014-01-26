@@ -29,30 +29,61 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 		setInterval(10);
 	}
 
-	public void Engage(IPlayer player, IWorld target, boolean cave, boolean lock)
+	public void EngageSurface(IPlayer player, IWorld target, boolean lock)
 	{
-		if (lockedLocation != null)
+		if (lockedSurfaceLocation != null)
 		{
-			if (!cave && skyFall)
+			if (skyFall)
 				fallen.add(player.getName());
-			process(player.getName(), lockedLocation);
+			Push(player.getName(), lockedSurfaceLocation);
 			return;
 		}
-		if (lock)
-			shouldLock = true; // Lock the next location we produce.
-
-		ILocation candidate;
-		while (true)
+		ILocation candidate = scan(target, false);
+		if (candidate == null)
+			return;
+		if (skyFall)
 		{
-			candidate = smartWarpChunks.getTarget(target, cave);
-			if (candidate == null)
-				return;
-			if (engine.targetFloorIsSafe(candidate, true))
-				break;
-			smartWarpChunks.setUnsafe(candidate);
-		}
-		if (!cave && skyFall)
 			fallen.add(player.getName());
+			candidate.setY(300);
+			candidate.setPitch(90);
+		}
+		if (lock)
+		{
+			lockedSurfaceLocation = candidate;
+			scheduler.startSyncTask(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					unlockSurface();
+				}
+			}, 20);
+		}
+		Push(player.getName(), candidate);
+	}
+
+	public void EngageCave(IPlayer player, IWorld target, boolean lock)
+	{
+		if (lockedCaveLocation != null)
+		{
+			Push(player.getName(), lockedCaveLocation);
+			return;
+		}
+		ILocation candidate = scan(target, true);
+		if (candidate == null)
+			return;
+		if (lock)
+		{
+			lockedCaveLocation = candidate;
+			scheduler.startSyncTask(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					unlockCave();
+				}
+			}, 20);
+		}
 		Push(player.getName(), candidate);
 	}
 
@@ -62,29 +93,9 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 		IPlayer player = server.getPlayerExact(playerName);
 		if (player == null)
 			return;
-		target.incrementX(0.5);
-		target.incrementZ(0.5);
-		if (skyFall)
-		{
-			target.setY(300);
-			target.setPitch(90);
-		}
-		if(!player.teleport(target))
-			fallen.remove(playerName);
 
-		if (shouldLock)
-		{
-			shouldLock = false;
-			lockedLocation = target;
-			scheduler.startSyncTask(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					unlock();
-				}
-			}, 20);
-		}
+		if (!player.teleport(target) && fallen.contains(playerName))
+			fallen.remove(playerName);
 	}
 
 	@Override
@@ -126,14 +137,36 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 		}
 	}
 
-	private void unlock()
+	private ILocation scan(IWorld target, boolean cave)
 	{
-		lockedLocation = null;
+		while (true)
+		{
+			ILocation candidate = smartWarpChunks.getTarget(target, true);
+			if (candidate == null)
+				return null;
+			if (engine.targetFloorIsSafe(candidate, true))
+			{
+				candidate.incrementX(0.5);
+				candidate.incrementZ(0.5);
+				return candidate;
+			}
+			smartWarpChunks.setUnsafe(candidate);
+		}
 	}
 
+	private void unlockCave()
+	{
+		lockedCaveLocation = null;
+	}
+
+	private void unlockSurface()
+	{
+		lockedSurfaceLocation = null;
+	}
+
+	private ILocation lockedCaveLocation;
+	private ILocation lockedSurfaceLocation;
 	private boolean skyFall = false;
-	private boolean shouldLock = false;
-	private ILocation lockedLocation;
 	private final List<String> fallen = new ArrayList<String>(0);
 	private final IScheduler scheduler;
 	private final SmartWarpChunkRepository smartWarpChunks;
