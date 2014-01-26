@@ -33,6 +33,8 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	{
 		if (lockedLocation != null)
 		{
+			if (!cave && skyFall)
+				fallen.add(player.getName());
 			process(player.getName(), lockedLocation);
 			return;
 		}
@@ -49,9 +51,9 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 				break;
 			smartWarpChunks.setUnsafe(candidate);
 		}
-		Push(player.getName(), candidate);
 		if (!cave && skyFall)
 			fallen.add(player.getName());
+		Push(player.getName(), candidate);
 	}
 
 	@Override
@@ -62,7 +64,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 			return;
 		target.incrementX(0.5);
 		target.incrementZ(0.5);
-		if (skyFall && fallen.contains(playerName))
+		if (skyFall)
 		{
 			target.setY(300);
 			target.setPitch(90);
