@@ -23,8 +23,7 @@ public class PortalWarp
 		this.destinationWorld = destination.getWorld();
 		this.radius = radius;
 
-		if (permission == null)
-			perm = null;
+		perm = permission;
 
 		if (this.type == PortalType.NORMAL || this.type == PortalType.RANDOM_RADIUS)
 			this.destination = destination;
