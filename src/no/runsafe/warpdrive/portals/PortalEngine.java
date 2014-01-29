@@ -28,12 +28,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent, IPlayerCustomEvent
 {
-	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console)
+	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console, IScheduler scheduler)
 	{
 		this.repository = repository;
 		this.smartWarpDrive = smartWarpDrive;
 		this.debugger = debugger;
 		this.console = console;
+		this.scheduler = scheduler;
 	}
 
 	public void reloadPortals()
@@ -52,13 +53,23 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		this.console.logInformation("%d portals loaded in %d worlds.", portalCount, portals.size());
 	}
 
-	public void teleportPlayer(PortalWarp portal, IPlayer player)
+	public void teleportPlayer(final PortalWarp portal, final IPlayer player)
 	{
 		this.debugger.debugFine("Teleporting player in portal: " + player.getName());
 		this.debugger.debugFine("Portal lock state: " + (portal.isLocked() ? "locked" : "unlocked"));
 
 		if (portal.getType() == PortalType.NORMAL)
-			player.teleport(portal.getLocation());
+			scheduler.startSyncTask(
+				new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						player.teleport(portal.getLocation());
+					}
+				},
+				0
+			);
 
 		if (portal.getType() == PortalType.RANDOM_SURFACE)
 			this.smartWarpDrive.EngageSurface(player, portal.getWorld(), portal.isLocked());
@@ -91,9 +102,9 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		}
 	}
 
-	private void randomRadiusTeleport(IPlayer player, ILocation theLocation, int radius)
+	private void randomRadiusTeleport(final IPlayer player, ILocation theLocation, int radius)
 	{
-		ILocation location = theLocation.clone();
+		final ILocation location = theLocation.clone();
 		int highX = location.getBlockX() + radius;
 		int highZ = location.getBlockZ() + radius;
 		int lowX = location.getBlockX() - radius;
@@ -107,7 +118,17 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			location.setX(this.getRandom(lowX, highX));
 			location.setZ(this.getRandom(lowZ, highZ));
 		}
-		player.teleport(location);
+
+		scheduler.startSyncTask(
+			new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					player.teleport(location);
+				}
+			}, 0
+		);
 	}
 
 	private int getRandom(int low, int high)
@@ -180,7 +201,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 	public void createRegionWarp(IWorld portalWorld, String region, String portalName, ILocation destination, String permission)
 	{
-		PortalWarp warp = new PortalWarp(portalName, portalWorld.getLocation(0.0,0.0,0.0), destination, PortalType.NORMAL, 0, permission, null, region);
+		PortalWarp warp = new PortalWarp(portalName, portalWorld.getLocation(0.0, 0.0, 0.0), destination, PortalType.NORMAL, 0, permission, null, region);
 		repository.storeWarp(warp);
 		portals.get(portalWorld.getName()).put(warp.getID(), warp);
 	}
@@ -306,4 +327,5 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private final SmartWarpDrive smartWarpDrive;
 	private final IDebug debugger;
 	private final IConsole console;
+	private final IScheduler scheduler;
 }
