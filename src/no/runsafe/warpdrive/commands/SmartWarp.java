@@ -6,7 +6,7 @@ import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.argument.WorldArgument;
-import no.runsafe.warpdrive.SmartWarpScanner;
+import no.runsafe.warpdrive.smartwarp.SmartWarpScanner;
 
 public class SmartWarp extends ExecutableCommand
 {

@@ -5,6 +5,7 @@ import no.runsafe.framework.api.event.block.ISignChange;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.commands.Warp;
+import no.runsafe.warpdrive.smartwarp.SnazzyWarp;
 
 public class WarpSignCreator implements ISignChange
 {

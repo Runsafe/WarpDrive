@@ -18,7 +18,7 @@ import no.runsafe.framework.internal.vector.Region3D;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.event.player.RunsafeCustomEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
-import no.runsafe.warpdrive.SmartWarpDrive;
+import no.runsafe.warpdrive.smartwarp.SmartWarpDrive;
 
 import java.util.Collection;
 import java.util.Collections;
