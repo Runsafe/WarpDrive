@@ -136,15 +136,25 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		return low + (int) (Math.random() * ((high - low) + 1));
 	}
 
-	private boolean safeToTeleport(ILocation location)
+	private boolean safeToTeleport(final ILocation location)
 	{
-		if (location.getBlock().is(Item.Unavailable.Air))
-		{
-			location.incrementY(1);
-			if (location.getBlock().is(Item.Unavailable.Air))
-				return true;
-		}
-		return false;
+		final boolean[] safe = {false};
+		scheduler.runNow(
+			new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					if (location.getBlock().is(Item.Unavailable.Air))
+					{
+						location.incrementY(1);
+						if (location.getBlock().is(Item.Unavailable.Air))
+							safe[0] = true;
+					}
+				}
+			}
+		);
+		return safe[0];
 	}
 
 	@Override
