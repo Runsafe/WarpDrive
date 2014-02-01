@@ -18,6 +18,7 @@ import no.runsafe.warpdrive.summoningstone.EventHandler;
 import no.runsafe.warpdrive.summoningstone.SummoningEngine;
 import no.runsafe.warpdrive.summoningstone.SummoningStoneCleaner;
 import no.runsafe.warpdrive.summoningstone.SummoningStoneRepository;
+import no.runsafe.warpdrive.zones.SetZoneCommand;
 
 public class WarpDrive extends RunsafeConfigurablePlugin
 {
@@ -60,6 +61,7 @@ public class WarpDrive extends RunsafeConfigurablePlugin
 		addComponent(RescanSmartWarp.class);
 		addComponent(SetPortal.class);
 		addComponent(SetRegionPortal.class);
+		addComponent(SetZoneCommand.class);
 
 		addComponent(WarpSignCreator.class);
 
