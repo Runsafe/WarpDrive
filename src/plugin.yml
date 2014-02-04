@@ -10,6 +10,8 @@ commands:
     description: Remove a private warp location
   home:
     description: Teleport to a private warp location
+  homeother:
+    description: Teleport to another players homes.
   setwarp:
     description: Set public warp location
   delwarp:
