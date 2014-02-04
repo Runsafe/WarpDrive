@@ -12,6 +12,7 @@ commands:
     description: Teleport to a private warp location
   homeother:
     description: Teleport to another players homes.
+    aliases: [ho]
   setwarp:
     description: Set public warp location
   delwarp:
