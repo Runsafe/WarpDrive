@@ -191,6 +191,15 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 				return false;
 			}
 		}
+		else if (worldName.contains("_nether"))
+		{
+			IWorld world = server.getWorld(worldName.replace("_nether", ""));
+			if (world != null)
+			{
+				player.teleport(world, from.getX() * 8, from.getY(), from.getZ() * 8);
+				return false;
+			}
+		}
 
 		return true;
 	}
