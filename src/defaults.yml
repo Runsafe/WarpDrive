@@ -8,3 +8,5 @@ summoningStone.ritualWorlds:
   - spawn
 summoningStone.stoneWorlds:
   - development
+netherWorlds:
+  - new_survival

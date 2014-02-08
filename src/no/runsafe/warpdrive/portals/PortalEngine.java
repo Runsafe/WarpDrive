@@ -1,9 +1,6 @@
 package no.runsafe.warpdrive.portals;
 
-import no.runsafe.framework.api.IConfiguration;
-import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerCustomEvent;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
@@ -20,21 +17,19 @@ import no.runsafe.framework.minecraft.event.player.RunsafeCustomEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.warpdrive.smartwarp.SmartWarpDrive;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent, IPlayerCustomEvent
 {
-	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console, IScheduler scheduler)
+	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console, IScheduler scheduler, IServer server)
 	{
 		this.repository = repository;
 		this.smartWarpDrive = smartWarpDrive;
 		this.debugger = debugger;
 		this.console = console;
 		this.scheduler = scheduler;
+		this.server = server;
 	}
 
 	public void reloadPortals()
@@ -186,6 +181,17 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			finalizeWarp(player);
 			return OnPlayerPortal(player, from, to);
 		}
+
+		if (netherWorlds.contains(worldName))
+		{
+			IWorld netherWorld = server.getWorld(worldName + "_nether");
+			if (netherWorld != null)
+			{
+				player.teleport(netherWorld, from.getX() / 8, from.getY(), from.getZ() / 8);
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -193,6 +199,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	public void OnConfigurationChanged(IConfiguration iConfiguration)
 	{
 		this.reloadPortals();
+		netherWorlds = iConfiguration.getConfigValueAsList("netherWorlds");
 	}
 
 	public PortalWarp getWarp(IWorld world, String portalName)
@@ -331,6 +338,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		}
 	}
 
+	private List<String> netherWorlds = new ArrayList<String>();
 	private final Map<String, PortalWarp> pending = new ConcurrentHashMap<String, PortalWarp>();
 	private final Map<String, Map<String, PortalWarp>> portals = new HashMap<String, Map<String, PortalWarp>>();
 	private final PortalRepository repository;
@@ -338,4 +346,5 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private final IDebug debugger;
 	private final IConsole console;
 	private final IScheduler scheduler;
+	private final IServer server;
 }
