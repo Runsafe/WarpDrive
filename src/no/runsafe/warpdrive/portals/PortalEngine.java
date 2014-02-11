@@ -2,6 +2,7 @@ package no.runsafe.warpdrive.portals;
 
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.block.IBlock;
+import no.runsafe.framework.api.chunk.IChunk;
 import no.runsafe.framework.api.event.player.IPlayerCustomEvent;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.player.IPlayerPortal;
@@ -187,7 +188,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			IWorld netherWorld = server.getWorld(worldName + "_nether");
 			if (netherWorld != null)
 			{
-				player.teleport(netherWorld, from.getX() / 8, from.getY(), from.getZ() / 8);
+				netherTeleport(netherWorld.getLocation(from.getX() / 8, from.getY() / 2, from.getZ() / 8), player);
 				return false;
 			}
 		}
@@ -196,7 +197,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			IWorld world = server.getWorld(worldName.replace("_nether", ""));
 			if (world != null)
 			{
-				player.teleport(world, from.getX() * 8, from.getY(), from.getZ() * 8);
+				netherTeleport(world.getLocation(from.getX() * 8, from.getY() * 2, from.getZ() * 8), player);
 				return false;
 			}
 		}
@@ -204,11 +205,34 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		return true;
 	}
 
+	private void netherTeleport(ILocation location, IPlayer player)
+	{
+		IChunk chunk = location.getChunk();
+
+		if (chunk.isUnloaded()) // Make sure we have the chunk loaded before editing.
+			chunk.load();
+
+		// Y correction.
+		if (location.getY() > netherMaxY)
+			location.setY(netherMaxY);
+		else if (location.getY() < netherMinY)
+			location.setY(netherMinY);
+
+		// Build a platform for the player to stand on.
+		ILocation blockLocation = location.clone();
+		blockLocation.offset(0, -1, 0);
+		blockLocation.getBlock().set(Item.BuildingBlock.Obsidian);
+
+		player.teleport(location); // Teleport the player.
+	}
+
 	@Override
 	public void OnConfigurationChanged(IConfiguration iConfiguration)
 	{
 		this.reloadPortals();
 		netherWorlds = iConfiguration.getConfigValueAsList("netherWorlds");
+		netherMaxY = iConfiguration.getConfigValueAsInt("netherPortals.maxY");
+		netherMinY = iConfiguration.getConfigValueAsInt("netherPortals.minY");
 	}
 
 	public PortalWarp getWarp(IWorld world, String portalName)
@@ -356,4 +380,6 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private final IConsole console;
 	private final IScheduler scheduler;
 	private final IServer server;
+	private int netherMaxY;
+	private int netherMinY;
 }

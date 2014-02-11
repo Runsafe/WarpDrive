@@ -10,3 +10,6 @@ summoningStone.stoneWorlds:
   - development
 netherWorlds:
   - new_survival
+netherPortals:
+  maxY: 120
+  minY: 6
