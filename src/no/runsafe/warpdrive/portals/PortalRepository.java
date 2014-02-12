@@ -62,7 +62,7 @@ public class PortalRepository extends Repository
 				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			warp.getID(), warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getDestinationWorldName(),
 			warp.getDestinationX(), warp.getDestinationY(), warp.getDestinationZ(), warp.getDestinationYaw(),
-			warp.getDestinationPitch(), null, "", warp.getRegion() == null ? null : warp.getRegion().toString(),
+			warp.getDestinationPitch(), null, warp.getPermission(), warp.getRegion() == null ? null : warp.getRegion().toString(),
 			warp.getEnterRegion()
 		);
 	}

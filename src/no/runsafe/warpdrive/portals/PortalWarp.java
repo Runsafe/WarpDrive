@@ -41,6 +41,11 @@ public class PortalWarp
 		this.perm = perm;
 	}
 
+	public String getPermission()
+	{
+		return perm;
+	}
+
 	public boolean canTeleport(IPlayer player)
 	{
 		return (this.perm == null || player.hasPermission(this.perm));
