@@ -149,6 +149,8 @@ public class Engine
 		while (location.getWorld().getBlockAt(location).isAir())
 		{
 			fallDistance++;
+			if (fallDistance > location.getBlockY())
+				return false;
 			floor = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY() - fallDistance, location.getBlockZ());
 		}
 		if (floor.isHazardous() || floor.canPassThrough() || floor.isAbleToFall() || fallDistance > 2)
