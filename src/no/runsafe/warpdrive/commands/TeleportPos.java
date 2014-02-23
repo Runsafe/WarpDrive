@@ -5,17 +5,15 @@ import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.IntegerArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.warpdrive.Engine;
 
 public class TeleportPos extends PlayerCommand
 {
-	public TeleportPos(Engine engine)
+	public TeleportPos()
 	{
 		super(
 			"teleportpos", "Teleports you to the given coordinates in your current world.", "runsafe.teleport.coordinate",
 			new IntegerArgument("x", true), new IntegerArgument("y", true), new IntegerArgument("z", true)
 		);
-		this.engine = engine;
 	}
 
 	@Override
@@ -24,18 +22,13 @@ public class TeleportPos extends PlayerCommand
 		Integer x = parameters.getValue("x");
 		Integer y = parameters.getValue("y");
 		Integer z = parameters.getValue("z");
-		if (x == null || z == null)
+		if (x == null || y == null || z == null)
 			return "Invalid coordinate";
 		ILocation target = player.getLocation();
 		target.setX(x);
 		target.setZ(z);
-		if (y == null)
-			target = engine.findTop(target);
-		else
-			target.setY(y);
+		target.setY(y);
 		player.teleport(target);
 		return null;
 	}
-
-	private final Engine engine;
 }
