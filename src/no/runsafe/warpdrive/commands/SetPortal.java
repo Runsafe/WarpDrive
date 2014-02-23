@@ -5,6 +5,7 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.command.argument.IArgumentList;
+import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.argument.WorldArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
@@ -23,7 +24,8 @@ public class SetPortal extends PlayerAsyncCommand
 			"runsafe.portal.set",
 			scheduler,
 			new WorldArgument(true),
-			new RequiredArgument("name")
+			new RequiredArgument("name"),
+			new OptionalArgument("permission")
 		);
 		this.engine = engine;
 		this.server = server;
@@ -40,18 +42,22 @@ public class SetPortal extends PlayerAsyncCommand
 		PortalWarp warp = engine.getWarp(portalWorld, portalName);
 		ILocation playerLocation = player.getLocation();
 
+		String permission = parameters.containsKey("permission") ? parameters.get("permission") : null;
+
 		if (playerLocation == null)
 			return "Invalid location.";
 
 		if (warp != null)
 		{
 			warp.setDestination(playerLocation);
+			warp.setPermission(permission);
+
 			engine.updateWarp(warp);
 			return "Portal " + portalName + " now connects to " + playerLocation.toString();
 		}
 		else
 		{
-			engine.createWarp(player, portalName, playerLocation, PortalType.NORMAL);
+			engine.createWarp(player, portalName, playerLocation, PortalType.NORMAL, permission);
 			return "Now walk through the portal to connect to " + playerLocation.toString();
 		}
 	}

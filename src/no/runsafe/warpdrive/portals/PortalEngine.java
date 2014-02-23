@@ -246,9 +246,9 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		return null;
 	}
 
-	public void createWarp(IPlayer creator, String portalName, ILocation destination, PortalType type) throws NullPointerException
+	public void createWarp(IPlayer creator, String portalName, ILocation destination, PortalType type, String permission) throws NullPointerException
 	{
-		PortalWarp warp = new PortalWarp(portalName, null, destination, type, -1, null, null, null); // Create new warp.
+		PortalWarp warp = new PortalWarp(portalName, null, destination, type, -1, permission, null, null); // Create new warp.
 		pending.put(creator.getName(), warp);
 	}
 
