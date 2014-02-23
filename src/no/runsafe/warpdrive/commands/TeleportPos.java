@@ -2,7 +2,7 @@ package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.argument.RequiredArgument;
+import no.runsafe.framework.api.command.argument.IntegerArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.Engine;
@@ -13,7 +13,7 @@ public class TeleportPos extends PlayerCommand
 	{
 		super(
 			"teleportpos", "Teleports you to the given coordinates in your current world.", "runsafe.teleport.coordinate",
-			new RequiredArgument("x"), new RequiredArgument("y"), new RequiredArgument("z")
+			new IntegerArgument("x", true), new IntegerArgument("y", true), new IntegerArgument("z", true)
 		);
 		this.engine = engine;
 	}
@@ -21,23 +21,15 @@ public class TeleportPos extends PlayerCommand
 	@Override
 	public String OnExecute(IPlayer player, IArgumentList parameters)
 	{
-		Double x = Double.valueOf(parameters.get("x"));
-		Double y;
-		try
-		{
-			y = Double.valueOf(parameters.get("y"));
-		}
-		catch (NumberFormatException e)
-		{
-			y = Double.NaN;
-		}
-		Double z = Double.valueOf(parameters.get("z"));
-		if (x.isNaN() || z.isNaN())
+		Integer x = parameters.getValue("x");
+		Integer y = parameters.getValue("y");
+		Integer z = parameters.getValue("z");
+		if (x == null || z == null)
 			return "Invalid coordinate";
 		ILocation target = player.getLocation();
 		target.setX(x);
 		target.setZ(z);
-		if (y.isNaN())
+		if (y == null)
 			target = engine.findTop(target);
 		else
 			target.setY(y);
