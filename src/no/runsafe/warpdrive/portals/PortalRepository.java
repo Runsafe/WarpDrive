@@ -116,6 +116,9 @@ public class PortalRepository extends Repository
 		update.addQueries("ALTER TABLE `warpdrive_portals`" +
 			"ADD COLUMN `region` VARCHAR(50) NULL DEFAULT NULL AFTER `portal_field`;");
 
+		update.addQueries("ALTER TABLE `warpdrive_portals`" +
+				"CHANGE COLUMN `permission` `permission` VARCHAR(255) NULL DEFAULT NULL AFTER `ID`;\n");
+
 		return update;
 	}
 }
