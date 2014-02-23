@@ -144,16 +144,12 @@ public class Engine
 		IChunk chunk = location.getChunk();
 		if (chunk.isUnloaded())
 			chunk.load();
-		IBlock floor = location.getBlock();
-		int fallDistance = 0;
-		while (location.getWorld().getBlockAt(location).isAir())
-		{
-			fallDistance++;
-			if (fallDistance > location.getBlockY())
-				return false;
-			floor = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY() - fallDistance, location.getBlockZ());
-		}
-		if (floor.isHazardous() || floor.canPassThrough() || floor.isAbleToFall() || fallDistance > 2)
+		IBlock floor;
+		if (location.getWorld().getBlockAt(location).isAir() || playerLocation)
+			floor = location.getWorld().getBlockAt(location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
+		else
+			floor = location.getWorld().getBlockAt(location);
+		if (floor.isHazardous() || floor.canPassThrough() || floor.isAbleToFall())
 			return false;
 
 		for (int y = playerLocation ? 0 : 1; y < (playerLocation ? 2 : 3); ++y)
