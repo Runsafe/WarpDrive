@@ -1,13 +1,14 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.ILocation;
+import no.runsafe.framework.api.command.IBranchingExecution;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.IntegerArgument;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.Engine;
 
-public class TeleportPos2D extends PlayerCommand
+public class TeleportPos2D extends PlayerCommand implements IBranchingExecution
 {
 	public TeleportPos2D(Engine engine)
 	{
