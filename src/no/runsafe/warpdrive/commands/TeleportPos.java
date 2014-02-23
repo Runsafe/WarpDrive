@@ -12,7 +12,7 @@ public class TeleportPos extends PlayerCommand implements IBranchingExecution
 	public TeleportPos()
 	{
 		super(
-			"teleportpos", "Teleports you to the given coordinates in your current world.", "runsafe.teleport.coordinate",
+			"teleportpos", "Teleport to a x,y,z coordinate in your current world.", "runsafe.teleport.coordinate",
 			new IntegerArgument("x", true), new IntegerArgument("y", true), new IntegerArgument("z", true)
 		);
 	}

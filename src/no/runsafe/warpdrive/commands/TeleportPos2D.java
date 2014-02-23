@@ -13,7 +13,7 @@ public class TeleportPos2D extends PlayerCommand implements IBranchingExecution
 	public TeleportPos2D(Engine engine)
 	{
 		super(
-			"teleportpos", "Teleports you to the given coordinates in your current world.", "runsafe.teleport.coordinate",
+			"teleportpos", "Teleport to the topmost block at the x,z coordinate in your current world.", "runsafe.teleport.coordinate",
 			new IntegerArgument("x", true), new IntegerArgument("z", true)
 		);
 		this.engine = engine;
