@@ -3,7 +3,7 @@ package no.runsafe.warpdrive.commands;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.command.IBranchingExecution;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.argument.IntegerArgument;
+import no.runsafe.framework.api.command.argument.WholeNumber;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
@@ -13,7 +13,7 @@ public class TeleportPos extends PlayerCommand implements IBranchingExecution
 	{
 		super(
 			"teleportpos", "Teleport to a x,y,z coordinate in your current world.", "runsafe.teleport.coordinate",
-			new IntegerArgument("x", true), new IntegerArgument("y", true), new IntegerArgument("z", true)
+			new WholeNumber.Required("x"), new WholeNumber.Required("y"), new WholeNumber.Required("z")
 		);
 	}
 

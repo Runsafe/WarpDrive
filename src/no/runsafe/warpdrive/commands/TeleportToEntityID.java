@@ -1,7 +1,7 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.argument.IntegerArgument;
+import no.runsafe.framework.api.command.argument.WholeNumber;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.entity.IEntity;
 import no.runsafe.framework.api.player.IPlayer;
@@ -12,7 +12,7 @@ public class TeleportToEntityID extends PlayerCommand
 	{
 		super(
 			"teleporttoentityid", "Teleports you to the given entity in your current world.", "runsafe.teleport.entity",
-			new IntegerArgument("entityid", true)
+			new WholeNumber.Required("entityid")
 		);
 	}
 

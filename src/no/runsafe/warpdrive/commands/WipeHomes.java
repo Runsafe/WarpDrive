@@ -1,11 +1,11 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.WorldArgument;
 import no.runsafe.framework.api.command.console.ConsoleAsyncCommand;
 import no.runsafe.warpdrive.database.WarpRepository;
-
-import java.util.Map;
 
 public class WipeHomes extends ConsoleAsyncCommand
 {
@@ -19,11 +19,13 @@ public class WipeHomes extends ConsoleAsyncCommand
 	}
 
 	@Override
-	public String OnAsyncExecute(Map<String, String> parameters)
+	public String OnAsyncExecute(IArgumentList parameters)
 	{
-		String world = parameters.get("world");
-		repository.DelAllPrivate(world);
-		return String.format("Deleted all homes from world %s", world);
+		IWorld world = parameters.getValue("world");
+		if (world == null)
+			return null;
+		repository.DelAllPrivate(world.getName());
+		return String.format("Deleted all homes from world %s", world.getName());
 	}
 
 	private final WarpRepository repository;
