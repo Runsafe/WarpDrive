@@ -27,7 +27,7 @@ public class SetRegionPortal extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
-		IWorld world = parameters.getWorld("world");
+		IWorld world = parameters.getValue("world");
 		if (world == null)
 			return null;
 		String region = parameters.get("region");

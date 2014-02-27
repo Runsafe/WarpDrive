@@ -1,7 +1,7 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.command.argument.AnyPlayerRequired;
+import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.ITabComplete;
 import no.runsafe.framework.api.command.argument.OptionalArgument;
@@ -16,7 +16,7 @@ public class HomeOther extends PlayerTeleportCommand
 {
 	public HomeOther(WarpRepository repository, IScheduler scheduler, Engine engine)
 	{
-		super("homeother", "Teleports you to someone elses house", "runsafe.home.other.use", scheduler, engine, new AnyPlayerRequired(), new HomeArgument(repository));
+		super("homeother", "Teleports you to someone elses house", "runsafe.home.other.use", scheduler, engine, new Player.Any.Required(), new HomeArgument(repository));
 		warpRepository = repository;
 	}
 
@@ -44,7 +44,7 @@ public class HomeOther extends PlayerTeleportCommand
 		target.player = player;
 		String home;
 
-		IPlayer otherPlayer = params.getPlayer("player");
+		IPlayer otherPlayer = params.getValue("player");
 		if (otherPlayer == null)
 		{
 			target.message = "Invalid player.";

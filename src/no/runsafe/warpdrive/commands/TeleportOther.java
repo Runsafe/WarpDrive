@@ -6,7 +6,7 @@ import no.runsafe.framework.api.command.IBranchingExecution;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.IContextPermissionProvider;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.argument.OnlinePlayerRequired;
+import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 import no.runsafe.warpdrive.Engine;
@@ -17,7 +17,7 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 	{
 		super(
 			"teleport", "Teleport player1 to player2", null,
-			new OnlinePlayerRequired("player1"), new OnlinePlayerRequired("player2")
+			new Player.Online.Required("player1"), new Player.Online.Required("player2")
 		);
 		this.engine = engine;
 		this.warned = new TimedCache<String, String>(scheduler, 10);
@@ -30,9 +30,9 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 		{
 			IPlayer target;
 			if (!parameters.containsKey("player2"))
-				target = parameters.getPlayer("player1");
+				target = parameters.getValue("player1");
 			else
-				target = parameters.getPlayer("player2");
+				target = parameters.getValue("player2");
 			if (target == null)
 				return null;
 
@@ -44,8 +44,8 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 	@Override
 	public String OnExecute(ICommandExecutor executor, IArgumentList parameters)
 	{
-		IPlayer move = parameters.getPlayer("player1");
-		IPlayer to = parameters.getPlayer("player2");
+		IPlayer move = parameters.getValue("player1");
+		IPlayer to = parameters.getValue("player2");
 		if (move == null || to == null)
 			return null;
 

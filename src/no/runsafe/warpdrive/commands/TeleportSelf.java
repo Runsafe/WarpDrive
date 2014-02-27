@@ -5,7 +5,7 @@ import no.runsafe.framework.api.command.IBranchingExecution;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.IContextPermissionProvider;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.argument.OnlinePlayerRequired;
+import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
@@ -17,7 +17,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 	{
 		super(
 			"teleport", "Teleport to another player", null,
-			new OnlinePlayerRequired("player")
+			new Player.Online.Required()
 		);
 		this.engine = engine;
 		this.warned = new TimedCache<String, String>(scheduler, 10);
@@ -28,7 +28,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 	{
 		if (executor instanceof IPlayer)
 		{
-			IPlayer target = parameters.getPlayer("player");
+			IPlayer target = parameters.getValue("player");
 			if (target == null)
 				return null;
 			return "runsafe.teleport.world." + target.getWorldName();
@@ -39,7 +39,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 	@Override
 	public String OnExecute(IPlayer player, IArgumentList parameters)
 	{
-		IPlayer to = parameters.getPlayer("player");
+		IPlayer to = parameters.getValue("player");
 		if (to == null)
 			return null;
 
