@@ -12,7 +12,7 @@ public class TeleportToEntityID extends PlayerCommand
 	{
 		super(
 			"teleporttoentityid", "Teleports you to the given entity in your current world.", "runsafe.teleport.entity",
-			new WholeNumber.Required("entityid")
+			new WholeNumber("entityid").require()
 		);
 	}
 

@@ -23,7 +23,7 @@ public class SetPortal extends PlayerAsyncCommand
 			"Hook your current location to a portal",
 			"runsafe.portal.set",
 			scheduler,
-			new WorldArgument(true),
+			new WorldArgument().require(),
 			new RequiredArgument("name"),
 			new OptionalArgument("permission")
 		);

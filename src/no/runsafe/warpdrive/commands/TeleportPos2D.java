@@ -14,7 +14,7 @@ public class TeleportPos2D extends PlayerCommand implements IBranchingExecution
 	{
 		super(
 			"teleportpos", "Teleport to the topmost block at the x,z coordinate in your current world.", "runsafe.teleport.coordinate",
-			new WholeNumber.Required("x"), new WholeNumber.Required("z")
+			new WholeNumber("x").require(), new WholeNumber("z").require()
 		);
 		this.engine = engine;
 	}

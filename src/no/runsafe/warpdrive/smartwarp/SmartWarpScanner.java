@@ -27,7 +27,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 		this.setInterval(10);
 	}
 
-	public void Setup(IWorld world, String radius, boolean restart)
+	public void Setup(IWorld world, Integer radius, boolean restart)
 	{
 		if (restart)
 		{

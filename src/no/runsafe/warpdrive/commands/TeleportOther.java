@@ -17,7 +17,7 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 	{
 		super(
 			"teleport", "Teleport player1 to player2", null,
-			new Player.Online.Required("player1"), new Player.Online.Required("player2")
+			new Player.Online("player1").require(), new Player.Online("player2").require()
 		);
 		this.engine = engine;
 		this.warned = new TimedCache<String, String>(scheduler, 10);

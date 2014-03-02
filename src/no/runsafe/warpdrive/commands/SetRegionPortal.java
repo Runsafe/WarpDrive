@@ -17,7 +17,7 @@ public class SetRegionPortal extends PlayerAsyncCommand
 	{
 		super("setregionportal", "Hooks up your current location to a region based portal", "runsafe.portal.set",
 			scheduler,
-			new WorldArgument(true),
+			new WorldArgument().require(),
 			new RequiredArgument("region"),
 			new OptionalArgument("permission")
 		);

@@ -16,7 +16,7 @@ public class HomeOther extends PlayerTeleportCommand
 {
 	public HomeOther(WarpRepository repository, IScheduler scheduler, Engine engine)
 	{
-		super("homeother", "Teleports you to someone elses house", "runsafe.home.other.use", scheduler, engine, new Player.Any.Required(), new HomeArgument(repository));
+		super("homeother", "Teleports you to someone elses house", "runsafe.home.other.use", scheduler, engine, new Player.Any().require(), new HomeArgument(repository));
 		warpRepository = repository;
 	}
 
