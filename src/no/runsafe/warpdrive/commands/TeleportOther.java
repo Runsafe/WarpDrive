@@ -17,7 +17,7 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 	{
 		super(
 			"teleport", "Teleport player1 to player2", null,
-			new Player.Online("player1").require(), new Player.Online("player2").require()
+			new Player("player1").onlineOnly().require(), new Player("player2").onlineOnly().require()
 		);
 		this.engine = engine;
 		this.warned = new TimedCache<String, String>(scheduler, 10);
@@ -29,7 +29,7 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 		if (executor instanceof IPlayer)
 		{
 			IPlayer target;
-			if (!parameters.containsKey("player2"))
+			if (parameters.get("player2") == null)
 				target = parameters.getValue("player1");
 			else
 				target = parameters.getValue("player2");

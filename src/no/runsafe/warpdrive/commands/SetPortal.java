@@ -42,7 +42,7 @@ public class SetPortal extends PlayerAsyncCommand
 		PortalWarp warp = engine.getWarp(portalWorld, portalName);
 		ILocation playerLocation = player.getLocation();
 
-		String permission = parameters.containsKey("permission") ? parameters.get("permission") : null;
+		String permission = parameters.get("permission");
 
 		if (playerLocation == null)
 			return "Invalid location.";

@@ -16,7 +16,7 @@ public class HomeOther extends PlayerTeleportCommand
 {
 	public HomeOther(WarpRepository repository, IScheduler scheduler, Engine engine)
 	{
-		super("homeother", "Teleports you to someone elses house", "runsafe.home.other.use", scheduler, engine, new Player.Any().require(), new HomeArgument(repository));
+		super("homeother", "Teleports you to someone elses house", "runsafe.home.other.use", scheduler, engine, new Player().require(), new HomeArgument(repository));
 		warpRepository = repository;
 	}
 
@@ -51,7 +51,7 @@ public class HomeOther extends PlayerTeleportCommand
 			return target;
 		}
 
-		if (!params.containsKey("home"))
+		if (params.get("home") != null)
 		{
 			List<String> homes = warpRepository.GetPrivateList(otherPlayer.getName());
 			if (homes.isEmpty())

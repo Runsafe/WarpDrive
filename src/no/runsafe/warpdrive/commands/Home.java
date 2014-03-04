@@ -42,7 +42,7 @@ public class Home extends PlayerTeleportCommand
 		PlayerTeleport target = new PlayerTeleport();
 		target.player = player;
 		String home;
-		if (!params.containsKey("home"))
+		if (params.get("home") == null)
 		{
 			List<String> homes = warpRepository.GetPrivateList(player.getName());
 			if (homes.isEmpty())

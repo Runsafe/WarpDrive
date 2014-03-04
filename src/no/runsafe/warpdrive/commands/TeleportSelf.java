@@ -17,7 +17,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 	{
 		super(
 			"teleport", "Teleport to another player", null,
-			new Player.Online().require()
+			new Player().onlineOnly().require()
 		);
 		this.engine = engine;
 		this.warned = new TimedCache<String, String>(scheduler, 10);
