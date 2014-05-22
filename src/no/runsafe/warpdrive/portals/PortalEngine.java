@@ -188,7 +188,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			IWorld netherWorld = server.getWorld(worldName + "_nether");
 			if (netherWorld != null)
 			{
-				netherTeleport(netherWorld.getLocation(from.getX() / 8, from.getY() / 2, from.getZ() / 8), player);
+				netherTeleport(netherWorld.getLocation(from.getX(), from.getY() / 2, from.getZ()), player);
 				return false;
 			}
 		}
@@ -197,7 +197,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			IWorld world = server.getWorld(worldName.replace("_nether", ""));
 			if (world != null)
 			{
-				netherTeleport(world.getLocation(from.getX() * 8, from.getY() * 2, from.getZ() * 8), player);
+				netherTeleport(world.getLocation(from.getX(), from.getY() * 2, from.getZ()), player);
 				return false;
 			}
 		}
