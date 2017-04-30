@@ -13,6 +13,7 @@ import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	implements IPlayerDamageEvent, IConfigurationChanged, IPluginDisabled
@@ -33,7 +34,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 		if (lockedSurfaceLocation != null)
 		{
 			if (skyFall)
-				fallen.add(player.getName());
+				fallen.add(player.getUniqueId());
 			Push(player.getName(), lockedSurfaceLocation);
 			return;
 		}
@@ -42,7 +43,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 			return;
 		if (skyFall)
 		{
-			fallen.add(player.getName());
+			fallen.add(player.getUniqueId());
 			candidate.setY(300);
 			candidate.setPitch(90);
 		}
@@ -93,8 +94,9 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 		if (player == null)
 			return;
 
-		if (!player.teleport(target) && fallen.contains(playerName))
-			fallen.remove(playerName);
+		UUID playerUUID = player.getUniqueId();
+		if (!player.teleport(target) && fallen.contains(playerUUID))
+			fallen.remove(playerUUID);
 	}
 
 	@Override
@@ -108,10 +110,10 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	{
 		if (event.getCause() == RunsafeEntityDamageEvent.RunsafeDamageCause.FALL)
 		{
-			if (fallen.contains(player.getName()))
+			if (fallen.contains(player.getUniqueId()))
 			{
 				event.cancel();
-				fallen.remove(player.getName());
+				fallen.remove(player.getUniqueId());
 			}
 		}
 	}
@@ -121,9 +123,9 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	{
 		if (!fallen.isEmpty())
 			console.logInformation("Teleporting %d falling players due to plugin shutdown.", fallen.size());
-		for (String playerName : fallen)
+		for (UUID playerUUID : fallen)
 		{
-			IPlayer player = server.getPlayerExact(playerName);
+			IPlayer player = server.getPlayer(playerUUID);
 			if (player != null)
 				player.teleport(player.getLocation().findTop());
 		}
@@ -142,7 +144,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	private ILocation lockedCaveLocation;
 	private ILocation lockedSurfaceLocation;
 	private boolean skyFall = false;
-	private final List<String> fallen = new ArrayList<String>(0);
+	private final List<UUID> fallen = new ArrayList<UUID>(0);
 	private final IScheduler scheduler;
 	private final SmartWarpChunkRepository smartWarpChunks;
 	private final Engine engine;
