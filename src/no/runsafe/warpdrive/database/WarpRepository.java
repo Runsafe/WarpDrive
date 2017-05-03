@@ -6,6 +6,7 @@ import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.ISchemaUpdate;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.api.database.SchemaUpdate;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 
 import java.util.List;
@@ -46,12 +47,16 @@ public class WarpRepository extends Repository
 		return update;
 	}
 
-	public void Persist(String creator, String name, boolean publicWarp, ILocation location)
+	public void Persist(IPlayer creator, String name, boolean publicWarp, ILocation location)
 	{
+		String creatorName = "";
+		if (creator != null)
+			creatorName = creator.getName();
+
 		database.update(
 			"INSERT INTO warpdrive_locations (creator, name, `public`, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)" +
 				"ON DUPLICATE KEY UPDATE world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z), yaw=VALUES(yaw), pitch=VALUES(pitch)",
-			creator,
+			creatorName,
 			name,
 			publicWarp,
 			location.getWorld().getName(),
@@ -71,27 +76,27 @@ public class WarpRepository extends Repository
 		return GetWarps(null, true);
 	}
 
-	public List<String> GetPrivateList(String owner)
+	public List<String> GetPrivateList(IPlayer owner)
 	{
 		return GetWarps(owner, false);
 	}
 
 	public ILocation GetPublic(String name)
 	{
-		return GetWarp("", name, true);
+		return GetWarp(null, name, true);
 	}
 
-	public ILocation GetPrivate(String owner, String name)
+	public ILocation GetPrivate(IPlayer owner, String name)
 	{
 		return GetWarp(owner, name, false);
 	}
 
 	public boolean DelPublic(String name)
 	{
-		return DelWarp("", name, true);
+		return DelWarp(null, name, true);
 	}
 
-	public boolean DelPrivate(String owner, String name)
+	public boolean DelPrivate(IPlayer owner, String name)
 	{
 		return DelWarp(owner, name, false);
 	}
@@ -101,22 +106,32 @@ public class WarpRepository extends Repository
 		database.execute("DELETE FROM warpdrive_locations WHERE world=? AND public=?", world, false);
 	}
 
-	private String cacheKey(String creator, String name, boolean publicWarp)
+	private String cacheKey(IPlayer creator, String name, boolean publicWarp)
 	{
 		if (publicWarp)
 			return name;
-		return String.format("%s:%s", creator, name);
+
+		String creatorName = "";
+		if (creator != null)
+			creatorName = creator.getName();
+
+		return String.format("%s:%s", creatorName, name);
 	}
 
-	private List<String> GetWarps(String owner, boolean publicWarp)
+	private List<String> GetWarps(IPlayer owner, boolean publicWarp)
 	{
 		if (publicWarp)
 			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=1");
 		else
-			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator=?", owner);
+		{
+			String ownerName = "";
+			if (owner != null)
+				ownerName = owner.getName();
+			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator=?", ownerName);
+		}
 	}
 
-	private ILocation GetWarp(String owner, String name, boolean publicWarp)
+	private ILocation GetWarp(IPlayer owner, String name, boolean publicWarp)
 	{
 		String key = cacheKey(owner, name, publicWarp);
 		ILocation location = cache.Cache(key);
@@ -129,15 +144,20 @@ public class WarpRepository extends Repository
 				name
 			);
 		else
+		{
+			String ownerName = "";
+			if (owner != null)
+				ownerName = owner.getName();
 			location = database.queryLocation(
 				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=0 AND creator=?",
-				name, owner
+				name, ownerName
 			);
+		}
 
 		return cache.Cache(key, location);
 	}
 
-	private boolean DelWarp(String owner, String name, boolean publicWarp)
+	private boolean DelWarp(IPlayer owner, String name, boolean publicWarp)
 	{
 		if (GetWarp(owner, name, publicWarp) == null)
 			return false;
@@ -145,7 +165,12 @@ public class WarpRepository extends Repository
 		if (publicWarp)
 			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=1", name);
 		else
-			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator=?", name, owner);
+		{
+			String ownerName = "";
+			if (owner != null)
+				ownerName = owner.getName();
+			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator=?", name, ownerName);
+		}
 		cache.Invalidate(cacheKey(owner, name, publicWarp));
 		return success;
 	}
