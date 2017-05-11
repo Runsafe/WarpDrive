@@ -78,6 +78,6 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 
 	private final WarpRepository warpRepository;
 	private final IConsole console;
-	public static final String signHeader = "[" + ChatColour.BLUE.toBukkit() + "warp" + ChatColour.RESET.toBukkit() + "]";
+	public static final String signHeader = ChatColour.DARK_BLUE.toBukkit() + "[warp]";
 	public static final String signTag = "[warp]";
 }
