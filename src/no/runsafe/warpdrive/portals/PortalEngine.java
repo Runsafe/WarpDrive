@@ -220,11 +220,13 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 		// Build a platform for the player to stand on.
 		ILocation blockLocation = location.clone();
-		blockLocation.getBlock().set(Item.Unavailable.Air);
+		if (!blockLocation.getBlock().is(Item.Unavailable.Portal))
+			blockLocation.getBlock().set(Item.Unavailable.Air);
 		blockLocation.offset(0, -1, 0);
 		blockLocation.getBlock().set(Item.BuildingBlock.Obsidian);
 		blockLocation.offset(0, 2, 0);
-		blockLocation.getBlock().set(Item.Unavailable.Air);
+		if (!blockLocation.getBlock().is(Item.Unavailable.Portal))
+			blockLocation.getBlock().set(Item.Unavailable.Air);
 
 		player.teleport(location); // Teleport the player.
 	}
