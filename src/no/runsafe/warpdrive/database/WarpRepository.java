@@ -6,16 +6,19 @@ import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.ISchemaUpdate;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.api.database.SchemaUpdate;
+import no.runsafe.framework.api.event.IServerReady;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 
 import java.util.List;
 
-public class WarpRepository extends Repository
+public class WarpRepository extends Repository implements IServerReady
 {
-	public WarpRepository(IScheduler scheduler)
+	public WarpRepository(IScheduler scheduler, IConsole console)
 	{
 		cache = new TimedCache<String, ILocation>(scheduler);
+		this.console = console;
 	}
 
 	@Override
@@ -30,23 +33,29 @@ public class WarpRepository extends Repository
 		ISchemaUpdate update = new SchemaUpdate();
 
 		update.addQueries(
-			"CREATE TABLE warpdrive_locations (" +
-				"`creator` varchar(20) NOT NULL," +
-				"`name` varchar(255) NOT NULL," +
-				"`public` bit NOT NULL," +
-				"`world` varchar(255) NOT NULL," +
-				"`x` double NOT NULL," +
-				"`y` double NOT NULL," +
-				"`z` double NOT NULL," +
-				"`yaw` double NOT NULL," +
-				"`pitch` double NOT NULL," +
-				"PRIMARY KEY(`creator`,`name`,`public`)" +
-			")"
+				"CREATE TABLE warpdrive_locations (" +
+						"`creator` varchar(20) NOT NULL," +
+						"`name` varchar(255) NOT NULL," +
+						"`public` bit NOT NULL," +
+						"`world` varchar(255) NOT NULL," +
+						"`x` double NOT NULL," +
+						"`y` double NOT NULL," +
+						"`z` double NOT NULL," +
+						"`yaw` double NOT NULL," +
+						"`pitch` double NOT NULL," +
+						"PRIMARY KEY(`creator`,`name`,`public`)" +
+						")"
 		);
 		update.addQueries( // Add a column for the creator's UUID.
-			String.format("ALTER TABLE %s ADD COLUMN `creator_id` VARCHAR(36) NOT NULL DEFAULT 'default'", getTableName())
+				String.format("ALTER TABLE %s ADD COLUMN `creator_id` VARCHAR(36) NOT NULL DEFAULT 'default'", getTableName())
 		);
 		return update;
+	}
+
+	@Override
+	public void OnServerReady()
+	{
+		UpdateUUIDs(); // Make sure no one has a default UUID when the server starts.
 	}
 
 	public void Persist(IPlayer creator, String name, boolean publicWarp, ILocation location)
@@ -111,6 +120,34 @@ public class WarpRepository extends Repository
 	public void DelAllPrivate(String world)
 	{
 		database.execute("DELETE FROM warpdrive_locations WHERE world=? AND public=?", world, false);
+	}
+
+	/**
+	 * Updates players stored with the default UUID to the UUID they have stored in UserControl
+	 * Requires player_db from UserControl to be a table in MySQL
+	 */
+	public void UpdateUUIDs()
+	{
+		console.logInformation("Updating WarpDrive UUIDs.");
+		// Check if any players still have the default UUID
+		if (this.database.queryString(String.format("SELECT `creator` FROM `%s` WHERE `creator_id` = 'default'", getTableName())) != null)
+		{
+			// Copy needed UUIDs over from the player database.
+			database.execute(String.format(
+					"UPDATE '%s` " +
+							"SET `player_id`=(SELECT `uuid` FROM player_db WHERE `name`=`%s`.`creator_id`) " +
+							"WHERE `player_id` = 'default'",
+					getTableName(), getTableName()
+			));
+
+			// Check if all players now have a UUID.
+			if (this.database.queryString(String.format("SELECT `creator` FROM `%s` WHERE `creator_id` = 'default'", getTableName())) != null)
+				console.logWarning("Not all players could be assigned a UUID.");
+			else
+				console.logInformation("All players assigned a UUID.");
+		}
+		else
+			console.logInformation("No UUIDs to update.");
 	}
 
 	private String cacheKey(IPlayer creator, String name, boolean publicWarp)
@@ -182,5 +219,6 @@ public class WarpRepository extends Repository
 		return success;
 	}
 
+	private final IConsole console;
 	private final TimedCache<String, ILocation> cache;
 }
