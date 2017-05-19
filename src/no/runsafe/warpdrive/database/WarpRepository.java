@@ -43,20 +43,27 @@ public class WarpRepository extends Repository
 				"PRIMARY KEY(`creator`,`name`,`public`)" +
 			")"
 		);
-
+		update.addQueries( // Add a column for the creator's UUID.
+			String.format("ALTER TABLE %s ADD COLUMN `creator_id` VARCHAR(36) NOT NULL DEFAULT 'default'", getTableName())
+		);
 		return update;
 	}
 
 	public void Persist(IPlayer creator, String name, boolean publicWarp, ILocation location)
 	{
 		String creatorName = "";
+		String creatorId = "";
 		if (creator != null)
+		{
 			creatorName = creator.getName();
+			creatorId = creator.getUniqueId().toString();
+		}
 
 		database.update(
-			"INSERT INTO warpdrive_locations (creator, name, `public`, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+			"INSERT INTO warpdrive_locations (creator, creator_id, name, `public`, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
 				"ON DUPLICATE KEY UPDATE world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z), yaw=VALUES(yaw), pitch=VALUES(pitch)",
 			creatorName,
+			creatorId,
 			name,
 			publicWarp,
 			location.getWorld().getName(),
@@ -124,10 +131,10 @@ public class WarpRepository extends Repository
 			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=1");
 		else
 		{
-			String ownerName = "";
+			String ownerId = "";
 			if (owner != null)
-				ownerName = owner.getName();
-			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator=?", ownerName);
+				ownerId = owner.getUniqueId().toString();
+			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator_id=?", ownerId);
 		}
 	}
 
@@ -145,12 +152,12 @@ public class WarpRepository extends Repository
 			);
 		else
 		{
-			String ownerName = "";
+			String ownerId = "";
 			if (owner != null)
-				ownerName = owner.getName();
+				ownerId = owner.getUniqueId().toString();
 			location = database.queryLocation(
-				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=0 AND creator=?",
-				name, ownerName
+				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=0 AND creator_id=?",
+				name, ownerId
 			);
 		}
 
@@ -166,10 +173,10 @@ public class WarpRepository extends Repository
 			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=1", name);
 		else
 		{
-			String ownerName = "";
+			String ownerId = "";
 			if (owner != null)
-				ownerName = owner.getName();
-			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator=?", name, ownerName);
+				ownerId = owner.getUniqueId().toString();
+			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator_id=?", name, ownerId);
 		}
 		cache.Invalidate(cacheKey(owner, name, publicWarp));
 		return success;
