@@ -44,7 +44,7 @@ public class WarpRepository extends Repository implements IServerReady
 				"`yaw` double NOT NULL," +
 				"`pitch` double NOT NULL," +
 				"PRIMARY KEY(`creator`,`name`,`public`)" +
-				")"
+			")"
 		);
 		// Add a column for the creator's UUID.
 		update.addQueries(
