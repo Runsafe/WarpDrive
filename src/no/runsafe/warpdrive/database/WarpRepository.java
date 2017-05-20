@@ -33,21 +33,24 @@ public class WarpRepository extends Repository implements IServerReady
 		ISchemaUpdate update = new SchemaUpdate();
 
 		update.addQueries(
-				"CREATE TABLE warpdrive_locations (" +
-						"`creator` varchar(20) NOT NULL," +
-						"`name` varchar(255) NOT NULL," +
-						"`public` bit NOT NULL," +
-						"`world` varchar(255) NOT NULL," +
-						"`x` double NOT NULL," +
-						"`y` double NOT NULL," +
-						"`z` double NOT NULL," +
-						"`yaw` double NOT NULL," +
-						"`pitch` double NOT NULL," +
-						"PRIMARY KEY(`creator`,`name`,`public`)" +
-						")"
+			"CREATE TABLE warpdrive_locations (" +
+				"`creator` varchar(20) NOT NULL," +
+				"`name` varchar(255) NOT NULL," +
+				"`public` bit NOT NULL," +
+				"`world` varchar(255) NOT NULL," +
+				"`x` double NOT NULL," +
+				"`y` double NOT NULL," +
+				"`z` double NOT NULL," +
+				"`yaw` double NOT NULL," +
+				"`pitch` double NOT NULL," +
+				"PRIMARY KEY(`creator`,`name`,`public`)" +
+				")"
 		);
-		update.addQueries( // Add a column for the creator's UUID.
-				String.format("ALTER TABLE %s ADD COLUMN `creator_id` VARCHAR(36) NOT NULL DEFAULT 'default'", getTableName())
+		// Add a column for the creator's UUID.
+		update.addQueries(
+			String.format(
+				"ALTER TABLE %s ADD COLUMN `creator_id` VARCHAR(36) NOT NULL DEFAULT 'default'", getTableName()
+			)
 		);
 		return update;
 	}
@@ -133,12 +136,12 @@ public class WarpRepository extends Repository implements IServerReady
 		if (this.database.queryString(String.format("SELECT `creator` FROM `%s` WHERE `creator_id` = 'default'", getTableName())) != null)
 		{
 			// Copy needed UUIDs over from the player database.
-			database.execute(String.format(
-					"UPDATE '%s` " +
-							"SET `player_id`=(SELECT `uuid` FROM player_db WHERE `name`=`%s`.`creator_id`) " +
-							"WHERE `player_id` = 'default'",
+			database.execute(
+				String.format(
+					"UPDATE '%s` SET `player_id`=(SELECT `uuid` FROM player_db WHERE `name`=`%s`.`creator_id`) WHERE `player_id` = 'default'",
 					getTableName(), getTableName()
-			));
+				)
+			);
 
 			// Check if all players now have a UUID.
 			if (this.database.queryString(String.format("SELECT `creator` FROM `%s` WHERE `creator_id` = 'default'", getTableName())) != null)
