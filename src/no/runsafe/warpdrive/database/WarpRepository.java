@@ -72,10 +72,9 @@ public class WarpRepository extends Repository implements IServerReady
 		}
 
 		database.update(
-			"INSERT INTO warpdrive_locations (creator, creator_id, name, `public`, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+			"INSERT INTO warpdrive_locations (creator, name, `public`, world, x, y, z, yaw, pitch, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
 				"ON DUPLICATE KEY UPDATE world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z), yaw=VALUES(yaw), pitch=VALUES(pitch)",
 			creatorName,
-			creatorId,
 			name,
 			publicWarp,
 			location.getWorld().getName(),
@@ -83,7 +82,8 @@ public class WarpRepository extends Repository implements IServerReady
 			location.getY(),
 			location.getZ(),
 			location.getYaw(),
-			location.getPitch()
+			location.getPitch(),
+			creatorId
 		);
 		String key = cacheKey(creator, name, publicWarp);
 		cache.Invalidate(key);
