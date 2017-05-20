@@ -6,14 +6,13 @@ import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.ISchemaUpdate;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.api.database.SchemaUpdate;
-import no.runsafe.framework.api.event.IServerReady;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 
 import java.util.List;
 
-public class WarpRepository extends Repository implements IServerReady
+public class WarpRepository extends Repository
 {
 	public WarpRepository(IScheduler scheduler, IConsole console)
 	{
@@ -52,13 +51,8 @@ public class WarpRepository extends Repository implements IServerReady
 				"ALTER TABLE %s ADD COLUMN `creator_id` VARCHAR(36) NOT NULL DEFAULT 'default'", getTableName()
 			)
 		);
+		UpdateUUIDs(); // Make sure no one has a default UUID.
 		return update;
-	}
-
-	@Override
-	public void OnServerReady()
-	{
-		UpdateUUIDs(); // Make sure no one has a default UUID when the server starts.
 	}
 
 	public void Persist(IPlayer creator, String name, boolean publicWarp, ILocation location)
