@@ -30,7 +30,7 @@ public class Home extends PlayerTeleportCommand
 		@Override
 		public List<String> getAlternatives(IPlayer player, String arg)
 		{
-			return warpRepository.GetPrivateList(player.getName());
+			return warpRepository.GetPrivateList(player);
 		}
 
 		private final WarpRepository warpRepository;
@@ -44,7 +44,7 @@ public class Home extends PlayerTeleportCommand
 		String home;
 		if (params.get("home") == null)
 		{
-			List<String> homes = warpRepository.GetPrivateList(player.getName());
+			List<String> homes = warpRepository.GetPrivateList(player);
 			if (homes.isEmpty())
 			{
 				target.message = "You do not have any homes set.";
@@ -60,7 +60,7 @@ public class Home extends PlayerTeleportCommand
 		}
 		else
 			home = params.get("home");
-		target.location = warpRepository.GetPrivate(player.getName(), home);
+		target.location = warpRepository.GetPrivate(player, home);
 		if (target.location == null)
 			target.message = String.format("You do not have a home named %s.", home);
 		else

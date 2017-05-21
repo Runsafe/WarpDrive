@@ -42,7 +42,7 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
-		List<String> homes = warpRepository.GetPrivateList(player.getName());
+		List<String> homes = warpRepository.GetPrivateList(player);
 		String name = parameters.get("name").toLowerCase();
 		if (!homes.contains(name))
 		{
@@ -58,7 +58,7 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 				return String.format("You are only allowed %d homes on this server.", limit);
 		}
 
-		warpRepository.Persist(player.getName(), name, false, player.getLocation());
+		warpRepository.Persist(player, name, false, player.getLocation());
 		return String.format("Current location saved as the home %s.", name);
 	}
 

@@ -6,9 +6,11 @@ import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.WarpDrive;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class SummoningEngine implements IConfigurationChanged
 {
@@ -23,23 +25,26 @@ public class SummoningEngine implements IConfigurationChanged
 	{
 		SummoningStone stone = stones.get(stoneID);
 		stone.setAwaitingPlayer();
-		pendingSummons.put(playerName, stoneID);
-
 		IPlayer player = server.getPlayerExact(playerName);
-		if (player != null && player.isOnline())
+		if (player == null)
+			return;
+
+		pendingSummons.put(player.getUniqueId(), stoneID);
+
+		if (player.isOnline())
 			player.sendColouredMessage("&3You have a pending summon, head to the ritual stone to accept.");
 	}
 
 	public boolean playerHasPendingSummon(IPlayer player)
 	{
-		return pendingSummons.containsKey(player.getName());
+		return pendingSummons.containsKey(player.getUniqueId());
 	}
 
 	public void acceptPlayerSummon(IPlayer player)
 	{
-		String playerName = player.getName();
-		int stoneID = pendingSummons.get(playerName);
-		WarpDrive.debug.debugFine("Player %s is accepting portal %s.", playerName, stoneID);
+		UUID playerUUID = player.getUniqueId();
+		int stoneID = pendingSummons.get(playerUUID);
+		WarpDrive.debug.debugFine("Player %s is accepting portal %s.", player.getName(), stoneID);
 		SummoningStone stone = stones.get(stoneID);
 
 		stone.setComplete();
@@ -53,7 +58,7 @@ public class SummoningEngine implements IConfigurationChanged
 
 		summoningStoneRepository.deleteSummoningStone(stoneID);
 		stones.remove(stoneID);
-		pendingSummons.remove(playerName);
+		pendingSummons.remove(playerUUID);
 	}
 
 	public int getStoneAtLocation(ILocation location)
@@ -95,7 +100,7 @@ public class SummoningEngine implements IConfigurationChanged
 			summoningStoneRepository.deleteSummoningStone(stoneID);
 			stones.remove(stoneID);
 
-			for (Map.Entry<String, Integer> pendingSummon : pendingSummons.entrySet())
+			for (Map.Entry<UUID, Integer> pendingSummon : pendingSummons.entrySet())
 				if (pendingSummon.getValue() == stoneID)
 					pendingSummons.remove(pendingSummon.getKey());
 		}
@@ -126,7 +131,7 @@ public class SummoningEngine implements IConfigurationChanged
 
 	private int stoneExpireTime = 600;
 	private final HashMap<Integer, SummoningStone> stones = new HashMap<Integer, SummoningStone>();
-	private final HashMap<String, Integer> pendingSummons = new HashMap<String, Integer>();
+	private final ConcurrentHashMap<UUID, Integer> pendingSummons = new ConcurrentHashMap<UUID, Integer>();
 	private List<String> ritualWorlds = new ArrayList<String>();
 	private List<String> stoneWorlds = new ArrayList<String>();
 	private final SummoningStoneRepository summoningStoneRepository;

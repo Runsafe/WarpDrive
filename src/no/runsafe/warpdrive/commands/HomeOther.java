@@ -31,7 +31,7 @@ public class HomeOther extends PlayerTeleportCommand
 		@Override
 		public List<String> getAlternatives(IPlayer player, String arg)
 		{
-			return warpRepository.GetPrivateList(player.getName());
+			return warpRepository.GetPrivateList(player);
 		}
 
 		private final WarpRepository warpRepository;
@@ -53,7 +53,7 @@ public class HomeOther extends PlayerTeleportCommand
 
 		if (params.get("home") != null)
 		{
-			List<String> homes = warpRepository.GetPrivateList(otherPlayer.getName());
+			List<String> homes = warpRepository.GetPrivateList(otherPlayer);
 			if (homes.isEmpty())
 			{
 				target.message = "That player does not have any homes.";
@@ -69,7 +69,7 @@ public class HomeOther extends PlayerTeleportCommand
 		}
 		else
 			home = params.get("home");
-		target.location = warpRepository.GetPrivate(otherPlayer.getName(), home);
+		target.location = warpRepository.GetPrivate(otherPlayer, home);
 		if (target.location == null)
 			target.message = String.format("That player does not have a home named %s.", home);
 		else

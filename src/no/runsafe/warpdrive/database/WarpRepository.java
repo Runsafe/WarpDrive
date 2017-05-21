@@ -6,15 +6,18 @@ import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.ISchemaUpdate;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.api.database.SchemaUpdate;
+import no.runsafe.framework.api.log.IConsole;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 
 import java.util.List;
 
 public class WarpRepository extends Repository
 {
-	public WarpRepository(IScheduler scheduler)
+	public WarpRepository(IScheduler scheduler, IConsole console)
 	{
 		cache = new TimedCache<String, ILocation>(scheduler);
+		this.console = console;
 	}
 
 	@Override
@@ -42,16 +45,37 @@ public class WarpRepository extends Repository
 				"PRIMARY KEY(`creator`,`name`,`public`)" +
 			")"
 		);
-
+		// Add a column for the creator's UUID.
+		update.addQueries(
+			String.format(
+				"ALTER TABLE %s ADD COLUMN `creator_id` VARCHAR(36) NOT NULL DEFAULT 'default'", getTableName()
+			)
+		);
+		update.addQueries(
+			String.format(
+				"UPDATE `%s` SET `creator_id` = " +
+					"COALESCE((SELECT `uuid` FROM player_db WHERE `name`=`%s`.`creator` AND `uuid`=NOT NULL),'default') " +
+					"WHERE `creator_id` = 'default'",
+				getTableName(), getTableName()
+			)
+		);
 		return update;
 	}
 
-	public void Persist(String creator, String name, boolean publicWarp, ILocation location)
+	public void Persist(IPlayer creator, String name, boolean publicWarp, ILocation location)
 	{
+		String creatorName = "";
+		String creatorId = "";
+		if (creator != null)
+		{
+			creatorName = creator.getName();
+			creatorId = creator.getUniqueId().toString();
+		}
+
 		database.update(
-			"INSERT INTO warpdrive_locations (creator, name, `public`, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+			"INSERT INTO warpdrive_locations (creator, name, `public`, world, x, y, z, yaw, pitch, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
 				"ON DUPLICATE KEY UPDATE world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z), yaw=VALUES(yaw), pitch=VALUES(pitch)",
-			creator,
+			creatorName,
 			name,
 			publicWarp,
 			location.getWorld().getName(),
@@ -59,7 +83,8 @@ public class WarpRepository extends Repository
 			location.getY(),
 			location.getZ(),
 			location.getYaw(),
-			location.getPitch()
+			location.getPitch(),
+			creatorId
 		);
 		String key = cacheKey(creator, name, publicWarp);
 		cache.Invalidate(key);
@@ -71,27 +96,27 @@ public class WarpRepository extends Repository
 		return GetWarps(null, true);
 	}
 
-	public List<String> GetPrivateList(String owner)
+	public List<String> GetPrivateList(IPlayer owner)
 	{
 		return GetWarps(owner, false);
 	}
 
 	public ILocation GetPublic(String name)
 	{
-		return GetWarp("", name, true);
+		return GetWarp(null, name, true);
 	}
 
-	public ILocation GetPrivate(String owner, String name)
+	public ILocation GetPrivate(IPlayer owner, String name)
 	{
 		return GetWarp(owner, name, false);
 	}
 
 	public boolean DelPublic(String name)
 	{
-		return DelWarp("", name, true);
+		return DelWarp(null, name, true);
 	}
 
-	public boolean DelPrivate(String owner, String name)
+	public boolean DelPrivate(IPlayer owner, String name)
 	{
 		return DelWarp(owner, name, false);
 	}
@@ -101,22 +126,32 @@ public class WarpRepository extends Repository
 		database.execute("DELETE FROM warpdrive_locations WHERE world=? AND public=?", world, false);
 	}
 
-	private String cacheKey(String creator, String name, boolean publicWarp)
+	private String cacheKey(IPlayer creator, String name, boolean publicWarp)
 	{
 		if (publicWarp)
 			return name;
-		return String.format("%s:%s", creator, name);
+
+		String creatorName = "";
+		if (creator != null)
+			creatorName = creator.getName();
+
+		return String.format("%s:%s", creatorName, name);
 	}
 
-	private List<String> GetWarps(String owner, boolean publicWarp)
+	private List<String> GetWarps(IPlayer owner, boolean publicWarp)
 	{
 		if (publicWarp)
 			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=1");
 		else
-			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator=?", owner);
+		{
+			String ownerId = "";
+			if (owner != null)
+				ownerId = owner.getUniqueId().toString();
+			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator_id=?", ownerId);
+		}
 	}
 
-	private ILocation GetWarp(String owner, String name, boolean publicWarp)
+	private ILocation GetWarp(IPlayer owner, String name, boolean publicWarp)
 	{
 		String key = cacheKey(owner, name, publicWarp);
 		ILocation location = cache.Cache(key);
@@ -129,15 +164,20 @@ public class WarpRepository extends Repository
 				name
 			);
 		else
+		{
+			String ownerId = "";
+			if (owner != null)
+				ownerId = owner.getUniqueId().toString();
 			location = database.queryLocation(
-				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=0 AND creator=?",
-				name, owner
+				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=0 AND creator_id=?",
+				name, ownerId
 			);
+		}
 
 		return cache.Cache(key, location);
 	}
 
-	private boolean DelWarp(String owner, String name, boolean publicWarp)
+	private boolean DelWarp(IPlayer owner, String name, boolean publicWarp)
 	{
 		if (GetWarp(owner, name, publicWarp) == null)
 			return false;
@@ -145,10 +185,16 @@ public class WarpRepository extends Repository
 		if (publicWarp)
 			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=1", name);
 		else
-			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator=?", name, owner);
+		{
+			String ownerId = "";
+			if (owner != null)
+				ownerId = owner.getUniqueId().toString();
+			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator_id=?", name, ownerId);
+		}
 		cache.Invalidate(cacheKey(owner, name, publicWarp));
 		return success;
 	}
 
+	private final IConsole console;
 	private final TimedCache<String, ILocation> cache;
 }
