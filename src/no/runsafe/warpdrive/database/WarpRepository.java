@@ -132,7 +132,9 @@ public class WarpRepository extends Repository
 			// Copy needed UUIDs over from the player database.
 			database.execute(
 				String.format(
-					"UPDATE `%s` SET `creator_id`=(SELECT `uuid` FROM player_db WHERE `name`=`%s`.`creator`) WHERE `creator_id` = 'default'",
+					"UPDATE `%s` SET `creator_id` = " +
+						"COALESCE((SELECT `uuid` FROM player_db WHERE `name`=`%s`.`creator` AND `uuid`=NOT NULL),'default') " +
+						"WHERE `creator_id` = 'default'",
 					getTableName(), getTableName()
 				)
 			);
