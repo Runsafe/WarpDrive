@@ -54,7 +54,7 @@ public class WarpRepository extends Repository
 		update.addQueries(
 			String.format(
 				"UPDATE `%s` SET `creator_id` = " +
-					"COALESCE((SELECT `uuid` FROM player_db WHERE `name`=`%s`.`creator` AND `uuid`=NOT NULL),'default') " +
+					"COALESCE((SELECT `uuid` FROM player_db WHERE `name`=`%s`.`creator`),'default') " +
 					"WHERE `creator_id` = 'default'",
 				getTableName(), getTableName()
 			)
