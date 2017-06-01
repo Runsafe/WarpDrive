@@ -51,7 +51,7 @@ public class HomeOther extends PlayerTeleportCommand
 			return target;
 		}
 
-		if (home != null)
+		if (home == null)
 		{
 			List<String> homes = warpRepository.GetPrivateList(otherPlayer);
 			if (homes.isEmpty())
