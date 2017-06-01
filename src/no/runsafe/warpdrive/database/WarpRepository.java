@@ -45,37 +45,30 @@ public class WarpRepository extends Repository
 				"PRIMARY KEY(`creator`,`name`,`public`)" +
 			")"
 		);
-		// Add a column for the creator's UUID.
-		update.addQueries(
-			String.format(
-				"ALTER TABLE %s ADD COLUMN `creator_id` VARCHAR(36) NOT NULL DEFAULT 'default'", getTableName()
-			)
-		);
-		update.addQueries(
-			String.format(
-				"UPDATE `%s` SET `creator_id` = " +
-					"COALESCE((SELECT `uuid` FROM player_db WHERE `name`=`%s`.`creator`),'default') " +
-					"WHERE `creator_id` = 'default'",
+
+		update.addQueries( // Convert from storing player data as user names to Unique IDs.
+			String.format("ALTER TABLE `%s` MODIFY COLUMN creator VARCHAR(36)", getTableName()),
+			String.format( // User names -> Unique Ids
+				"UPDATE IGNORE `%s` SET `creator` = " +
+					"COALESCE((SELECT `uuid` FROM player_db WHERE `name`=`%s`.`creator`), `creator`) " +
+					"WHERE length(`creator`) != 36",
 				getTableName(), getTableName()
 			)
 		);
+
 		return update;
 	}
 
 	public void Persist(IPlayer creator, String name, boolean publicWarp, ILocation location)
 	{
-		String creatorName = "";
 		String creatorId = "";
 		if (creator != null)
-		{
-			creatorName = creator.getName();
 			creatorId = creator.getUniqueId().toString();
-		}
 
 		database.update(
-			"INSERT INTO warpdrive_locations (creator, name, `public`, world, x, y, z, yaw, pitch, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+			"INSERT INTO warpdrive_locations (creator, name, `public`, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)" +
 				"ON DUPLICATE KEY UPDATE world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z), yaw=VALUES(yaw), pitch=VALUES(pitch)",
-			creatorName,
+			creatorId,
 			name,
 			publicWarp,
 			location.getWorld().getName(),
@@ -83,8 +76,7 @@ public class WarpRepository extends Repository
 			location.getY(),
 			location.getZ(),
 			location.getYaw(),
-			location.getPitch(),
-			creatorId
+			location.getPitch()
 		);
 		String key = cacheKey(creator, name, publicWarp);
 		cache.Invalidate(key);
@@ -147,7 +139,7 @@ public class WarpRepository extends Repository
 			String ownerId = "";
 			if (owner != null)
 				ownerId = owner.getUniqueId().toString();
-			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator_id=?", ownerId);
+			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator=?", ownerId);
 		}
 	}
 
@@ -169,7 +161,7 @@ public class WarpRepository extends Repository
 			if (owner != null)
 				ownerId = owner.getUniqueId().toString();
 			location = database.queryLocation(
-				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=0 AND creator_id=?",
+				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=0 AND creator=?",
 				name, ownerId
 			);
 		}
@@ -189,7 +181,7 @@ public class WarpRepository extends Repository
 			String ownerId = "";
 			if (owner != null)
 				ownerId = owner.getUniqueId().toString();
-			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator_id=?", name, ownerId);
+			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator=?", name, ownerId);
 		}
 		cache.Invalidate(cacheKey(owner, name, publicWarp));
 		return success;
