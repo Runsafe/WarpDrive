@@ -21,7 +21,6 @@ import org.joda.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -68,7 +67,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		if (target != null && target.isOnline() && destination != null)
 		{
 			if (target.teleport(destination))
-				fallen.add(target.getUniqueId());
+				fallen.add(target);
 		}
 		else
 			debugger.outputDebugToConsole("Unable to find destination..", Level.FINE);
@@ -86,10 +85,10 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	{
 		if (event.getCause() == RunsafeEntityDamageEvent.RunsafeDamageCause.FALL)
 		{
-			if (fallen.contains(player.getUniqueId()))
+			if (fallen.contains(player))
 			{
 				event.cancel();
-				fallen.remove(player.getUniqueId());
+				fallen.remove(player);
 			}
 		}
 	}
@@ -99,9 +98,8 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	{
 		if (!fallen.isEmpty())
 			console.logInformation("Teleporting %d falling players due to plugin shutdown.", fallen.size());
-		for (UUID playerUUID : fallen)
+		for (IPlayer player : fallen)
 		{
-			IPlayer player = server.getPlayer(playerUUID);
 			if (player != null)
 				player.teleport(player.getLocation().findTop());
 		}
@@ -178,7 +176,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	}
 
 	private final ConcurrentHashMap<String, WarpParameters> snazzyWarps = new ConcurrentHashMap<String, WarpParameters>();
-	private final List<UUID> fallen = new ArrayList<UUID>(0);
+	private final List<IPlayer> fallen = new ArrayList<>(0);
 	private final IDebug debugger;
 	private final IServer server;
 	private final IConsole console;

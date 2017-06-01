@@ -11,8 +11,6 @@ import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 import no.runsafe.warpdrive.Engine;
 
-import java.util.UUID;
-
 public class TeleportSelf extends PlayerCommand implements IContextPermissionProvider, IBranchingExecution
 {
 	public TeleportSelf(Engine engine, IScheduler scheduler)
@@ -22,7 +20,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 			new Player().onlineOnly().require()
 		);
 		this.engine = engine;
-		this.warned = new TimedCache<UUID, UUID>(scheduler, 10);
+		this.warned = new TimedCache<>(scheduler, 10);
 	}
 
 	@Override
@@ -45,8 +43,8 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 		if (to == null)
 			return null;
 
-		UUID warning = warned.Cache(player.getUniqueId());
-		boolean force = warning != null && warning.equals(to.getUniqueId());
+		IPlayer warning = warned.Cache(player);
+		boolean force = warning != null && warning.equals(to);
 
 		if (to.getWorldName().equals(player.getWorldName()))
 		{
@@ -64,10 +62,10 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 		if (engine.safePlayerTeleport(to.getLocation(), player))
 			return null;
 
-		warned.Cache(player.getUniqueId(), to.getUniqueId());
+		warned.Cache(player, to);
 		return String.format("Unable to safely teleport you to %1$s, repeat command to force.", to.getPrettyName());
 	}
 
 	private final Engine engine;
-	private final TimedCache<UUID, UUID> warned;
+	private final TimedCache<IPlayer, IPlayer> warned;
 }

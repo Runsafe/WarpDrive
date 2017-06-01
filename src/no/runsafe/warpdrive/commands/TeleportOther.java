@@ -11,8 +11,6 @@ import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 import no.runsafe.warpdrive.Engine;
 
-import java.util.UUID;
-
 public class TeleportOther extends ExecutableCommand implements IContextPermissionProvider, IBranchingExecution
 {
 	public TeleportOther(Engine engine, IScheduler scheduler)
@@ -22,7 +20,7 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 			new Player("player1").onlineOnly().require(), new Player("player2").onlineOnly().require()
 		);
 		this.engine = engine;
-		this.warned = new TimedCache<UUID, UUID>(scheduler, 10);
+		this.warned = new TimedCache<>(scheduler, 10);
 	}
 
 	@Override
@@ -51,8 +49,8 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 		if (move == null || to == null)
 			return null;
 
-		UUID warning = warned.Cache(move.getUniqueId());
-		boolean force = warning != null && warning.equals(to.getUniqueId());
+		IPlayer warning = warned.Cache(move);
+		boolean force = warning != null && warning.equals(to);
 
 		if (to.getWorldName().equals(move.getWorldName()))
 		{
@@ -70,10 +68,10 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 		if (engine.safePlayerTeleport(to.getLocation(), move))
 			return String.format("Safely teleported %1$s to %2$s.", move.getPrettyName(), to.getPrettyName());
 
-		warned.Cache(move.getUniqueId(), to.getUniqueId());
+		warned.Cache(move, to);
 		return String.format("Unable to safely teleport %1$s to %2$s, repeat command to force.", move.getPrettyName(), to.getPrettyName());
 	}
 
 	private final Engine engine;
-	private final TimedCache<UUID, UUID> warned;
+	private final TimedCache<IPlayer, IPlayer> warned;
 }

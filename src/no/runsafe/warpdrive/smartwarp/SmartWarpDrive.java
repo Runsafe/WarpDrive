@@ -13,7 +13,6 @@ import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	implements IPlayerDamageEvent, IConfigurationChanged, IPluginDisabled
@@ -34,7 +33,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 		if (lockedSurfaceLocation != null)
 		{
 			if (skyFall)
-				fallen.add(player.getUniqueId());
+				fallen.add(player);
 			Push(player.getName(), lockedSurfaceLocation);
 			return;
 		}
@@ -43,7 +42,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 			return;
 		if (skyFall)
 		{
-			fallen.add(player.getUniqueId());
+			fallen.add(player);
 			candidate.setY(300);
 			candidate.setPitch(90);
 		}
@@ -94,9 +93,8 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 		if (player == null)
 			return;
 
-		UUID playerUUID = player.getUniqueId();
-		if (!player.teleport(target) && fallen.contains(playerUUID))
-			fallen.remove(playerUUID);
+		if (!player.teleport(target) && fallen.contains(player))
+			fallen.remove(player);
 	}
 
 	@Override
@@ -110,10 +108,10 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	{
 		if (event.getCause() == RunsafeEntityDamageEvent.RunsafeDamageCause.FALL)
 		{
-			if (fallen.contains(player.getUniqueId()))
+			if (fallen.contains(player))
 			{
 				event.cancel();
-				fallen.remove(player.getUniqueId());
+				fallen.remove(player);
 			}
 		}
 	}
@@ -123,9 +121,8 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	{
 		if (!fallen.isEmpty())
 			console.logInformation("Teleporting %d falling players due to plugin shutdown.", fallen.size());
-		for (UUID playerUUID : fallen)
+		for (IPlayer player : fallen)
 		{
-			IPlayer player = server.getPlayer(playerUUID);
 			if (player != null)
 				player.teleport(player.getLocation().findTop());
 		}
@@ -144,7 +141,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	private ILocation lockedCaveLocation;
 	private ILocation lockedSurfaceLocation;
 	private boolean skyFall = false;
-	private final List<UUID> fallen = new ArrayList<UUID>(0);
+	private final List<IPlayer> fallen = new ArrayList<>(0);
 	private final IScheduler scheduler;
 	private final SmartWarpChunkRepository smartWarpChunks;
 	private final Engine engine;
