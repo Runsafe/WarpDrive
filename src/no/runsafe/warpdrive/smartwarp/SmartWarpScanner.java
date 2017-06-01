@@ -2,10 +2,10 @@ package no.runsafe.warpdrive.smartwarp;
 
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.api.log.IConsole;
+import no.runsafe.framework.api.server.IWorldManager;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.Engine;
 import no.runsafe.warpdrive.database.SmartWarpChunkRepository;
@@ -15,14 +15,14 @@ import java.util.HashMap;
 
 public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implements IPluginEnabled
 {
-	public SmartWarpScanner(IScheduler scheduler, IConsole console, SmartWarpRepository warpRepository, SmartWarpChunkRepository chunkRepository, Engine engine, IServer server)
+	public SmartWarpScanner(IScheduler scheduler, IConsole console, SmartWarpRepository warpRepository, SmartWarpChunkRepository chunkRepository, Engine engine, IWorldManager worldManager)
 	{
 		super(scheduler);
 		this.console = console;
 		this.warpRepository = warpRepository;
 		this.chunkRepository = chunkRepository;
 		this.engine = engine;
-		this.server = server;
+		this.worldManager = worldManager;
 
 		this.setInterval(10);
 	}
@@ -109,7 +109,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 	private ILocation CalculateNextLocation(String world)
 	{
 		if (!worlds.containsKey(world))
-			worlds.put(world, server.getWorld(world));
+			worlds.put(world, worldManager.getWorld(world));
 		int r = range.get(world) / 16;
 		double offset = (range.get(world) / 2) - 0.5;
 		double x = 16 * (progress.get(world) % r) - offset;
@@ -124,5 +124,5 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 	private final SmartWarpRepository warpRepository;
 	private final SmartWarpChunkRepository chunkRepository;
 	private final Engine engine;
-	private final IServer server;
+	private final IWorldManager worldManager;
 }

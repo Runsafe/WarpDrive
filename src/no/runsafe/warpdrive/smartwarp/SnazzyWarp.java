@@ -10,6 +10,8 @@ import no.runsafe.framework.api.event.plugin.IPluginDisabled;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.server.IPlayerProvider;
+import no.runsafe.framework.api.server.IWorldManager;
 import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDamageEvent;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import no.runsafe.framework.text.ChatColour;
@@ -27,12 +29,13 @@ import java.util.logging.Level;
 public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
 	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged, IPlayerDamageEvent, IPluginDisabled
 {
-	public SnazzyWarp(IScheduler scheduler, Engine engine, IDebug output, IServer server, IConsole console)
+	public SnazzyWarp(IScheduler scheduler, Engine engine, IDebug output, IPlayerProvider playerProvider, IWorldManager worldManager, IConsole console)
 	{
 		super(scheduler, 2);
 		this.engine = engine;
 		debugger = output;
-		this.server = server;
+		this.playerProvider = playerProvider;
+		this.worldManager = worldManager;
 		this.console = console;
 	}
 
@@ -57,7 +60,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		if (parameters == null)
 			return;
 		debugger.outputDebugToConsole(String.format("Player %s teleporting", player), Level.FINE);
-		IPlayer target = server.getPlayer(player);
+		IPlayer target = playerProvider.getPlayer(player);
 		ILocation destination = parameters.getTarget();
 		if (skyFall)
 		{
@@ -113,7 +116,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		{
 			maxDistance = Integer.parseInt(sign.getLine(2));
 			minDistance = Integer.parseInt(sign.getLine(3));
-			world = server.getWorld(sign.getLine(1));
+			world = worldManager.getWorld(sign.getLine(1));
 			if (world == null)
 				debugger.debugFine("New warp sign created outside a world!");
 			else
@@ -178,7 +181,8 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	private final ConcurrentHashMap<String, WarpParameters> snazzyWarps = new ConcurrentHashMap<String, WarpParameters>();
 	private final List<IPlayer> fallen = new ArrayList<>(0);
 	private final IDebug debugger;
-	private final IServer server;
+	private final IPlayerProvider playerProvider;
+	private final IWorldManager worldManager;
 	private final IConsole console;
 	private Duration change_after;
 	private boolean skyFall = false;

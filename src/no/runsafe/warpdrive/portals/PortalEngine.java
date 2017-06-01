@@ -10,6 +10,7 @@ import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.server.IWorldManager;
 import no.runsafe.framework.api.vector.IRegion3D;
 import no.runsafe.framework.internal.vector.Point3D;
 import no.runsafe.framework.internal.vector.Region3D;
@@ -23,14 +24,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent, IPlayerCustomEvent
 {
-	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console, IScheduler scheduler, IServer server)
+	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console, IScheduler scheduler, IWorldManager worldManager)
 	{
 		this.repository = repository;
 		this.smartWarpDrive = smartWarpDrive;
 		this.debugger = debugger;
 		this.console = console;
 		this.scheduler = scheduler;
-		this.server = server;
+		this.worldManager = worldManager;
 	}
 
 	public void reloadPortals()
@@ -185,7 +186,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 		if (netherWorlds.contains(worldName))
 		{
-			IWorld netherWorld = server.getWorld(worldName + "_nether");
+			IWorld netherWorld = worldManager.getWorld(worldName + "_nether");
 			if (netherWorld != null)
 			{
 				netherTeleport(netherWorld.getLocation(from.getX(), from.getY() / 2, from.getZ()), player);
@@ -194,7 +195,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		}
 		else if (worldName.contains("_nether"))
 		{
-			IWorld world = server.getWorld(worldName.replace("_nether", ""));
+			IWorld world = worldManager.getWorld(worldName.replace("_nether", ""));
 			if (world != null)
 			{
 				netherTeleport(world.getLocation(from.getX(), from.getY() * 2, from.getZ()), player);
@@ -384,7 +385,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private final IDebug debugger;
 	private final IConsole console;
 	private final IScheduler scheduler;
-	private final IServer server;
+	private final IWorldManager worldManager;
 	private int netherMaxY;
 	private int netherMinY;
 }

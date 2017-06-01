@@ -6,6 +6,7 @@ import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginDisabled;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.server.IPlayerProvider;
 import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDamageEvent;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.Engine;
@@ -17,13 +18,13 @@ import java.util.List;
 public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	implements IPlayerDamageEvent, IConfigurationChanged, IPluginDisabled
 {
-	public SmartWarpDrive(IScheduler scheduler, SmartWarpChunkRepository smartWarpChunks, Engine engine, IServer server, IConsole console)
+	public SmartWarpDrive(IScheduler scheduler, SmartWarpChunkRepository smartWarpChunks, Engine engine, IPlayerProvider playerProvider, IConsole console)
 	{
 		super(scheduler);
 		this.scheduler = scheduler;
 		this.smartWarpChunks = smartWarpChunks;
 		this.engine = engine;
-		this.server = server;
+		this.playerProvider = playerProvider;
 		this.console = console;
 		setInterval(10);
 	}
@@ -89,7 +90,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	@Override
 	public void process(String playerName, ILocation target)
 	{
-		IPlayer player = server.getPlayerExact(playerName);
+		IPlayer player = playerProvider.getPlayerExact(playerName);
 		if (player == null)
 			return;
 
@@ -145,6 +146,6 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 	private final IScheduler scheduler;
 	private final SmartWarpChunkRepository smartWarpChunks;
 	private final Engine engine;
-	private final IServer server;
+	private final IPlayerProvider playerProvider;
 	private final IConsole console;
 }

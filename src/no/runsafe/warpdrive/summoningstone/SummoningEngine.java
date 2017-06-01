@@ -3,6 +3,7 @@ package no.runsafe.warpdrive.summoningstone;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.server.IPlayerProvider;
 import no.runsafe.warpdrive.WarpDrive;
 
 import java.util.ArrayList;
@@ -13,18 +14,18 @@ import java.util.Map;
 
 public class SummoningEngine implements IConfigurationChanged
 {
-	public SummoningEngine(SummoningStoneRepository summoningStoneRepository, IScheduler scheduler, IServer server)
+	public SummoningEngine(SummoningStoneRepository summoningStoneRepository, IScheduler scheduler, IPlayerProvider playerProvider)
 	{
 		this.summoningStoneRepository = summoningStoneRepository;
 		this.scheduler = scheduler;
-		this.server = server;
+		this.playerProvider = playerProvider;
 	}
 
 	public void registerPendingSummon(String playerName, int stoneID)
 	{
 		SummoningStone stone = stones.get(stoneID);
 		stone.setAwaitingPlayer();
-		IPlayer player = server.getPlayerExact(playerName);
+		IPlayer player = playerProvider.getPlayerExact(playerName);
 		if (player == null)
 			return;
 
@@ -134,5 +135,5 @@ public class SummoningEngine implements IConfigurationChanged
 	private List<String> stoneWorlds = new ArrayList<String>();
 	private final SummoningStoneRepository summoningStoneRepository;
 	private final IScheduler scheduler;
-	private final IServer server;
+	private final IPlayerProvider playerProvider;
 }
