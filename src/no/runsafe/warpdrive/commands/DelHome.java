@@ -21,9 +21,10 @@ public class DelHome extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
-		if (warpRepository.DelPrivate(player, parameters.get("name")))
-			return String.format("Home location %s removed.", parameters.get("name"));
-		return String.format("Unable to remove the home named %s.", parameters.get("name"));
+		String homeName = parameters.getValue("name");
+		if (warpRepository.DelPrivate(player, homeName))
+			return String.format("Home location %s removed.", homeName);
+		return String.format("Unable to remove the home named %s.", homeName);
 	}
 
 	private final WarpRepository warpRepository;

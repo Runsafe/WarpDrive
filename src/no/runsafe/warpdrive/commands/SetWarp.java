@@ -21,7 +21,7 @@ public class SetWarp extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
-		String name = parameters.get("name").toLowerCase();
+		String name = ((String)parameters.getValue("name")).toLowerCase();
 		warpRepository.Persist(player, name, true, player.getLocation());
 		return String.format("Current location saved as the warp %s.", name);
 	}

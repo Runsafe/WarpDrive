@@ -41,8 +41,8 @@ public class Home extends PlayerTeleportCommand
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.player = player;
-		String home;
-		if (params.get("home") == null)
+		String home = params.getValue("home");
+		if (home == null)
 		{
 			List<String> homes = warpRepository.GetPrivateList(player);
 			if (homes.isEmpty())
@@ -58,8 +58,7 @@ public class Home extends PlayerTeleportCommand
 				return target;
 			}
 		}
-		else
-			home = params.get("home");
+
 		target.location = warpRepository.GetPrivate(player, home);
 		if (target.location == null)
 			target.message = String.format("You do not have a home named %s.", home);

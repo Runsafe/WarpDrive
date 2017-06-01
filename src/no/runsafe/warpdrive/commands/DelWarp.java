@@ -21,9 +21,10 @@ public class DelWarp extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
-		if (warpRepository.DelPublic(parameters.get("name")))
-			return String.format("Deleted public warp %s.", parameters.get("name"));
-		return String.format("Unable to delete the public warp %s.", parameters.get("name"));
+		String warpName = parameters.getValue("name");
+		if (warpRepository.DelPublic(warpName))
+			return String.format("Deleted public warp %s.", warpName);
+		return String.format("Unable to delete the public warp %s.", warpName);
 	}
 
 	private final WarpRepository warpRepository;

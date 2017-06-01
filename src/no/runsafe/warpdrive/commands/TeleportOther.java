@@ -31,7 +31,7 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 		if (executor instanceof IPlayer)
 		{
 			IPlayer target;
-			if (parameters.get("player2") == null)
+			if (parameters.getValue("player2") == null)
 				target = parameters.getValue("player1");
 			else
 				target = parameters.getValue("player2");

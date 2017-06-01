@@ -43,7 +43,7 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
 		List<String> homes = warpRepository.GetPrivateList(player);
-		String name = parameters.get("name").toLowerCase();
+		String name = ((String) parameters.getValue("name")).toLowerCase();
 		if (!homes.contains(name))
 		{
 			int limit = 0;
