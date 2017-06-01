@@ -5,7 +5,6 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.database.ISchemaUpdate;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.api.database.SchemaUpdate;
-import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 
@@ -14,10 +13,9 @@ import java.util.List;
 
 public class WarpRepository extends Repository
 {
-	public WarpRepository(IScheduler scheduler, IConsole console)
+	public WarpRepository(IScheduler scheduler)
 	{
 		cache = new TimedCache<String, ILocation>(scheduler);
-		this.console = console;
 	}
 
 	@Nonnull
@@ -197,6 +195,5 @@ public class WarpRepository extends Repository
 		return success;
 	}
 
-	private final IConsole console;
 	private final TimedCache<String, ILocation> cache;
 }
