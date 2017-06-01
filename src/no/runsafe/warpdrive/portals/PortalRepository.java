@@ -7,11 +7,14 @@ import no.runsafe.framework.api.database.SchemaUpdate;
 import no.runsafe.framework.internal.vector.Region3D;
 import no.runsafe.warpdrive.WarpDrive;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PortalRepository extends Repository
 {
+	@Nonnull
+	@Override
 	public String getTableName()
 	{
 		return "warpdrive_portals";
@@ -83,6 +86,7 @@ public class PortalRepository extends Repository
 		);
 	}
 
+	@Nonnull
 	@Override
 	public ISchemaUpdate getSchemaUpdateQueries()
 	{

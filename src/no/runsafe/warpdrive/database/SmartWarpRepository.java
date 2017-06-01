@@ -5,16 +5,19 @@ import no.runsafe.framework.api.database.ISchemaUpdate;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.api.database.SchemaUpdate;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class SmartWarpRepository extends Repository
 {
+	@Nonnull
 	@Override
 	public String getTableName()
 	{
 		return "smartwarp_settings";
 	}
 
+	@Nonnull
 	@Override
 	public ISchemaUpdate getSchemaUpdateQueries()
 	{

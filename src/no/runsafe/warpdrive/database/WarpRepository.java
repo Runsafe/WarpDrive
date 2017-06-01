@@ -10,6 +10,7 @@ import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class WarpRepository extends Repository
@@ -20,12 +21,14 @@ public class WarpRepository extends Repository
 		this.console = console;
 	}
 
+	@Nonnull
 	@Override
 	public String getTableName()
 	{
 		return "warpdrive_locations";
 	}
 
+	@Nonnull
 	@Override
 	public ISchemaUpdate getSchemaUpdateQueries()
 	{

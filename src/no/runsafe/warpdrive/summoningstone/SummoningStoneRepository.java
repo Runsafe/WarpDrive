@@ -4,11 +4,13 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.database.*;
 import no.runsafe.warpdrive.WarpDrive;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SummoningStoneRepository extends Repository
 {
+	@Nonnull
 	public String getTableName()
 	{
 		return "summoningStones";
@@ -49,6 +51,7 @@ public class SummoningStoneRepository extends Repository
 		return id == null ? 0 : id;
 	}
 
+	@Nonnull
 	@Override
 	public ISchemaUpdate getSchemaUpdateQueries()
 	{
