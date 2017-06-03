@@ -38,7 +38,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 		target.player = player;
 		target.location = warpRepository.GetPublic(((String) parameters.getValue("destination")).toLowerCase());
 		if (target.location == null)
-			target.message = String.format("The warp %s does not exist.", parameters.getValue("destination"));
+			target.message = String.format("The warp %s does not exist.", (String) parameters.getValue("destination"));
 		return target;
 	}
 
