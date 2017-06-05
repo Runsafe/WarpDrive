@@ -130,6 +130,12 @@ public class WarpRepository extends Repository
 		return String.format("%s:%s", creatorName, name);
 	}
 
+	/**
+	 * Get warps created by the player or all public warps.
+	 * @param owner Warp creator.  Only needs to be valid if publicWarp is false.
+	 * @param publicWarp Whether or not the warps are public.
+	 * @return All public warp names when public warp is true, otherwise the player's home names.
+	 */
 	private List<String> GetWarps(IPlayer owner, boolean publicWarp)
 	{
 		if (publicWarp)
@@ -143,6 +149,13 @@ public class WarpRepository extends Repository
 		}
 	}
 
+	/**
+	 * Gets a warp from the mysql database.
+	 * @param owner Warp creator. Only needs to be valid if the warp is private.
+	 * @param name Warp name.
+	 * @param publicWarp True if the warp is a public warp.
+	 * @return Warp location. Null if the location is invalid or isn't stored.
+	 */
 	private ILocation GetWarp(IPlayer owner, String name, boolean publicWarp)
 	{
 		String key = cacheKey(owner, name, publicWarp);
@@ -171,7 +184,7 @@ public class WarpRepository extends Repository
 
 	/**
 	 * Checks if a warp is in the database.
-	 * @param owner Warp creator.
+	 * @param owner Warp creator. Only needs to be valid if the warp is private.
 	 * @param name Warp name.
 	 * @param publicWarp True if it's a public warp.
 	 * @return True if the warp exists even if it has an invalid location.
@@ -196,6 +209,13 @@ public class WarpRepository extends Repository
 		) != null;
 	}
 
+	/**
+	 * Deletes a warp from mysql.
+	 * @param owner Warp creator. Only needs to be valid if the warp is private.
+	 * @param name Warp name.
+	 * @param publicWarp True if the warp is public.
+	 * @return True if deleted, false otherwise.
+	 */
 	private boolean DelWarp(IPlayer owner, String name, boolean publicWarp)
 	{
 		if (!doesWarpExist(owner, name, publicWarp))
