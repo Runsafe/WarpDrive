@@ -169,9 +169,36 @@ public class WarpRepository extends Repository
 		return cache.Cache(key, location);
 	}
 
+	/**
+	 * Checks if a warp is in the database.
+	 * @param owner Warp creator.
+	 * @param name Warp name.
+	 * @param publicWarp True if it's a public warp.
+	 * @return True if the warp exists even if it has an invalid location.
+	 */
+	private boolean doesWarpExist(IPlayer owner, String name, boolean publicWarp)
+	{
+		// Check if the warp is already stored in the cache.
+		if (cache.Cache(cacheKey(owner, name, publicWarp)) != null)
+			return true;
+
+		// Check for invalid warp creator if it's a private warp.
+		if (!publicWarp && (owner == null || owner.getUniqueId() == null))
+			return false;
+
+		String privateWarp = "";
+		if (!publicWarp)
+			privateWarp = " AND `creator`='" + owner.getUniqueId().toString() + "'";
+
+		return database.queryString(
+			"SELECT y FROM `warpdrive_locations` WHERE `name`=? AND `public`=?" + privateWarp,
+			name, publicWarp
+		) != null;
+	}
+
 	private boolean DelWarp(IPlayer owner, String name, boolean publicWarp)
 	{
-		if (GetWarp(owner, name, publicWarp) == null)
+		if (!doesWarpExist(owner, name, publicWarp))
 			return false;
 		boolean success;
 		if (publicWarp)
