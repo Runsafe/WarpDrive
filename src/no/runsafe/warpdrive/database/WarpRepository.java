@@ -61,14 +61,10 @@ public class WarpRepository extends Repository
 
 	public void Persist(IPlayer creator, String name, boolean publicWarp, ILocation location)
 	{
-		String creatorId = "";
-		if (creator != null)
-			creatorId = creator.getUniqueId().toString();
-
 		database.update(
 			"INSERT INTO warpdrive_locations (creator, name, `public`, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)" +
 				"ON DUPLICATE KEY UPDATE world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z), yaw=VALUES(yaw), pitch=VALUES(pitch)",
-			creatorId,
+			creator,
 			name,
 			publicWarp,
 			location.getWorld().getName(),
@@ -141,12 +137,7 @@ public class WarpRepository extends Repository
 		if (publicWarp)
 			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=1");
 		else
-		{
-			String ownerId = "";
-			if (owner != null)
-				ownerId = owner.getUniqueId().toString();
-			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator=?", ownerId);
-		}
+			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator=?", owner);
 	}
 
 	/**
@@ -169,15 +160,10 @@ public class WarpRepository extends Repository
 				name
 			);
 		else
-		{
-			String ownerId = "";
-			if (owner != null)
-				ownerId = owner.getUniqueId().toString();
 			location = database.queryLocation(
 				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=0 AND creator=?",
-				name, ownerId
+				name, owner
 			);
-		}
 
 		return cache.Cache(key, location);
 	}
@@ -224,12 +210,7 @@ public class WarpRepository extends Repository
 		if (publicWarp)
 			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=1", name);
 		else
-		{
-			String ownerId = "";
-			if (owner != null)
-				ownerId = owner.getUniqueId().toString();
-			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator=?", name, ownerId);
-		}
+			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator=?", name, owner);
 		cache.Invalidate(cacheKey(owner, name, publicWarp));
 		return success;
 	}
