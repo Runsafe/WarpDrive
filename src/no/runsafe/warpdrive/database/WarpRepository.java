@@ -53,7 +53,8 @@ public class WarpRepository extends Repository
 					"COALESCE((SELECT `uuid` FROM player_db WHERE `name`=`%s`.`creator`), `creator`) " +
 					"WHERE length(`creator`) != 36",
 				getTableName(), getTableName()
-			)
+			),
+			String.format("ALTER TABLE `%s` MODIFY COLUMN `public` TINYINT(1) NOT NULL", getTableName())
 		);
 
 		return update;
@@ -66,7 +67,7 @@ public class WarpRepository extends Repository
 				"ON DUPLICATE KEY UPDATE world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z), yaw=VALUES(yaw), pitch=VALUES(pitch)",
 			creator,
 			name,
-			publicWarp,
+			publicWarp ? 1:0,
 			location.getWorld().getName(),
 			location.getX(),
 			location.getY(),
@@ -191,7 +192,7 @@ public class WarpRepository extends Repository
 
 		return database.queryString(
 			"SELECT y FROM `warpdrive_locations` WHERE `name`=? AND `public`=?" + privateWarp,
-			name, publicWarp
+			name, publicWarp ? 1:0
 		) != null;
 	}
 
