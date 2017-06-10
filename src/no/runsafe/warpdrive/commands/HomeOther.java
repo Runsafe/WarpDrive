@@ -1,10 +1,9 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.argument.ITabComplete;
-import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.Engine;
 import no.runsafe.warpdrive.database.WarpRepository;
@@ -16,33 +15,26 @@ public class HomeOther extends PlayerTeleportCommand
 {
 	public HomeOther(WarpRepository repository, IScheduler scheduler, Engine engine)
 	{
-		super("homeother", "Teleports you to someone elses house", "runsafe.home.other.use", scheduler, engine, new Player().require(), new HomeArgument(repository));
+		super(
+			"homeother",
+			"Teleports you to someone elses house",
+			"runsafe.home.other.use",
+			scheduler,
+			engine,
+			new Player().require(),
+			new OptionalArgument(HOME_NAME)
+		);
 		warpRepository = repository;
 	}
 
-	public static class HomeArgument extends OptionalArgument implements ITabComplete
-	{
-		public HomeArgument(WarpRepository warpRepository)
-		{
-			super("home");
-			this.warpRepository = warpRepository;
-		}
-
-		@Override
-		public List<String> getAlternatives(IPlayer player, String arg)
-		{
-			return warpRepository.GetPrivateList(player);
-		}
-
-		private final WarpRepository warpRepository;
-	}
+	private static final String HOME_NAME = "home";
 
 	@Override
 	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(IPlayer player, IArgumentList params)
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.player = player;
-		String home = params.getValue("home");
+		String home = params.getValue(HOME_NAME);
 
 		IPlayer otherPlayer = params.getValue("player");
 		if (otherPlayer == null)
