@@ -44,6 +44,9 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	{
 		List<String> homes = warpRepository.GetPrivateList(player);
 		String name = ((String) parameters.getValue("name")).toLowerCase();
+		if (!name.matches("[a-z0-9]*"))
+			return "&cInvalid home name.";
+
 		if (!homes.contains(name))
 		{
 			int limit = 0;

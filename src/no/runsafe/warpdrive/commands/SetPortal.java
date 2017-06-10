@@ -37,6 +37,9 @@ public class SetPortal extends PlayerAsyncCommand
 			return "&cInvalid world.";
 
 		String portalName = parameters.getValue("name");
+		if (!portalName.matches("[a-zA-Z0-9]*"))
+			return "&cInvalid portal name.";
+
 		PortalWarp warp = engine.getWarp(portalWorld, portalName);
 		ILocation playerLocation = player.getLocation();
 
