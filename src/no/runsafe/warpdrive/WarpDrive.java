@@ -64,7 +64,10 @@ public class WarpDrive extends RunsafeConfigurablePlugin
 		addComponent(SetPortal.class);
 		addComponent(SetRegionPortal.class);
 		addComponent(SetZoneCommand.class);
+
+		// Command arguments
 		addComponent(WarpArgument.class);
+		addComponent(HomeArgument.class);
 
 		addComponent(WarpSignCreator.class);
 
