@@ -23,8 +23,8 @@ public class DelHome extends PlayerAsyncCommand
 	{
 		String homeName = parameters.getValue("name");
 		if (warpRepository.DelPrivate(player, homeName))
-			return String.format("Home location %s removed.", homeName);
-		return String.format("Unable to remove the home named %s.", homeName);
+			return String.format("&aHome location %s removed.", homeName);
+		return String.format("&cUnable to remove the home named %s.", homeName);
 	}
 
 	private final WarpRepository warpRepository;

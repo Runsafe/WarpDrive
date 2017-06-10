@@ -63,13 +63,13 @@ public class TeleportOther extends ExecutableCommand implements IContextPermissi
 		if (force)
 		{
 			move.teleport(to.getLocation());
-			return String.format("Performed unsafe teleport of %s to %s.", move.getPrettyName(), to.getPrettyName());
+			return String.format("&aPerformed unsafe teleport of %s to %s.", move.getPrettyName(), to.getPrettyName());
 		}
 		if (engine.safePlayerTeleport(to.getLocation(), move))
-			return String.format("Safely teleported %1$s to %2$s.", move.getPrettyName(), to.getPrettyName());
+			return String.format("&aSafely teleported %1$s to %2$s.", move.getPrettyName(), to.getPrettyName());
 
 		warned.Cache(move, to);
-		return String.format("Unable to safely teleport %1$s to %2$s, repeat command to force.", move.getPrettyName(), to.getPrettyName());
+		return String.format("&cUnable to safely teleport %1$s to %2$s, repeat command to force.", move.getPrettyName(), to.getPrettyName());
 	}
 
 	private final Engine engine;

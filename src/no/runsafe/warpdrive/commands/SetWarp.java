@@ -23,7 +23,7 @@ public class SetWarp extends PlayerAsyncCommand
 	{
 		String name = ((String)parameters.getValue("name")).toLowerCase();
 		warpRepository.Persist(player, name, true, player.getLocation());
-		return String.format("Current location saved as the warp %s.", name);
+		return String.format("&aCurrent location saved as the warp %s.", name);
 	}
 
 	private final WarpRepository warpRepository;

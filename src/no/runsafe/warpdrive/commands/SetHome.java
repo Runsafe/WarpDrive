@@ -55,11 +55,11 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 			if (limit == 0)
 				limit = privateWarpLimit.get("default");
 			if (homes.size() >= limit)
-				return String.format("You are only allowed %d homes on this server.", limit);
+				return String.format("&cYou are only allowed %d homes on this server.", limit);
 		}
 
 		warpRepository.Persist(player, name, false, player.getLocation());
-		return String.format("Current location saved as the home %s.", name);
+		return String.format("&aCurrent location saved as the home %s.", name);
 	}
 
 	private final WarpRepository warpRepository;

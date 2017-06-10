@@ -27,8 +27,8 @@ public class DelWarp extends PlayerAsyncCommand
 	{
 		String warpName = parameters.getValue(WARP_NAME);
 		if (warpRepository.DelPublic(warpName))
-			return String.format("Deleted public warp %s.", warpName);
-		return String.format("Unable to delete the public warp %s.", warpName);
+			return String.format("&aDeleted public warp %s.", warpName);
+		return String.format("&cUnable to delete the public warp %s.", warpName);
 	}
 
 	private final WarpRepository warpRepository;

@@ -47,21 +47,21 @@ public class Home extends PlayerTeleportCommand
 			List<String> homes = warpRepository.GetPrivateList(player);
 			if (homes.isEmpty())
 			{
-				target.message = "You do not have any homes set.";
+				target.message = "&cYou do not have any homes set.";
 				return target;
 			}
 			if (homes.size() == 1)
 				home = homes.get(0);
 			else
 			{
-				target.message = String.format("Homes: %s", StringUtils.join(homes, ", "));
+				target.message = String.format("&2&lHomes:&r %s", StringUtils.join(homes, ", "));
 				return target;
 			}
 		}
 
 		target.location = warpRepository.GetPrivate(player, home);
 		if (target.location == null)
-			target.message = String.format("Home %s is in an invalid location.", home);
+			target.message = String.format("&cHome %s is in an invalid location.", home);
 		else
 			target.force = true;
 		return target;

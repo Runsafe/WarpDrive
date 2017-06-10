@@ -57,13 +57,13 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 		if (force)
 		{
 			player.teleport(to.getLocation());
-			return String.format("Performed unsafe teleport to %s.", to.getPrettyName());
+			return String.format("&cPerformed unsafe teleport to %s.", to.getPrettyName());
 		}
 		if (engine.safePlayerTeleport(to.getLocation(), player))
 			return null;
 
 		warned.Cache(player, to);
-		return String.format("Unable to safely teleport you to %1$s, repeat command to force.", to.getPrettyName());
+		return String.format("&cUnable to safely teleport you to %1$s, repeat command to force.", to.getPrettyName());
 	}
 
 	private final Engine engine;

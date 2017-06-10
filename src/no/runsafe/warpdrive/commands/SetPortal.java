@@ -34,7 +34,7 @@ public class SetPortal extends PlayerAsyncCommand
 	{
 		IWorld portalWorld = parameters.getValue("world");
 		if (portalWorld == null)
-			return "Invalid world.";
+			return "&cInvalid world.";
 
 		String portalName = parameters.getValue("name");
 		PortalWarp warp = engine.getWarp(portalWorld, portalName);
@@ -43,7 +43,7 @@ public class SetPortal extends PlayerAsyncCommand
 		String permission = parameters.getValue("permission");
 
 		if (playerLocation == null)
-			return "Invalid location.";
+			return "&cInvalid location.";
 
 		if (warp != null)
 		{
@@ -51,7 +51,7 @@ public class SetPortal extends PlayerAsyncCommand
 			warp.setPermission(permission);
 
 			engine.updateWarp(warp);
-			return "Portal " + portalName + " now connects to " + playerLocation.toString();
+			return "&aPortal " + portalName + " now connects to " + playerLocation.toString();
 		}
 		else
 		{
