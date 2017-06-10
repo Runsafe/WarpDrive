@@ -73,14 +73,7 @@ public class SummoningEngine implements IConfigurationChanged
 
 	public int registerExpireTimer(final int stoneID)
 	{
-		return scheduler.startSyncTask(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				summoningStoneExpire(stoneID);
-			}
-		}, stoneExpireTime);
+		return scheduler.startSyncTask(() -> summoningStoneExpire(stoneID), stoneExpireTime);
 	}
 
 	public void registerStone(int stoneID, SummoningStone stone)

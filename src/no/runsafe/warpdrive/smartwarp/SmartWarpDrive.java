@@ -50,14 +50,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 		if (lock)
 		{
 			lockedSurfaceLocation = candidate;
-			scheduler.startSyncTask(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					unlockSurface();
-				}
-			}, 20);
+			scheduler.startSyncTask(this::unlockSurface, 20);
 		}
 		Push(player.getName(), candidate);
 	}
@@ -75,14 +68,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 		if (lock)
 		{
 			lockedCaveLocation = candidate;
-			scheduler.startSyncTask(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					unlockCave();
-				}
-			}, 20);
+			scheduler.startSyncTask(this::unlockCave, 20);
 		}
 		Push(player.getName(), candidate);
 	}

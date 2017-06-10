@@ -56,17 +56,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		this.debugger.debugFine("Portal lock state: " + (portal.isLocked() ? "locked" : "unlocked"));
 
 		if (portal.getType() == PortalType.NORMAL)
-			scheduler.startSyncTask(
-				new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						player.teleport(portal.getLocation());
-					}
-				},
-				0
-			);
+			scheduler.startSyncTask(() -> player.teleport(portal.getLocation()), 0);
 
 		if (portal.getType() == PortalType.RANDOM_SURFACE)
 			this.smartWarpDrive.EngageSurface(player, portal.getWorld(), portal.isLocked());
@@ -116,16 +106,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			location.setZ(this.getRandom(lowZ, highZ));
 		}
 
-		scheduler.startSyncTask(
-			new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					player.teleport(location);
-				}
-			}, 0
-		);
+		scheduler.startSyncTask(() -> player.teleport(location), 0);
 	}
 
 	private int getRandom(int low, int high)
@@ -136,21 +117,15 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private boolean safeToTeleport(final ILocation location)
 	{
 		final boolean[] safe = {false};
-		scheduler.runNow(
-			new Runnable()
+		scheduler.runNow(() ->
+		{
+			if (location.getBlock().is(Item.Unavailable.Air))
 			{
-				@Override
-				public void run()
-				{
-					if (location.getBlock().is(Item.Unavailable.Air))
-					{
-						location.incrementY(1);
-						if (location.getBlock().is(Item.Unavailable.Air))
-							safe[0] = true;
-					}
-				}
+				location.incrementY(1);
+				if (location.getBlock().is(Item.Unavailable.Air))
+					safe[0] = true;
 			}
-		);
+		});
 		return safe[0];
 	}
 
