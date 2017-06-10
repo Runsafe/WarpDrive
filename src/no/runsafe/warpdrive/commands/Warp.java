@@ -5,7 +5,6 @@ import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.block.ISign;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.event.player.IPlayerRightClickSign;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
@@ -23,12 +22,18 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	public Warp(WarpRepository repository, IConsole output, IScheduler scheduler, Engine engine)
 	{
 		super(
-			"warp", "Teleports you to a predefined warp location", "runsafe.warp.use.<destination>", scheduler, engine,
-			new RequiredArgument("destination")
+			"warp",
+			"Teleports you to a predefined warp location",
+			"runsafe.warp.use.<destination>",
+			scheduler,
+			engine,
+			new WarpArgument(WARP_NAME, repository)
 		);
 		warpRepository = repository;
 		console = output;
 	}
+
+	private static final String WARP_NAME = "destination";
 
 	@Override
 	public PlayerTeleport OnAsyncExecute(IPlayer player, IArgumentList parameters)
@@ -36,9 +41,9 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 		PlayerTeleport target = new PlayerTeleport();
 		target.force = true;
 		target.player = player;
-		target.location = warpRepository.GetPublic(((String) parameters.getValue("destination")).toLowerCase());
+		target.location = warpRepository.GetPublic(((String) parameters.getValue(WARP_NAME)).toLowerCase());
 		if (target.location == null)
-			target.message = String.format("The warp %s does not exist.", (String) parameters.getValue("destination"));
+			target.message = String.format("The warp %s does not exist.", (String) parameters.getValue(WARP_NAME));
 		return target;
 	}
 
