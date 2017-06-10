@@ -117,9 +117,9 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 		return worlds.get(world).getLocation(x, 255.0, z);
 	}
 
-	private final HashMap<String, Double> progress = new HashMap<String, Double>();
-	private final HashMap<String, Integer> range = new HashMap<String, Integer>();
-	private final HashMap<String, IWorld> worlds = new HashMap<String, IWorld>();
+	private final HashMap<String, Double> progress = new HashMap<>();
+	private final HashMap<String, Integer> range = new HashMap<>();
+	private final HashMap<String, IWorld> worlds = new HashMap<>();
 	private final IConsole console;
 	private final SmartWarpRepository warpRepository;
 	private final SmartWarpChunkRepository chunkRepository;

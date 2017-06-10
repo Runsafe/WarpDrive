@@ -22,7 +22,7 @@ public class PortalRepository extends Repository
 
 	public List<PortalWarp> getPortalWarps()
 	{
-		List<PortalWarp> warps = new ArrayList<PortalWarp>();
+		List<PortalWarp> warps = new ArrayList<>();
 
 		for (IRow row : database.query("SELECT * FROM warpdrive_portals"))
 		{

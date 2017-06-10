@@ -18,7 +18,7 @@ public class SummoningStoneRepository extends Repository
 
 	public List<ILocation> getStoneList()
 	{
-		List<ILocation> stones = new ArrayList<ILocation>();
+		List<ILocation> stones = new ArrayList<>();
 		for (IRow node : database.query("SELECT world, x, y, z FROM summoningStones"))
 			stones.add(node.Location());
 		return stones;

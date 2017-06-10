@@ -63,6 +63,6 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	}
 
 	private final WarpRepository warpRepository;
-	private final ConcurrentHashMap<String, Integer> privateWarpLimit = new ConcurrentHashMap<String, Integer>();
+	private final ConcurrentHashMap<String, Integer> privateWarpLimit = new ConcurrentHashMap<>();
 	private final IConsole console;
 }

@@ -51,7 +51,7 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	@Override
 	public String getUsage(@Nonnull ICommandExecutor executor)
 	{
-		ArrayList<String> warps = new ArrayList<String>();
+		ArrayList<String> warps = new ArrayList<>();
 		for (String warp : warpRepository.GetPublicList())
 			if (executor.hasPermission(String.format("runsafe.warp.use.%s", warp)))
 				warps.add(warp);

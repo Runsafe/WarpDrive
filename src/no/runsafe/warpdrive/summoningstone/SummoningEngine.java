@@ -129,10 +129,10 @@ public class SummoningEngine implements IConfigurationChanged
 	}
 
 	private int stoneExpireTime = 600;
-	private final HashMap<Integer, SummoningStone> stones = new HashMap<Integer, SummoningStone>();
+	private final HashMap<Integer, SummoningStone> stones = new HashMap<>();
 	private final ConcurrentHashMap<IPlayer, Integer> pendingSummons = new ConcurrentHashMap<>();
-	private List<String> ritualWorlds = new ArrayList<String>();
-	private List<String> stoneWorlds = new ArrayList<String>();
+	private List<String> ritualWorlds = new ArrayList<>();
+	private List<String> stoneWorlds = new ArrayList<>();
 	private final SummoningStoneRepository summoningStoneRepository;
 	private final IScheduler scheduler;
 	private final IPlayerProvider playerProvider;

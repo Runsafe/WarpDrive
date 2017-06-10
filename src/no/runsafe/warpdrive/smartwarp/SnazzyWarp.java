@@ -178,7 +178,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		}
 	}
 
-	private final ConcurrentHashMap<String, WarpParameters> snazzyWarps = new ConcurrentHashMap<String, WarpParameters>();
+	private final ConcurrentHashMap<String, WarpParameters> snazzyWarps = new ConcurrentHashMap<>();
 	private final List<IPlayer> fallen = new ArrayList<>(0);
 	private final IDebug debugger;
 	private final IPlayerProvider playerProvider;

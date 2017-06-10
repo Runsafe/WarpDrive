@@ -42,7 +42,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		{
 			String portalWorldName = portal.getPortalWorld().getName();
 			if (!portals.containsKey(portalWorldName))
-				portals.put(portalWorldName, new HashMap<String, PortalWarp>());
+				portals.put(portalWorldName, new HashMap<>());
 
 			portalCount += 1;
 			portals.get(portalWorldName).put(portal.getID(), portal);
@@ -271,7 +271,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		pending.remove(player.getName());
 		String worldName = player.getWorldName();
 		if (!portals.containsKey(worldName)) // Check if we're missing a container for this world.
-			portals.put(worldName, new HashMap<String, PortalWarp>()); // Create a new warp container.
+			portals.put(worldName, new HashMap<>()); // Create a new warp container.
 
 		repository.storeWarp(warp); // Store the warp in the database.
 		portals.get(worldName).put(warp.getID(), warp); // Add to the in-memory warp storage.
@@ -279,7 +279,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 	private IRegion3D scanArea(ILocation location)
 	{
-		Map<Integer, Map<Integer, Map<Integer, Boolean>>> portalMap = new HashMap<Integer, Map<Integer, Map<Integer, Boolean>>>();
+		Map<Integer, Map<Integer, Map<Integer, Boolean>>> portalMap = new HashMap<>();
 		getNeighbouringPortalBlocks(location, portalMap);
 		int xMin = Collections.min(portalMap.keySet());
 		int xMax = Collections.max(portalMap.keySet());
@@ -306,9 +306,9 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
 		if (!portalMap.containsKey(x))
-			portalMap.put(x, new HashMap<Integer, Map<Integer, Boolean>>());
+			portalMap.put(x, new HashMap<>());
 		if (!portalMap.get(x).containsKey(y))
-			portalMap.get(x).put(y, new HashMap<Integer, Boolean>());
+			portalMap.get(x).put(y, new HashMap<>());
 		if (!portalMap.get(x).get(y).containsKey(z))
 			portalMap.get(x).get(y).put(z, true);
 		else
@@ -339,7 +339,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	{
 		String worldName = warp.getWorldName();
 		if (!portals.containsKey(worldName))
-			portals.put(worldName, new HashMap<String, PortalWarp>());
+			portals.put(worldName, new HashMap<>());
 
 		repository.updatePortalWarp(warp); // Store changes in the database.
 		portals.get(worldName).put(warp.getID(), warp);
@@ -377,9 +377,9 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		}
 	}
 
-	private List<String> netherWorlds = new ArrayList<String>();
-	private final Map<String, PortalWarp> pending = new ConcurrentHashMap<String, PortalWarp>();
-	private final Map<String, Map<String, PortalWarp>> portals = new HashMap<String, Map<String, PortalWarp>>();
+	private List<String> netherWorlds = new ArrayList<>();
+	private final Map<String, PortalWarp> pending = new ConcurrentHashMap<>();
+	private final Map<String, Map<String, PortalWarp>> portals = new HashMap<>();
 	private final PortalRepository repository;
 	private final SmartWarpDrive smartWarpDrive;
 	private final IDebug debugger;

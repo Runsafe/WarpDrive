@@ -15,7 +15,7 @@ public class WarpRepository extends Repository
 {
 	public WarpRepository(IScheduler scheduler)
 	{
-		cache = new TimedCache<String, ILocation>(scheduler);
+		cache = new TimedCache<>(scheduler);
 	}
 
 	@Nonnull
