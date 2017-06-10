@@ -61,7 +61,7 @@ public class Home extends PlayerTeleportCommand
 
 		target.location = warpRepository.GetPrivate(player, home);
 		if (target.location == null)
-			target.message = String.format("You do not have a home named %s.", home);
+			target.message = String.format("Home %s is in an invalid location.", home);
 		else
 			target.force = true;
 		return target;

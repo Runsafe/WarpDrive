@@ -70,7 +70,7 @@ public class HomeOther extends PlayerTeleportCommand
 
 		target.location = warpRepository.GetPrivate(otherPlayer, home);
 		if (target.location == null)
-			target.message = String.format("That player does not have a home named %s.", home);
+			target.message = String.format("Home %s is in an invalid location.", home);
 		else
 			target.force = true;
 		return target;
