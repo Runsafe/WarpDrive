@@ -19,8 +19,11 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	public SetHome(IScheduler scheduler, WarpRepository repository, IConsole output)
 	{
 		super(
-			"sethome", "Saves your current location as a home", "runsafe.home.set", scheduler,
-			new RequiredArgument("name")
+			"sethome",
+			"Saves your current location as a home",
+			"runsafe.home.set",
+			scheduler,
+			new RequiredArgument("name").toLowercase()
 		);
 		warpRepository = repository;
 		console = output;
@@ -43,7 +46,7 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
 		List<String> homes = warpRepository.GetPrivateList(player);
-		String name = ((String) parameters.getValue("name")).toLowerCase();
+		String name = parameters.getValue("name");
 		if (!name.matches("[a-z0-9]*"))
 			return "&cInvalid home name.";
 
