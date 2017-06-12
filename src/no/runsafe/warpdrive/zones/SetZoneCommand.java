@@ -17,7 +17,7 @@ public class SetZoneCommand extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList list)
 	{
-		player.sendPacket(new PacketSetBossBar(list.get("zone")));
+		player.sendPacket(new PacketSetBossBar(list.getValue("zone")));
 		return "Done!";
 	}
 }

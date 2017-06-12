@@ -1,6 +1,5 @@
 package no.runsafe.warpdrive.commands;
 
-import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.command.ExecutableCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
@@ -21,7 +20,7 @@ public class RescanSmartWarp extends ExecutableCommand
 	@Override
 	public String OnExecute(ICommandExecutor executor, IArgumentList param)
 	{
-		scanner.Setup((IWorld) param.getValue("world"), (Integer) param.getValue("radius"), true);
+		scanner.Setup(param.getValue("world"), param.getValue("radius"), true);
 		return "&2Smart-warp scan re-started";
 	}
 

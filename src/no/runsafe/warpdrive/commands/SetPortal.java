@@ -2,7 +2,6 @@ package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.OptionalArgument;
@@ -16,7 +15,7 @@ import no.runsafe.warpdrive.portals.PortalWarp;
 
 public class SetPortal extends PlayerAsyncCommand
 {
-	public SetPortal(IScheduler scheduler, PortalEngine engine, IServer server)
+	public SetPortal(IScheduler scheduler, PortalEngine engine)
 	{
 		super(
 			"setportal",
@@ -28,24 +27,26 @@ public class SetPortal extends PlayerAsyncCommand
 			new OptionalArgument("permission")
 		);
 		this.engine = engine;
-		this.server = server;
 	}
 
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
-		IWorld portalWorld = server.getWorld(parameters.get("world"));
+		IWorld portalWorld = parameters.getValue("world");
 		if (portalWorld == null)
-			return "Invalid world.";
+			return "&cInvalid world.";
 
-		String portalName = parameters.get("name");
+		String portalName = parameters.getValue("name");
+		if (!portalName.matches("[a-zA-Z0-9]*"))
+			return "&cInvalid portal name.";
+
 		PortalWarp warp = engine.getWarp(portalWorld, portalName);
 		ILocation playerLocation = player.getLocation();
 
-		String permission = parameters.get("permission");
+		String permission = parameters.getValue("permission");
 
 		if (playerLocation == null)
-			return "Invalid location.";
+			return "&cInvalid location.";
 
 		if (warp != null)
 		{
@@ -53,7 +54,7 @@ public class SetPortal extends PlayerAsyncCommand
 			warp.setPermission(permission);
 
 			engine.updateWarp(warp);
-			return "Portal " + portalName + " now connects to " + playerLocation.toString();
+			return "&aPortal " + portalName + " now connects to " + playerLocation.toString();
 		}
 		else
 		{
@@ -63,5 +64,4 @@ public class SetPortal extends PlayerAsyncCommand
 	}
 
 	private final PortalEngine engine;
-	private final IServer server;
 }

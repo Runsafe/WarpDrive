@@ -81,7 +81,7 @@ public class Engine
 
 	private List<ILocation> findSafePoints(IWorld world, int x, int z)
 	{
-		ArrayList<ILocation> options = new ArrayList<ILocation>();
+		ArrayList<ILocation> options = new ArrayList<>();
 		int safe = 0;
 		boolean safeFloor = false;
 		ILocation floor = null;

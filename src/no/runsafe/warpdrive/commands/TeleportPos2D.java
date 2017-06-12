@@ -25,7 +25,7 @@ public class TeleportPos2D extends PlayerCommand implements IBranchingExecution
 		Integer x = parameters.getValue("x");
 		Integer z = parameters.getValue("z");
 		if (x == null || z == null)
-			return "Invalid coordinate";
+			return "&cInvalid coordinate";
 		ILocation target = player.getLocation();
 		target.setX(x);
 		target.setZ(z);

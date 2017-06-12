@@ -30,17 +30,17 @@ public class SetRegionPortal extends PlayerAsyncCommand
 		IWorld world = parameters.getValue("world");
 		if (world == null)
 			return null;
-		String region = parameters.get("region");
+		String region = parameters.getValue("region");
 		String portal_name = "region_" + world.getName() + '_' + region;
 		PortalWarp warp = engine.getWarp(world, portal_name);
 		if (warp != null)
 		{
 			warp.setLocation(player.getLocation());
 			engine.updateWarp(warp);
-			return "Region " + region + " in world " + world.getName() + " warp updated!";
+			return "&aRegion " + region + " in world " + world.getName() + " warp updated!";
 		}
-		engine.createRegionWarp(world, region, portal_name, player.getLocation(), parameters.get("permission"));
-		return "The region " + region + " in world " + world.getName() + " has been hooked up to a new portal!";
+		engine.createRegionWarp(world, region, portal_name, player.getLocation(), parameters.getValue("permission"));
+		return "&aThe region " + region + " in world " + world.getName() + " has been hooked up to a new portal!";
 	}
 
 	private final PortalEngine engine;

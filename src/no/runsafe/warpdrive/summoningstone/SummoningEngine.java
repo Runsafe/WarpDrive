@@ -3,6 +3,7 @@ package no.runsafe.warpdrive.summoningstone;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.server.IPlayerProvider;
 import no.runsafe.warpdrive.WarpDrive;
 
 import java.util.ArrayList;
@@ -10,26 +11,25 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class SummoningEngine implements IConfigurationChanged
 {
-	public SummoningEngine(SummoningStoneRepository summoningStoneRepository, IScheduler scheduler, IServer server)
+	public SummoningEngine(SummoningStoneRepository summoningStoneRepository, IScheduler scheduler, IPlayerProvider playerProvider)
 	{
 		this.summoningStoneRepository = summoningStoneRepository;
 		this.scheduler = scheduler;
-		this.server = server;
+		this.playerProvider = playerProvider;
 	}
 
 	public void registerPendingSummon(String playerName, int stoneID)
 	{
 		SummoningStone stone = stones.get(stoneID);
 		stone.setAwaitingPlayer();
-		IPlayer player = server.getPlayerExact(playerName);
+		IPlayer player = playerProvider.getPlayerExact(playerName);
 		if (player == null)
 			return;
 
-		pendingSummons.put(player.getUniqueId(), stoneID);
+		pendingSummons.put(player, stoneID);
 
 		if (player.isOnline())
 			player.sendColouredMessage("&3You have a pending summon, head to the ritual stone to accept.");
@@ -37,13 +37,12 @@ public class SummoningEngine implements IConfigurationChanged
 
 	public boolean playerHasPendingSummon(IPlayer player)
 	{
-		return pendingSummons.containsKey(player.getUniqueId());
+		return pendingSummons.containsKey(player);
 	}
 
 	public void acceptPlayerSummon(IPlayer player)
 	{
-		UUID playerUUID = player.getUniqueId();
-		int stoneID = pendingSummons.get(playerUUID);
+		int stoneID = pendingSummons.get(player);
 		WarpDrive.debug.debugFine("Player %s is accepting portal %s.", player.getName(), stoneID);
 		SummoningStone stone = stones.get(stoneID);
 
@@ -58,7 +57,7 @@ public class SummoningEngine implements IConfigurationChanged
 
 		summoningStoneRepository.deleteSummoningStone(stoneID);
 		stones.remove(stoneID);
-		pendingSummons.remove(playerUUID);
+		pendingSummons.remove(player);
 	}
 
 	public int getStoneAtLocation(ILocation location)
@@ -74,14 +73,7 @@ public class SummoningEngine implements IConfigurationChanged
 
 	public int registerExpireTimer(final int stoneID)
 	{
-		return scheduler.startSyncTask(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				summoningStoneExpire(stoneID);
-			}
-		}, stoneExpireTime);
+		return scheduler.startSyncTask(() -> summoningStoneExpire(stoneID), stoneExpireTime);
 	}
 
 	public void registerStone(int stoneID, SummoningStone stone)
@@ -100,7 +92,7 @@ public class SummoningEngine implements IConfigurationChanged
 			summoningStoneRepository.deleteSummoningStone(stoneID);
 			stones.remove(stoneID);
 
-			for (Map.Entry<UUID, Integer> pendingSummon : pendingSummons.entrySet())
+			for (Map.Entry<IPlayer, Integer> pendingSummon : pendingSummons.entrySet())
 				if (pendingSummon.getValue() == stoneID)
 					pendingSummons.remove(pendingSummon.getKey());
 		}
@@ -130,11 +122,11 @@ public class SummoningEngine implements IConfigurationChanged
 	}
 
 	private int stoneExpireTime = 600;
-	private final HashMap<Integer, SummoningStone> stones = new HashMap<Integer, SummoningStone>();
-	private final ConcurrentHashMap<UUID, Integer> pendingSummons = new ConcurrentHashMap<UUID, Integer>();
-	private List<String> ritualWorlds = new ArrayList<String>();
-	private List<String> stoneWorlds = new ArrayList<String>();
+	private final HashMap<Integer, SummoningStone> stones = new HashMap<>();
+	private final ConcurrentHashMap<IPlayer, Integer> pendingSummons = new ConcurrentHashMap<>();
+	private List<String> ritualWorlds = new ArrayList<>();
+	private List<String> stoneWorlds = new ArrayList<>();
 	private final SummoningStoneRepository summoningStoneRepository;
 	private final IScheduler scheduler;
-	private final IServer server;
+	private final IPlayerProvider playerProvider;
 }

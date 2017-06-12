@@ -19,8 +19,11 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	public SetHome(IScheduler scheduler, WarpRepository repository, IConsole output)
 	{
 		super(
-			"sethome", "Saves your current location as a home", "runsafe.home.set", scheduler,
-			new RequiredArgument("name")
+			"sethome",
+			"Saves your current location as a home",
+			"runsafe.home.set",
+			scheduler,
+			new RequiredArgument("name").toLowercase()
 		);
 		warpRepository = repository;
 		console = output;
@@ -43,7 +46,10 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
 		List<String> homes = warpRepository.GetPrivateList(player);
-		String name = parameters.get("name").toLowerCase();
+		String name = parameters.getValue("name");
+		if (!name.matches("[a-z0-9]*"))
+			return "&cInvalid home name.";
+
 		if (!homes.contains(name))
 		{
 			int limit = 0;
@@ -55,14 +61,14 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 			if (limit == 0)
 				limit = privateWarpLimit.get("default");
 			if (homes.size() >= limit)
-				return String.format("You are only allowed %d homes on this server.", limit);
+				return String.format("&cYou are only allowed %d homes on this server.", limit);
 		}
 
 		warpRepository.Persist(player, name, false, player.getLocation());
-		return String.format("Current location saved as the home %s.", name);
+		return String.format("&aCurrent location saved as the home %s.", name);
 	}
 
 	private final WarpRepository warpRepository;
-	private final ConcurrentHashMap<String, Integer> privateWarpLimit = new ConcurrentHashMap<String, Integer>();
+	private final ConcurrentHashMap<String, Integer> privateWarpLimit = new ConcurrentHashMap<>();
 	private final IConsole console;
 }

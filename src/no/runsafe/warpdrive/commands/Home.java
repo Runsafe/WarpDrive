@@ -2,8 +2,6 @@ package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.argument.ITabComplete;
-import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.Engine;
 import no.runsafe.warpdrive.database.WarpRepository;
@@ -15,54 +13,45 @@ public class Home extends PlayerTeleportCommand
 {
 	public Home(WarpRepository repository, IScheduler scheduler, Engine engine)
 	{
-		super("home", "Teleports you to a home location", "runsafe.home.use", scheduler, engine, new HomeArgument(repository));
+		super(
+			"home",
+			"Teleports you to a home location",
+			"runsafe.home.use",
+			scheduler,
+			engine,
+			new HomeArgument(HOME_NAME, repository)
+		);
 		warpRepository = repository;
 	}
 
-	public static class HomeArgument extends OptionalArgument implements ITabComplete
-	{
-		public HomeArgument(WarpRepository warpRepository)
-		{
-			super("home");
-			this.warpRepository = warpRepository;
-		}
-
-		@Override
-		public List<String> getAlternatives(IPlayer player, String arg)
-		{
-			return warpRepository.GetPrivateList(player);
-		}
-
-		private final WarpRepository warpRepository;
-	}
+	private static final String HOME_NAME = "home";
 
 	@Override
 	public PlayerTeleportCommand.PlayerTeleport OnAsyncExecute(IPlayer player, IArgumentList params)
 	{
 		PlayerTeleport target = new PlayerTeleport();
 		target.player = player;
-		String home;
-		if (params.get("home") == null)
+		String home = params.getValue(HOME_NAME);
+		if (home == null)
 		{
 			List<String> homes = warpRepository.GetPrivateList(player);
 			if (homes.isEmpty())
 			{
-				target.message = "You do not have any homes set.";
+				target.message = "&cYou do not have any homes set.";
 				return target;
 			}
 			if (homes.size() == 1)
 				home = homes.get(0);
 			else
 			{
-				target.message = String.format("Homes: %s", StringUtils.join(homes, ", "));
+				target.message = String.format("&2&lHomes:&r %s", StringUtils.join(homes, ", "));
 				return target;
 			}
 		}
-		else
-			home = params.get("home");
+
 		target.location = warpRepository.GetPrivate(player, home);
 		if (target.location == null)
-			target.message = String.format("You do not have a home named %s.", home);
+			target.message = String.format("&cHome %s is in an invalid location.", home);
 		else
 			target.force = true;
 		return target;

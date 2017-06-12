@@ -2,19 +2,22 @@ package no.runsafe.warpdrive.database;
 
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
-import no.runsafe.framework.api.database.IDatabase;
 import no.runsafe.framework.api.database.ISchemaUpdate;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.api.database.SchemaUpdate;
 
+import javax.annotation.Nonnull;
+
 public class SmartWarpChunkRepository extends Repository
 {
+	@Nonnull
 	@Override
 	public String getTableName()
 	{
 		return "smartwarp_targets";
 	}
 
+	@Nonnull
 	@Override
 	public ISchemaUpdate getSchemaUpdateQueries()
 	{

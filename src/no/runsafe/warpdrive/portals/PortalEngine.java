@@ -10,6 +10,7 @@ import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.api.server.IWorldManager;
 import no.runsafe.framework.api.vector.IRegion3D;
 import no.runsafe.framework.internal.vector.Point3D;
 import no.runsafe.framework.internal.vector.Region3D;
@@ -23,14 +24,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlayerInteractEvent, IPlayerCustomEvent
 {
-	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console, IScheduler scheduler, IServer server)
+	public PortalEngine(PortalRepository repository, SmartWarpDrive smartWarpDrive, IDebug debugger, IConsole console, IScheduler scheduler, IWorldManager worldManager)
 	{
 		this.repository = repository;
 		this.smartWarpDrive = smartWarpDrive;
 		this.debugger = debugger;
 		this.console = console;
 		this.scheduler = scheduler;
-		this.server = server;
+		this.worldManager = worldManager;
 	}
 
 	public void reloadPortals()
@@ -41,7 +42,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		{
 			String portalWorldName = portal.getPortalWorld().getName();
 			if (!portals.containsKey(portalWorldName))
-				portals.put(portalWorldName, new HashMap<String, PortalWarp>());
+				portals.put(portalWorldName, new HashMap<>());
 
 			portalCount += 1;
 			portals.get(portalWorldName).put(portal.getID(), portal);
@@ -55,17 +56,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		this.debugger.debugFine("Portal lock state: " + (portal.isLocked() ? "locked" : "unlocked"));
 
 		if (portal.getType() == PortalType.NORMAL)
-			scheduler.startSyncTask(
-				new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						player.teleport(portal.getLocation());
-					}
-				},
-				0
-			);
+			scheduler.startSyncTask(() -> player.teleport(portal.getLocation()), 0);
 
 		if (portal.getType() == PortalType.RANDOM_SURFACE)
 			this.smartWarpDrive.EngageSurface(player, portal.getWorld(), portal.isLocked());
@@ -115,16 +106,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			location.setZ(this.getRandom(lowZ, highZ));
 		}
 
-		scheduler.startSyncTask(
-			new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					player.teleport(location);
-				}
-			}, 0
-		);
+		scheduler.startSyncTask(() -> player.teleport(location), 0);
 	}
 
 	private int getRandom(int low, int high)
@@ -135,21 +117,15 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private boolean safeToTeleport(final ILocation location)
 	{
 		final boolean[] safe = {false};
-		scheduler.runNow(
-			new Runnable()
+		scheduler.runNow(() ->
+		{
+			if (location.getBlock().is(Item.Unavailable.Air))
 			{
-				@Override
-				public void run()
-				{
-					if (location.getBlock().is(Item.Unavailable.Air))
-					{
-						location.incrementY(1);
-						if (location.getBlock().is(Item.Unavailable.Air))
-							safe[0] = true;
-					}
-				}
+				location.incrementY(1);
+				if (location.getBlock().is(Item.Unavailable.Air))
+					safe[0] = true;
 			}
-		);
+		});
 		return safe[0];
 	}
 
@@ -185,7 +161,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 		if (netherWorlds.contains(worldName))
 		{
-			IWorld netherWorld = server.getWorld(worldName + "_nether");
+			IWorld netherWorld = worldManager.getWorld(worldName + "_nether");
 			if (netherWorld != null)
 			{
 				netherTeleport(netherWorld.getLocation(from.getX(), from.getY() / 2, from.getZ()), player);
@@ -194,7 +170,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		}
 		else if (worldName.contains("_nether"))
 		{
-			IWorld world = server.getWorld(worldName.replace("_nether", ""));
+			IWorld world = worldManager.getWorld(worldName.replace("_nether", ""));
 			if (world != null)
 			{
 				netherTeleport(world.getLocation(from.getX(), from.getY() * 2, from.getZ()), player);
@@ -270,7 +246,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		pending.remove(player.getName());
 		String worldName = player.getWorldName();
 		if (!portals.containsKey(worldName)) // Check if we're missing a container for this world.
-			portals.put(worldName, new HashMap<String, PortalWarp>()); // Create a new warp container.
+			portals.put(worldName, new HashMap<>()); // Create a new warp container.
 
 		repository.storeWarp(warp); // Store the warp in the database.
 		portals.get(worldName).put(warp.getID(), warp); // Add to the in-memory warp storage.
@@ -278,7 +254,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 	private IRegion3D scanArea(ILocation location)
 	{
-		Map<Integer, Map<Integer, Map<Integer, Boolean>>> portalMap = new HashMap<Integer, Map<Integer, Map<Integer, Boolean>>>();
+		Map<Integer, Map<Integer, Map<Integer, Boolean>>> portalMap = new HashMap<>();
 		getNeighbouringPortalBlocks(location, portalMap);
 		int xMin = Collections.min(portalMap.keySet());
 		int xMax = Collections.max(portalMap.keySet());
@@ -305,9 +281,9 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
 		if (!portalMap.containsKey(x))
-			portalMap.put(x, new HashMap<Integer, Map<Integer, Boolean>>());
+			portalMap.put(x, new HashMap<>());
 		if (!portalMap.get(x).containsKey(y))
-			portalMap.get(x).put(y, new HashMap<Integer, Boolean>());
+			portalMap.get(x).put(y, new HashMap<>());
 		if (!portalMap.get(x).get(y).containsKey(z))
 			portalMap.get(x).get(y).put(z, true);
 		else
@@ -338,7 +314,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	{
 		String worldName = warp.getWorldName();
 		if (!portals.containsKey(worldName))
-			portals.put(worldName, new HashMap<String, PortalWarp>());
+			portals.put(worldName, new HashMap<>());
 
 		repository.updatePortalWarp(warp); // Store changes in the database.
 		portals.get(worldName).put(warp.getID(), warp);
@@ -376,15 +352,15 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		}
 	}
 
-	private List<String> netherWorlds = new ArrayList<String>();
-	private final Map<String, PortalWarp> pending = new ConcurrentHashMap<String, PortalWarp>();
-	private final Map<String, Map<String, PortalWarp>> portals = new HashMap<String, Map<String, PortalWarp>>();
+	private List<String> netherWorlds = new ArrayList<>();
+	private final Map<String, PortalWarp> pending = new ConcurrentHashMap<>();
+	private final Map<String, Map<String, PortalWarp>> portals = new HashMap<>();
 	private final PortalRepository repository;
 	private final SmartWarpDrive smartWarpDrive;
 	private final IDebug debugger;
 	private final IConsole console;
 	private final IScheduler scheduler;
-	private final IServer server;
+	private final IWorldManager worldManager;
 	private int netherMaxY;
 	private int netherMinY;
 }

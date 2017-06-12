@@ -12,8 +12,11 @@ public class SetWarp extends PlayerAsyncCommand
 	public SetWarp(IScheduler scheduler, WarpRepository repository)
 	{
 		super(
-			"setwarp", "Saves your location as a public warp", "runsafe.warp.set", scheduler,
-			new RequiredArgument("name")
+			"setwarp",
+			"Saves your location as a public warp",
+			"runsafe.warp.set",
+			scheduler,
+			new RequiredArgument("name").toLowercase()
 		);
 		warpRepository = repository;
 	}
@@ -21,9 +24,12 @@ public class SetWarp extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
-		String name = parameters.get("name").toLowerCase();
+		String name = parameters.getValue("name");
+		if (!name.matches("[a-z0-9]*"))
+			return "&cInvalid warp name.";
+
 		warpRepository.Persist(player, name, true, player.getLocation());
-		return String.format("Current location saved as the warp %s.", name);
+		return String.format("&aCurrent location saved as the warp %s.", name);
 	}
 
 	private final WarpRepository warpRepository;
