@@ -67,7 +67,7 @@ public class WarpRepository extends Repository
 				"ON DUPLICATE KEY UPDATE world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z), yaw=VALUES(yaw), pitch=VALUES(pitch)",
 			creator,
 			name,
-			publicWarp ? 1:0,
+			publicWarp ? 1 : 0,
 			location.getWorld().getName(),
 			location.getX(),
 			location.getY(),
@@ -192,7 +192,7 @@ public class WarpRepository extends Repository
 
 		return database.queryString(
 			"SELECT y FROM `warpdrive_locations` WHERE `name`=? AND `public`=?" + privateWarp,
-			name, publicWarp ? 1:0
+			name, publicWarp ? 1 : 0
 		) != null;
 	}
 
