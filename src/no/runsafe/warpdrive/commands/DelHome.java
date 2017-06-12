@@ -15,7 +15,7 @@ public class DelHome extends PlayerAsyncCommand
 			"Deletes a home location",
 			"runsafe.home.delete",
 			scheduler,
-			new HomeArgument(HOME_NAME, repository)
+			new HomeArgument(HOME_NAME, repository).require()
 		);
 		warpRepository = repository;
 	}

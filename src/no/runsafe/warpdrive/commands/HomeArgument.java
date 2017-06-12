@@ -3,14 +3,14 @@ package no.runsafe.warpdrive.commands;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.ITabComplete;
 import no.runsafe.framework.api.command.argument.IValueExpander;
-import no.runsafe.framework.api.command.argument.OptionalArgument;
+import no.runsafe.framework.api.command.argument.StringArgumentSpecification;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.database.WarpRepository;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class HomeArgument extends OptionalArgument implements ITabComplete, IValueExpander
+public class HomeArgument extends StringArgumentSpecification implements ITabComplete, IValueExpander
 {
 	public HomeArgument(WarpRepository warpRepository)
 	{
@@ -22,6 +22,12 @@ public class HomeArgument extends OptionalArgument implements ITabComplete, IVal
 	{
 		super(name);
 		this.warpRepository = warpRepository;
+	}
+
+	@Override
+	public boolean isWhitespaceInclusive()
+	{
+		return false;
 	}
 
 	@Override
