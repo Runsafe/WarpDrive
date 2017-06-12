@@ -75,39 +75,39 @@ public class WarpRepository extends Repository
 			location.getYaw(),
 			location.getPitch()
 		);
-		String key = cacheKey(creator, name, publicWarp);
+		String key = cacheKey(creator, name);
 		cache.Invalidate(key);
 		cache.Cache(key, location);
 	}
 
 	public List<String> GetPublicList()
 	{
-		return GetWarps(null, true);
+		return GetWarps(null);
 	}
 
 	public List<String> GetPrivateList(IPlayer owner)
 	{
-		return GetWarps(owner, false);
+		return GetWarps(owner);
 	}
 
 	public ILocation GetPublic(String name)
 	{
-		return GetWarp(null, name, true);
+		return GetWarp(null, name);
 	}
 
 	public ILocation GetPrivate(IPlayer owner, String name)
 	{
-		return GetWarp(owner, name, false);
+		return GetWarp(owner, name);
 	}
 
 	public boolean DelPublic(String name)
 	{
-		return DelWarp(null, name, true);
+		return DelWarp(null, name);
 	}
 
 	public boolean DelPrivate(IPlayer owner, String name)
 	{
-		return DelWarp(owner, name, false);
+		return DelWarp(owner, name);
 	}
 
 	public void DelAllPrivate(String world)
@@ -115,27 +115,22 @@ public class WarpRepository extends Repository
 		database.execute("DELETE FROM warpdrive_locations WHERE world=? AND public=?", world, false);
 	}
 
-	private String cacheKey(IPlayer creator, String name, boolean publicWarp)
+	private String cacheKey(IPlayer creator, String name)
 	{
-		if (publicWarp)
+		if (creator == null)
 			return name;
 
-		String creatorName = "";
-		if (creator != null)
-			creatorName = creator.getName();
-
-		return String.format("%s:%s", creatorName, name);
+		return String.format("%s:%s", creator.getName(), name);
 	}
 
 	/**
 	 * Get warps created by the player or all public warps.
-	 * @param owner Warp creator.  Only needs to be valid if publicWarp is false.
-	 * @param publicWarp Whether or not the warps are public.
-	 * @return All public warp names when public warp is true, otherwise the player's home names.
+	 * @param owner Warp creator.  Should be null for public warps.
+	 * @return All public warp names when owner is null, otherwise the player's home names.
 	 */
-	private List<String> GetWarps(IPlayer owner, boolean publicWarp)
+	private List<String> GetWarps(IPlayer owner)
 	{
-		if (publicWarp)
+		if (owner == null)
 			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=1");
 		else
 			return database.queryStrings("SELECT name FROM warpdrive_locations WHERE `public`=0 AND creator=?", owner);
@@ -143,19 +138,18 @@ public class WarpRepository extends Repository
 
 	/**
 	 * Gets a warp from the mysql database.
-	 * @param owner Warp creator. Only needs to be valid if the warp is private.
+	 * @param owner Warp creator.  Should be null for public warps.
 	 * @param name Warp name.
-	 * @param publicWarp True if the warp is a public warp.
 	 * @return Warp location. Null if the location is invalid or isn't stored.
 	 */
-	private ILocation GetWarp(IPlayer owner, String name, boolean publicWarp)
+	private ILocation GetWarp(IPlayer owner, String name)
 	{
-		String key = cacheKey(owner, name, publicWarp);
+		String key = cacheKey(owner, name);
 		ILocation location = cache.Cache(key);
 		if (location != null)
 			return location;
 
-		if (publicWarp)
+		if (owner == null)
 			location = database.queryLocation(
 				"SELECT world, x, y, z, yaw, pitch FROM warpdrive_locations WHERE name=? AND `public`=1",
 				name
@@ -171,21 +165,17 @@ public class WarpRepository extends Repository
 
 	/**
 	 * Checks if a warp is in the database.
-	 * @param owner Warp creator. Only needs to be valid if the warp is private.
+	 * @param owner Warp creator.  Should be null for public warps.
 	 * @param name Warp name.
-	 * @param publicWarp True if it's a public warp.
 	 * @return True if the warp exists even if it has an invalid location.
 	 */
-	private boolean doesWarpExist(IPlayer owner, String name, boolean publicWarp)
+	private boolean doesWarpExist(IPlayer owner, String name)
 	{
 		// Check if the warp is already stored in the cache.
-		if (cache.Cache(cacheKey(owner, name, publicWarp)) != null)
+		if (cache.Cache(cacheKey(owner, name)) != null)
 			return true;
 
-		// Check for invalid warp creator if it's a private warp.
-		if (!publicWarp && (owner == null || owner.getUniqueId() == null))
-			return false;
-
+		final boolean publicWarp = (owner == null);
 		String privateWarp = "";
 		if (!publicWarp)
 			privateWarp = " AND `creator`='" + owner.getUniqueId().toString() + "'";
@@ -198,21 +188,20 @@ public class WarpRepository extends Repository
 
 	/**
 	 * Deletes a warp from mysql.
-	 * @param owner Warp creator. Only needs to be valid if the warp is private.
+	 * @param owner Warp creator.  Should be null for public warps.
 	 * @param name Warp name.
-	 * @param publicWarp True if the warp is public.
 	 * @return True if deleted, false otherwise.
 	 */
-	private boolean DelWarp(IPlayer owner, String name, boolean publicWarp)
+	private boolean DelWarp(IPlayer owner, String name)
 	{
-		if (!doesWarpExist(owner, name, publicWarp))
+		if (!doesWarpExist(owner, name))
 			return false;
 		boolean success;
-		if (publicWarp)
+		if (owner == null)
 			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=1", name);
 		else
 			success = database.execute("DELETE FROM warpdrive_locations WHERE name=? AND public=0 AND creator=?", name, owner);
-		cache.Invalidate(cacheKey(owner, name, publicWarp));
+		cache.Invalidate(cacheKey(owner, name));
 		return success;
 	}
 
