@@ -39,11 +39,12 @@ public class Warp extends PlayerTeleportCommand implements IPlayerRightClickSign
 	public PlayerTeleport OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
 		PlayerTeleport target = new PlayerTeleport();
+		String warpName = parameters.getValue(WARP_NAME);
 		target.force = true;
 		target.player = player;
-		target.location = warpRepository.GetPublic(((String) parameters.getValue(WARP_NAME)).toLowerCase());
+		target.location = warpRepository.GetPublic(warpName);
 		if (target.location == null)
-			target.message = String.format("&cThe warp %s is in an invalid location.", (String) parameters.getValue(WARP_NAME));
+			target.message = String.format("&cThe warp %s is in an invalid location.", warpName);
 		return target;
 	}
 
