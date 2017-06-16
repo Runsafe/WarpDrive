@@ -25,7 +25,7 @@ public class SetWarp extends PlayerAsyncCommand
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
 		String name = parameters.getValue("name");
-		if (!name.matches("[a-z0-9]*"))
+		if (!name.matches("[a-z0-9_-]*"))
 			return "&cInvalid warp name.";
 
 		warpRepository.Persist(player, name, true, player.getLocation());
