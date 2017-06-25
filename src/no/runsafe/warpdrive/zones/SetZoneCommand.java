@@ -5,7 +5,6 @@ import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
 import no.runsafe.framework.api.command.player.PlayerAsyncCommand;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.networking.PacketSetBossBar;
 
 public class SetZoneCommand extends PlayerAsyncCommand
 {
@@ -17,7 +16,7 @@ public class SetZoneCommand extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList list)
 	{
-		player.sendPacket(new PacketSetBossBar(list.getValue("zone")));
+		player.sendTitle(list.getValue("zone"), "");
 		return "Done!";
 	}
 }
