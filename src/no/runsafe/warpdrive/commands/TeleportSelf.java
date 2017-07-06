@@ -63,7 +63,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 			return null;
 
 		warned.Cache(player, to);
-		return String.format("&cUnable to safely teleport you to %1$s, repeat command to force.", to.getPrettyName());
+		return String.format("&cUnable to safely teleport you to %1$s&c, repeat command to force.", to.getPrettyName());
 	}
 
 	private final Engine engine;
