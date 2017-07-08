@@ -8,6 +8,8 @@ import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.warpdrive.Engine;
 
+import static java.lang.Math.abs;
+
 public class TeleportPos2D extends PlayerCommand implements IBranchingExecution
 {
 	public TeleportPos2D(Engine engine)
@@ -26,6 +28,8 @@ public class TeleportPos2D extends PlayerCommand implements IBranchingExecution
 		Integer z = parameters.getValue("z");
 		if (x == null || z == null)
 			return "&cInvalid coordinate";
+		if (abs(x) > 30000000 || abs(z) > 30000000)
+			return "&cOutside the world boundaries.";
 		ILocation target = player.getLocation();
 		target.setX(x);
 		target.setZ(z);

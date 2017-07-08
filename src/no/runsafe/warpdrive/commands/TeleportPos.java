@@ -7,6 +7,8 @@ import no.runsafe.framework.api.command.argument.WholeNumber;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
+import static java.lang.Math.abs;
+
 public class TeleportPos extends PlayerCommand implements IBranchingExecution
 {
 	public TeleportPos()
@@ -25,6 +27,8 @@ public class TeleportPos extends PlayerCommand implements IBranchingExecution
 		Integer z = parameters.getValue("z");
 		if (x == null || y == null || z == null)
 			return "&cInvalid coordinate";
+		if (abs(x) > 30000000 || y > 255 || y < 0 || abs(z) > 30000000)
+			return "&cOutside the world boundaries.";
 		ILocation target = player.getLocation();
 		target.setX(x);
 		target.setZ(z);
