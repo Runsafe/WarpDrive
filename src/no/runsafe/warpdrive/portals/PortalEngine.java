@@ -40,7 +40,14 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		int portalCount = 0;
 		for (PortalWarp portal : this.repository.getPortalWarps())
 		{
-			String portalWorldName = portal.getPortalWorld().getName();
+			ILocation location = portal.getPortalLocation();
+			if (location == null || location.getWorld() == null)
+			{
+				abandoned_portals.put(portal.getID(), portal);
+				this.console.logWarning("Found portal %s without a valid location, ignoring", portal.getID());
+				continue;
+			}
+			String portalWorldName = location.getWorld().getName();
 			if (!portals.containsKey(portalWorldName))
 				portals.put(portalWorldName, new HashMap<>());
 
@@ -221,6 +228,8 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		String worldName = world.getName();
 		if (portals.containsKey(worldName) && portals.get(worldName).containsKey(portalName))
 			return portals.get(worldName).get(portalName);
+		if (abandoned_portals.containsKey(portalName))
+			return abandoned_portals.get(portalName);
 		return null;
 	}
 
@@ -318,6 +327,12 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 
 		repository.updatePortalWarp(warp); // Store changes in the database.
 		portals.get(worldName).put(warp.getID(), warp);
+
+		if (abandoned_portals.containsKey(warp.getID()))
+		{
+			this.console.logInformation("Moved portal %s to new world %s", warp.getID(), worldName);
+			abandoned_portals.remove(warp.getID());
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -355,6 +370,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	private List<String> netherWorlds = new ArrayList<>();
 	private final Map<String, PortalWarp> pending = new ConcurrentHashMap<>();
 	private final Map<String, Map<String, PortalWarp>> portals = new HashMap<>();
+	private final Map<String, PortalWarp> abandoned_portals = new HashMap<>();
 	private final PortalRepository repository;
 	private final SmartWarpDrive smartWarpDrive;
 	private final IDebug debugger;
