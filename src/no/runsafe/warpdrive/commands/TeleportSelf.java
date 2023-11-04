@@ -50,8 +50,8 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 
 		ILocation targetLocation = to.getLocationBehindPlayer(
 			2,
-			player.getGameMode() == GameMode.CREATIVE
-				|| player.getGameMode() == GameMode.SPECTATOR
+			player.getGameMode() != GameMode.CREATIVE
+				&& player.getGameMode() != GameMode.SPECTATOR
 		);
 		if (targetLocation == null)
 		{
