@@ -6,6 +6,7 @@ import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.chunk.IChunk;
 import no.runsafe.framework.api.player.IPlayer;
+import org.bukkit.GameMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,10 @@ public class Engine
 {
 	public boolean safePlayerTeleport(ILocation originalLocation, IPlayer player)
 	{
+		if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR)
+		{
+			player.teleport(originalLocation);
+		}
 		ILocation target = findSafeSpot(originalLocation);
 		if (target != null)
 		{

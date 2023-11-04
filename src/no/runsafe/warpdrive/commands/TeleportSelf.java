@@ -47,7 +47,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 		IPlayer warning = warned.Cache(player);
 		boolean force = warning != null && warning.equals(to);
 
-		ILocation targetLocation = player.getLocationBehindPlayer(2);
+		ILocation targetLocation = to.getLocationBehindPlayer(2);
 		if (targetLocation == null)
 		{
 			return null;
