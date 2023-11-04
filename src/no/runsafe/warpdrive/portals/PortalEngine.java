@@ -339,31 +339,42 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	@Override
 	public void OnPlayerCustomEvent(RunsafeCustomEvent event)
 	{
-		if (event.getEvent().equals("region.enter"))
+		if (!event.getEvent().equals("region.enter"))
 		{
-			final IPlayer player = event.getPlayer();
-			String playerWorld = player.getWorldName();
+			return;
+		}
+		final IPlayer player = event.getPlayer();
+		String playerWorld = player.getWorldName();
 
-			if (playerWorld == null)
-				return;
+		if (playerWorld == null)
+		{
+			debugger.debugFiner("Player %s was not in a world, ignoring event", player.getName());
+			return;
+		}
+		Map<String, String> data = (Map<String, String>) event.getData();
+		String regionName = data.get("region");
 
-			Map<String, String> data = (Map<String, String>) event.getData();
-			String regionName = data.get("region");
-
-			if (portals.containsKey(playerWorld))
+		if (!portals.containsKey(playerWorld))
+		{
+			debugger.debugFiner("There are no portals in %s, ignoring event", playerWorld);
+			return;
+		}
+		for (PortalWarp portal : portals.get(playerWorld).values())
+		{
+			if (!portal.hasEnterRegion() || !portal.getEnterRegion().equals(regionName))
 			{
-				for (PortalWarp portal : portals.get(playerWorld).values())
-				{
-					if (portal.hasEnterRegion() && portal.getEnterRegion().equals(regionName))
-					{
-						if (portal.canTeleport(player))
-							teleportPlayer(portal, player);
-						else
-							player.sendColouredMessage("&cYou do not have permission to use this portal.");
-						return;
-					}
-				}
+				debugger.debugFiner("Portal with region %s does not match the region %s", portal.getEnterRegion(), regionName);
+				continue;
 			}
+			if (!portal.canTeleport(player))
+			{
+				debugger.debugInfo("Player %s denied access to region portal %s", player.getName(), regionName);
+				player.sendColouredMessage("&cYou do not have permission to use this portal.");
+				return;
+			}
+			debugger.debugInfo("Activating portal for player %s", player.getName());
+			teleportPlayer(portal, player);
+			return;
 		}
 	}
 
