@@ -1,5 +1,6 @@
 package no.runsafe.warpdrive.commands;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.IBranchingExecution;
 import no.runsafe.framework.api.command.ICommandExecutor;
@@ -46,20 +47,25 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 		IPlayer warning = warned.Cache(player);
 		boolean force = warning != null && warning.equals(to);
 
+		ILocation targetLocation = player.getLocationBehindPlayer(2);
+		if (targetLocation == null)
+		{
+			return null;
+		}
 		if (to.getWorldName().equals(player.getWorldName()))
 		{
 			if (to.isCreative() && player.isCreative())
 			{
-				player.teleport(to.getLocation());
+				player.teleport(targetLocation);
 				return null;
 			}
 		}
 		if (force)
 		{
-			player.teleport(to.getLocation());
+			player.teleport(targetLocation);
 			return String.format("&cPerformed unsafe teleport to %s.", to.getPrettyName());
 		}
-		if (engine.safePlayerTeleport(to.getLocation(), player))
+		if (engine.safePlayerTeleport(targetLocation, player))
 			return null;
 
 		warned.Cache(player, to);
