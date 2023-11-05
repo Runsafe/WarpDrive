@@ -30,9 +30,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 	{
 		if (executor instanceof IPlayer)
 		{
-			IPlayer target = parameters.getValue("player");
-			if (target == null)
-				return null;
+			IPlayer target = parameters.getRequired("player");
 			return "runsafe.teleport.world." + target.getWorldName();
 		}
 		return null;
@@ -41,13 +39,11 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 	@Override
 	public String OnExecute(IPlayer player, IArgumentList parameters)
 	{
-		IPlayer to = parameters.getValue("player");
-		if (to == null)
-			return null;
-
+		IPlayer to = parameters.getRequired("player");
 		IPlayer warning = warned.Cache(player);
 		boolean force = warning != null && warning.equals(to);
 
+		// Calculate where the player should be teleported to
 		ILocation targetLocation = to.getLocationBehindPlayer(
 			2,
 			player.getGameMode() != GameMode.CREATIVE
@@ -57,6 +53,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 		{
 			return null;
 		}
+		// Keep it real simple when both players are in creative mode
 		if (to.getWorldName().equals(player.getWorldName()))
 		{
 			if (to.isCreative() && player.isCreative())
@@ -65,14 +62,17 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 				return null;
 			}
 		}
+		// Just teleport on second tp attempt
 		if (force)
 		{
 			player.teleport(targetLocation);
 			return String.format("&cPerformed unsafe teleport to %s.", to.getPrettyName());
 		}
+		// Try to safely teleport
 		if (engine.safePlayerTeleport(targetLocation, player))
 			return null;
 
+		// Send safety warning to player
 		warned.Cache(player, to);
 		return String.format("&cUnable to safely teleport you to %1$s&c, repeat command to force.", to.getPrettyName());
 	}
