@@ -165,27 +165,37 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 			finalizeWarp(player);
 			return OnPlayerPortal(player, from, to);
 		}
-
 		if (netherWorlds.contains(worldName))
 		{
 			IWorld netherWorld = worldManager.getWorld(worldName + "_nether");
-			if (netherWorld != null)
+			if (netherWorld == null)
 			{
-				netherTeleport(netherWorld.getLocation(from.getX(), from.getY() / 2, from.getZ()), player);
+				return true;
+			}
+			ILocation target = netherWorld.getLocation(from.getX(), from.getY() / 2, from.getZ());
+			if (target == null)
+			{
 				return false;
 			}
+			netherTeleport(target, player);
+			return false;
 		}
-		else if (worldName.contains("_nether"))
+		if (!worldName.contains("_nether"))
 		{
-			IWorld world = worldManager.getWorld(worldName.replace("_nether", ""));
-			if (world != null)
-			{
-				netherTeleport(world.getLocation(from.getX(), from.getY() * 2, from.getZ()), player);
-				return false;
-			}
+			return false;
 		}
-
-		return true;
+		IWorld world = worldManager.getWorld(worldName.replace("_nether", ""));
+		if (world == null)
+		{
+			return true;
+		}
+		ILocation target = world.getLocation(from.getX(), from.getY() * 2, from.getZ());
+		if (target == null)
+		{
+			return false;
+		}
+		netherTeleport(target, player);
+		return false;
 	}
 
 	private void netherTeleport(ILocation location, IPlayer player)

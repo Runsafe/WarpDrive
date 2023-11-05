@@ -27,16 +27,15 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 		this.setInterval(10);
 	}
 
-	public void Setup(IWorld world, Integer radius, boolean restart)
+	public void Setup(IWorld world, int radius, boolean restart)
 	{
 		if (restart)
 		{
 			chunkRepository.clear(world);
 			progress.put(world.getName(), 0D);
 		}
-		int r = Integer.valueOf(radius);
-		warpRepository.setRange(world.getName(), r);
-		range.put(world.getName(), r);
+		warpRepository.setRange(world.getName(), radius);
+		range.put(world.getName(), radius);
 		if (!progress.containsKey(world.getName()))
 			progress.put(world.getName(), 0D);
 		if (!isQueued(world.getName()))
@@ -80,12 +79,12 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 					air = 0;
 			}
 		}
-		Double p = progress.get(world) + 1;
+		double p = progress.get(world) + 1;
 		progress.put(world, p);
 		warpRepository.setProgress(world, p);
 		if (progress.get(world) % 1000 == 0)
 		{
-			double d = range.get(world) / 16;
+			double d = range.get(world) / 16D;
 			console.logInformation(
 				"Scanning location %.0f/%.0f in %s (%.2f%%)",
 				p, d * d, world, 100D * p / (d * d)
@@ -111,7 +110,7 @@ public class SmartWarpScanner extends ForegroundWorker<String, ILocation> implem
 		if (!worlds.containsKey(world))
 			worlds.put(world, worldManager.getWorld(world));
 		int r = range.get(world) / 16;
-		double offset = (range.get(world) / 2) - 0.5;
+		double offset = (range.get(world) / 2D) - 0.5;
 		double x = 16 * (progress.get(world) % r) - offset;
 		double z = 16 * (progress.get(world) / r) - offset;
 		return worlds.get(world).getLocation(x, 255.0, z);

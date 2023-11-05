@@ -32,11 +32,8 @@ public class SetPortal extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
-		IWorld portalWorld = parameters.getValue("world");
-		if (portalWorld == null)
-			return "&cInvalid world.";
-
-		String portalName = parameters.getValue("name");
+		IWorld portalWorld = parameters.getRequired("world");
+		String portalName = parameters.getRequired("name");
 		if (!portalName.matches("[a-zA-Z0-9]*"))
 			return "&cInvalid portal name.";
 
@@ -48,19 +45,16 @@ public class SetPortal extends PlayerAsyncCommand
 		if (playerLocation == null)
 			return "&cInvalid location.";
 
-		if (warp != null)
-		{
-			warp.setDestination(playerLocation);
-			warp.setPermission(permission);
-
-			engine.updateWarp(warp);
-			return "&aPortal " + portalName + " now connects to " + playerLocation.toString();
-		}
-		else
+		if (warp == null)
 		{
 			engine.createWarp(player, portalName, playerLocation, PortalType.NORMAL, permission);
-			return "Now walk through the portal to connect to " + playerLocation.toString();
+			return "Now walk through the portal to connect to " + playerLocation;
 		}
+		warp.setDestination(playerLocation);
+		warp.setPermission(permission);
+
+		engine.updateWarp(warp);
+		return "&aPortal " + portalName + " now connects to " + playerLocation;
 	}
 
 	private final PortalEngine engine;

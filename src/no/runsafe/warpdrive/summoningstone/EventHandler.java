@@ -87,37 +87,42 @@ public class EventHandler implements IPlayerPortalEvent, IEntityPortalEnterEvent
 		if ((itemStack.is(Item.Tool.FlintAndSteel) || itemStack.is(Item.Miscellaneous.FireCharge)) && runsafeBlock.is(Item.BuildingBlock.Emerald))
 		{
 			WarpDrive.debug.debugFine("Detected FLINT_AND_STEEL click on EMERALD_BLOCK");
-			ILocation stoneLocation = runsafeBlock.getLocation();
-			if (engine.canCreateStone(stoneLocation.getWorld()) && SummoningStone.isSummoningStone(stoneLocation))
-			{
-				WarpDrive.debug.debugFine("Location is safe to create a summoning stone.");
-				int stoneID = repository.addSummoningStone(stoneLocation);
-				SummoningStone summoningStone = new SummoningStone(stoneLocation);
-				summoningStone.activate();
-				summoningStone.setTimerID(engine.registerExpireTimer(stoneID));
-
-				engine.registerStone(stoneID, summoningStone);
-				return false;
-			}
+			return AttemptToCreateSummoningStone(runsafeBlock);
 		}
-		else if (itemStack.is(Item.Miscellaneous.EyeOfEnder) && runsafeBlock.is(Item.Decoration.EnderPortalFrame))
+		if (!itemStack.is(Item.Miscellaneous.EyeOfEnder) || !runsafeBlock.is(Item.Decoration.EnderPortalFrame))
 		{
-			if (engine.isRitualWorld(runsafePlayer.getWorld()))
-			{
-				if (engine.playerHasPendingSummon(runsafePlayer))
-				{
-					engine.acceptPlayerSummon(runsafePlayer);
-					runsafePlayer.removeItem(Item.Miscellaneous.EyeOfEnder, 1);
-				}
-				else
-				{
-					runsafePlayer.sendColouredMessage("&cYou have no pending summons to accept.");
-				}
-				return false;
-			}
+			return true;
 		}
-
+		IWorld playerWorld = runsafePlayer.getWorld();
+		if (playerWorld == null || !engine.isRitualWorld(playerWorld))
+		{
+			return true;
+		}
+		if (!engine.playerHasPendingSummon(runsafePlayer))
+		{
+			runsafePlayer.sendColouredMessage("&cYou have no pending summons to accept.");
+			return false;
+		}
+		engine.acceptPlayerSummon(runsafePlayer);
+		runsafePlayer.removeItem(Item.Miscellaneous.EyeOfEnder, 1);
 		return true;
+	}
+
+	private boolean AttemptToCreateSummoningStone(IBlock runsafeBlock)
+	{
+		ILocation stoneLocation = runsafeBlock.getLocation();
+		if (!engine.canCreateStone(stoneLocation.getWorld()) || !SummoningStone.isSummoningStone(stoneLocation))
+		{
+			return true;
+		}
+		WarpDrive.debug.debugFine("Location is safe to create a summoning stone.");
+		int stoneID = repository.addSummoningStone(stoneLocation);
+		SummoningStone summoningStone = new SummoningStone(stoneLocation);
+		summoningStone.activate();
+		summoningStone.setTimerID(engine.registerExpireTimer(stoneID));
+
+		engine.registerStone(stoneID, summoningStone);
+		return false;
 	}
 
 	@Override

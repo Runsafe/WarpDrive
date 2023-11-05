@@ -27,9 +27,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
-	IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged, IPlayerDamageEvent, IPluginDisabled
+                                                                                    IPlayerRightClickSign, IAsyncEvent,
+                                                                                    IConfigurationChanged,
+                                                                                    IPlayerDamageEvent, IPluginDisabled
 {
-	public SnazzyWarp(IScheduler scheduler, Engine engine, IDebug output, IPlayerProvider playerProvider, IWorldManager worldManager, IConsole console)
+	public SnazzyWarp(
+		IScheduler scheduler, Engine engine, IDebug output, IPlayerProvider playerProvider, IWorldManager worldManager,
+		IConsole console
+	)
 	{
 		super(scheduler, 2);
 		this.engine = engine;
@@ -71,8 +76,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		{
 			if (target.teleport(destination))
 				fallen.add(target);
-		}
-		else
+		} else
 			debugger.outputDebugToConsole("Unable to find destination..", Level.FINE);
 	}
 
@@ -104,13 +108,19 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		for (IPlayer player : fallen)
 		{
 			if (player != null)
-				player.teleport(player.getLocation().findTop());
+			{
+				ILocation location = player.getLocation();
+				if (location != null)
+				{
+					player.teleport(location.findTop());
+				}
+			}
 		}
 	}
 
 	private final Engine engine;
 
-	class WarpParameters
+	public class WarpParameters
 	{
 		WarpParameters(ISign sign)
 		{
@@ -155,7 +165,13 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 			ILocation target = null;
 			int retries = 10;
 			while (target == null && retries-- > 0)
-				target = engine.findRandomSafeSpot(world.getLocation(randomX + 0.5, 64.0D, randomZ + 0.5));
+			{
+				ILocation randomLocation = world.getLocation(randomX + 0.5, 64.0D, randomZ + 0.5);
+				if (randomLocation != null)
+				{
+					target = engine.findRandomSafeSpot(randomLocation);
+				}
+			}
 			if (target != null)
 			{
 				target.setX(target.getBlockX() + 0.5);

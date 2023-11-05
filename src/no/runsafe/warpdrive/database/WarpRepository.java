@@ -46,7 +46,7 @@ public class WarpRepository extends Repository
 			")"
 		);
 
-		update.addQueries( // Convert from storing player data as user names to Unique IDs.
+		update.addQueries( // Convert from storing player data as usernames to Unique IDs.
 			String.format("ALTER TABLE `%s` MODIFY COLUMN creator VARCHAR(36)", getTableName()),
 			String.format( // User names -> Unique Ids
 				"UPDATE IGNORE `%s` SET `creator` = " +

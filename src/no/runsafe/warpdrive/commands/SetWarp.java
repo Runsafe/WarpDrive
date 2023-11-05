@@ -1,5 +1,6 @@
 package no.runsafe.warpdrive.commands;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
@@ -24,11 +25,16 @@ public class SetWarp extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
-		String name = parameters.getValue("name");
+		String name = parameters.getRequired("name");
 		if (!name.matches("[a-z0-9_-]*"))
 			return "&cInvalid warp name.";
 
-		warpRepository.Persist(player, name, true, player.getLocation());
+		ILocation playerLocation = player.getLocation();
+		if (playerLocation == null)
+		{
+			return "Unable to get player location";
+		}
+		warpRepository.Persist(player, name, true, playerLocation);
 		return String.format("&aCurrent location saved as the warp %s.", name);
 	}
 

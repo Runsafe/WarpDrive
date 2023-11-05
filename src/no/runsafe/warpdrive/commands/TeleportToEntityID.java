@@ -1,5 +1,6 @@
 package no.runsafe.warpdrive.commands;
 
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.WholeNumber;
 import no.runsafe.framework.api.command.player.PlayerCommand;
@@ -16,12 +17,16 @@ public class TeleportToEntityID extends PlayerCommand
 		);
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	@Override
 	public String OnExecute(IPlayer player, IArgumentList parameters)
 	{
-		Integer entityId = parameters.getValue("entityid");
-		IEntity entity = player.getWorld().getEntityById(entityId);
+		int entityId = parameters.getRequired("entityid");
+		IWorld world = player.getWorld();
+		if (world == null)
+		{
+			return null;
+		}
+		IEntity entity = world.getEntityById(entityId);
 		player.teleport(entity);
 		return null;
 	}

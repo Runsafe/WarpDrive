@@ -78,13 +78,18 @@ public class PortalWarp
 
 	public boolean isInPortal(IPlayer player)
 	{
+		ILocation playerLocation = player.getLocation();
+		if (playerLocation == null)
+		{
+			return false;
+		}
 		if (region != null)
 		{
-			WarpDrive.debug.debugFine("Checking if %s is within %s", player.getLocation(), region);
-			return region.contains(player.getLocation().getPoint());
+			WarpDrive.debug.debugFine("Checking if %s is within %s", playerLocation, region);
+			return region.contains(playerLocation.getPoint());
 		}
-		WarpDrive.debug.debugFine("Checking if %s is close to %s", player.getLocation(), location);
-		return player.getLocation().distance(this.location) < 2;
+		WarpDrive.debug.debugFine("Checking if %s is close to %s", playerLocation, location);
+		return playerLocation.distance(this.location) < 2;
 	}
 
 	public int getRadius()
@@ -194,7 +199,7 @@ public class PortalWarp
 	private ILocation location;
 	private ILocation destination;
 	private IWorld destinationWorld;
-	private int radius;
+	private final int radius;
 	private boolean locked = false;
 	private String enterRegion;
 }

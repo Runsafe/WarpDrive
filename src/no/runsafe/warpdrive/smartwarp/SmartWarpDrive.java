@@ -80,7 +80,7 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 		if (player == null)
 			return;
 
-		if (!player.teleport(target) && fallen.contains(player))
+		if (!player.teleport(target))
 			fallen.remove(player);
 	}
 
@@ -110,8 +110,16 @@ public class SmartWarpDrive extends ForegroundWorker<String, ILocation>
 			console.logInformation("Teleporting %d falling players due to plugin shutdown.", fallen.size());
 		for (IPlayer player : fallen)
 		{
-			if (player != null)
-				player.teleport(player.getLocation().findTop());
+			if (player == null)
+			{
+				continue;
+			}
+			ILocation location = player.getLocation();
+			if (location == null)
+			{
+				continue;
+			}
+			player.teleport(location.findTop());
 		}
 	}
 

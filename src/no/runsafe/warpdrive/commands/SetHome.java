@@ -1,6 +1,7 @@
 package no.runsafe.warpdrive.commands;
 
 import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.RequiredArgument;
@@ -46,7 +47,7 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
 		List<String> homes = warpRepository.GetPrivateList(player);
-		String name = parameters.getValue("name");
+		String name = parameters.getRequired("name");
 		if (!name.matches("[a-z0-9_-]*"))
 			return "&cInvalid home name.";
 
@@ -64,7 +65,12 @@ public class SetHome extends PlayerAsyncCommand implements IConfigurationChanged
 				return String.format("&cYou are only allowed %d homes on this server.", limit);
 		}
 
-		warpRepository.Persist(player, name, false, player.getLocation());
+		ILocation location = player.getLocation();
+		if (location == null)
+		{
+			return "&cUnable to get player location.";
+		}
+		warpRepository.Persist(player, name, false, location);
 		return String.format("&aCurrent location saved as the home %s.", name);
 	}
 

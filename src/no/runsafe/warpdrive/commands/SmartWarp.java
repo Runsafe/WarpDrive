@@ -21,7 +21,7 @@ public class SmartWarp extends ExecutableCommand
 	@Override
 	public String OnExecute(ICommandExecutor iCommandExecutor, IArgumentList param)
 	{
-		scanner.Setup(param.getValue("world"), param.getValue("radius"), false);
+		scanner.Setup(param.getValue("world"), param.getRequired("radius"), false);
 		return "&2Smart-warp scan started";
 	}
 

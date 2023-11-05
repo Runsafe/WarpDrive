@@ -17,7 +17,12 @@ public class Top extends PlayerCommand
 	@Override
 	public String OnExecute(IPlayer player, IArgumentList parameters)
 	{
-		ILocation top = engine.findTop(player.getLocation());
+		ILocation playerLocation = player.getLocation();
+		if (playerLocation == null)
+		{
+			return null;
+		}
+		ILocation top = engine.findTop(playerLocation);
 		top.setY(top.getY() + 1);
 		player.teleport(top);
 		return null;

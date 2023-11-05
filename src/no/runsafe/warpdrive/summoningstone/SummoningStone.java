@@ -64,7 +64,7 @@ public class SummoningStone
 		}
 	}
 
-	// Load all chunks the portal is in so we can edit it.
+	// Load all chunks the portal is in, so we can edit it.
 	private void preparePortalForEditing()
 	{
 		loadChunkAt(-1, -1);

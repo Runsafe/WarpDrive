@@ -11,7 +11,7 @@ public class RescanSmartWarp extends ExecutableCommand
 {
 	public RescanSmartWarp(SmartWarpScanner scanner)
 	{
-		super("rescansmartwarp", "Clears out cached data for a smartwarp and reinitializes it.", "runsafe.warpdrive.smart",
+		super("rescansmartwarp", "Clears out cached data for a smartwarp and reinitialize it.", "runsafe.warpdrive.smart",
 			new WorldArgument().require(), new WholeNumber("radius").require()
 		);
 		this.scanner = scanner;
@@ -20,7 +20,7 @@ public class RescanSmartWarp extends ExecutableCommand
 	@Override
 	public String OnExecute(ICommandExecutor executor, IArgumentList param)
 	{
-		scanner.Setup(param.getValue("world"), param.getValue("radius"), true);
+		scanner.Setup(param.getValue("world"), param.getRequired("radius"), true);
 		return "&2Smart-warp scan re-started";
 	}
 

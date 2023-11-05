@@ -31,6 +31,10 @@ public class TeleportPos2D extends PlayerCommand implements IBranchingExecution
 		if (abs(x) > 30000000 || abs(z) > 30000000)
 			return "&cOutside the world boundaries.";
 		ILocation target = player.getLocation();
+		if (target == null)
+		{
+			return "&cUnable to get player location";
+		}
 		target.setX(x);
 		target.setZ(z);
 		target = engine.findTop(target);
