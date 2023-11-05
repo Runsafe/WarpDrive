@@ -31,7 +31,11 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 	{
 		if (executor instanceof IPlayer && parameters.has("player"))
 		{
-			IPlayer target = parameters.getRequired("player");
+			IPlayer target = parameters.getValue("player");
+			if (target == null)
+			{
+				return null;
+			}
 			return "runsafe.teleport.world." + target.getWorldName();
 		}
 		return null;
