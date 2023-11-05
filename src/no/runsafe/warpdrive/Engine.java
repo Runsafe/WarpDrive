@@ -17,7 +17,9 @@ public class Engine
 	{
 		if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR)
 		{
+			player.setFallDistance(0.0F);
 			player.teleport(originalLocation);
+			return true;
 		}
 		ILocation target = findSafeSpot(originalLocation);
 		if (target != null)

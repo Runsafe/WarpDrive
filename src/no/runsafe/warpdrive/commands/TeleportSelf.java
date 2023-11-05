@@ -11,6 +11,7 @@ import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.timer.TimedCache;
 import no.runsafe.warpdrive.Engine;
+import no.runsafe.warpdrive.WarpDrive;
 import org.bukkit.GameMode;
 
 public class TeleportSelf extends PlayerCommand implements IContextPermissionProvider, IBranchingExecution
@@ -43,6 +44,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 		IPlayer warning = warned.Cache(player);
 		boolean force = warning != null && warning.equals(to);
 
+		WarpDrive.debug.debugFine("target player %s is at %s", to.getName(), to.getLocation());
 		// Calculate where the player should be teleported to
 		ILocation targetLocation = to.getLocationBehindPlayer(
 			2,
@@ -53,10 +55,11 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 		{
 			return null;
 		}
+		WarpDrive.debug.debugFine("Teleporting %s to %s", player.getName(), targetLocation);
 		// Keep it real simple when both players are in creative mode
 		if (to.getWorldName().equals(player.getWorldName()))
 		{
-			if (to.isCreative() && player.isCreative())
+			if (to.isCreative() && player.isCreative() || player.getGameMode() == GameMode.SPECTATOR)
 			{
 				player.teleport(targetLocation);
 				return null;
