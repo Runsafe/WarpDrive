@@ -28,7 +28,7 @@ public class TeleportSelf extends PlayerCommand implements IContextPermissionPro
 	@Override
 	public String getPermission(ICommandExecutor executor, IArgumentList parameters, String[] args)
 	{
-		if (executor instanceof IPlayer)
+		if (executor instanceof IPlayer && parameters.has("player"))
 		{
 			IPlayer target = parameters.getRequired("player");
 			return "runsafe.teleport.world." + target.getWorldName();
