@@ -17,9 +17,9 @@ import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import no.runsafe.framework.text.ChatColour;
 import no.runsafe.framework.timer.ForegroundWorker;
 import no.runsafe.warpdrive.Engine;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -83,7 +83,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 	@Override
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
-		change_after = Duration.standardSeconds(configuration.getConfigValueAsInt("snazzy.timeout"));
+		change_after = Duration.ofSeconds(configuration.getConfigValueAsInt("snazzy.timeout"));
 		skyFall = configuration.getConfigValueAsBoolean("snazzy.skyfall");
 	}
 
@@ -141,10 +141,10 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 
 		public ILocation getTarget()
 		{
-			if (target == null || expires.isBefore(DateTime.now()) || !engine.targetFloorIsSafe(target, true))
+			if (target == null || expires.isBefore(Instant.now()) || !engine.targetFloorIsSafe(target, true))
 			{
 				target = getNewTarget();
-				expires = DateTime.now().plus(change_after);
+				expires = Instant.now().plus(change_after);
 			}
 			return target;
 		}
@@ -185,7 +185,7 @@ public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParamete
 		private final int maxDistance;
 		private final int minDistance;
 		private final Random rng = new Random();
-		private DateTime expires = DateTime.now();
+		private Instant expires = Instant.now();
 		private ILocation target;
 
 		public boolean refresh(ISign sign)
