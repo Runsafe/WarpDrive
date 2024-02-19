@@ -18,6 +18,10 @@ public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<P
 	@Override
 	public void SyncPostExecute(PlayerTeleport playerTeleport)
 	{
+		if (playerTeleport == null)
+		{
+			return;
+		}
 		if (playerTeleport.location != null)
 		{
 			if (playerTeleport.force)
@@ -31,7 +35,7 @@ public abstract class PlayerTeleportCommand extends PlayerAsyncCallbackCommand<P
 
 	private final Engine engine;
 
-	public class PlayerTeleport
+	public static class PlayerTeleport
 	{
 		public String message = null;
 		public ILocation location = null;
