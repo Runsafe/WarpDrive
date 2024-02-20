@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ASMPluginConfiguration">
     <asm skipDebug="false" skipFrames="false" skipCode="false" expandFrames="false" />
@@ -7,25 +8,127 @@
     <entry_points version="2.0">
       <entry_point TYPE="method" FQNAME="no.runsafe.warpdrive.portals.PortalWarp void setPermission(java.lang.String perm)" />
     </entry_points>
+    <pattern value="no.runsafe.warpdrive.smartwarp.ChunkScanner" />
+    <pattern value="no.runsafe.warpdrive.smartwarp.ChunkScanner" method="ChunkScanner" />
+    <pattern value="no.runsafe.warpdrive.commands.DelHome" />
+    <pattern value="no.runsafe.warpdrive.commands.DelHome" method="DelHome" />
+    <pattern value="no.runsafe.warpdrive.commands.DelWarp" />
+    <pattern value="no.runsafe.warpdrive.commands.DelWarp" method="DelWarp" />
+    <pattern value="no.runsafe.warpdrive.Engine" />
+    <pattern value="no.runsafe.warpdrive.summoningstone.EventHandler" />
+    <pattern value="no.runsafe.warpdrive.summoningstone.EventHandler" method="EventHandler" />
+    <pattern value="no.runsafe.warpdrive.portals.PortalWarp" method="getPortalWorld" />
+    <pattern value="no.runsafe.warpdrive.commands.Home" />
+    <pattern value="no.runsafe.warpdrive.commands.Home" method="Home" />
+    <pattern value="no.runsafe.warpdrive.commands.HomeArgument" />
+    <pattern value="no.runsafe.warpdrive.commands.HomeArgument" method="HomeArgument" />
+    <pattern value="no.runsafe.warpdrive.commands.HomeOther" />
+    <pattern value="no.runsafe.warpdrive.commands.HomeOther" method="HomeOther" />
+    <pattern value="no.runsafe.warpdrive.commands.PlayerTeleportCommand.PlayerTeleport" />
+    <pattern value="no.runsafe.warpdrive.portals.PortalRepository" />
+    <pattern value="no.runsafe.warpdrive.database.SmartWarpChunkRepository" />
+    <pattern value="no.runsafe.warpdrive.database.SmartWarpRepository" />
+    <pattern value="no.runsafe.warpdrive.summoningstone.SummoningStoneRepository" />
+    <pattern value="no.runsafe.warpdrive.WarpDrive" />
+    <pattern value="no.runsafe.warpdrive.zones.ZoneHandler" />
+    <pattern value="no.runsafe.warpdrive.portals.PortalEngine" method="OnPlayerPortal" />
+    <pattern value="no.runsafe.warpdrive.commands.PlayerTeleportCommand" />
+    <pattern value="no.runsafe.warpdrive.commands.PlayerTeleportCommand" method="PlayerTeleportCommand" />
+    <pattern value="no.runsafe.warpdrive.portals.PortalEngine" />
+    <pattern value="no.runsafe.warpdrive.portals.PortalEngine" method="PortalEngine" />
+    <pattern value="no.runsafe.warpdrive.portals.PortalWarp" />
+    <pattern value="no.runsafe.warpdrive.commands.RescanSmartWarp" />
+    <pattern value="no.runsafe.warpdrive.commands.RescanSmartWarp" method="RescanSmartWarp" />
+    <pattern value="no.runsafe.warpdrive.portals.PortalWarp" method="setEnterRegion" />
+    <pattern value="no.runsafe.warpdrive.commands.SetHome" />
+    <pattern value="no.runsafe.warpdrive.commands.SetHome" method="SetHome" />
+    <pattern value="no.runsafe.warpdrive.portals.PortalWarp" method="setPermission" />
+    <pattern value="no.runsafe.warpdrive.commands.SetPortal" />
+    <pattern value="no.runsafe.warpdrive.commands.SetPortal" method="SetPortal" />
+    <pattern value="no.runsafe.warpdrive.commands.SetRegionPortal" />
+    <pattern value="no.runsafe.warpdrive.commands.SetRegionPortal" method="SetRegionPortal" />
+    <pattern value="no.runsafe.warpdrive.commands.SetWarp" />
+    <pattern value="no.runsafe.warpdrive.commands.SetWarp" method="SetWarp" />
+    <pattern value="no.runsafe.warpdrive.zones.SetZoneCommand" />
+    <pattern value="no.runsafe.warpdrive.zones.SetZoneCommand" method="SetZoneCommand" />
+    <pattern value="no.runsafe.warpdrive.commands.SmartWarp" />
+    <pattern value="no.runsafe.warpdrive.commands.SmartWarp" method="SmartWarp" />
+    <pattern value="no.runsafe.warpdrive.smartwarp.SmartWarpDrive" />
+    <pattern value="no.runsafe.warpdrive.smartwarp.SmartWarpDrive" method="SmartWarpDrive" />
+    <pattern value="no.runsafe.warpdrive.smartwarp.SmartWarpScanner" />
+    <pattern value="no.runsafe.warpdrive.smartwarp.SmartWarpScanner" method="SmartWarpScanner" />
+    <pattern value="no.runsafe.warpdrive.smartwarp.SnazzyWarp" />
+    <pattern value="no.runsafe.warpdrive.smartwarp.SnazzyWarp" method="SnazzyWarp" />
+    <pattern value="no.runsafe.warpdrive.summoningstone.SummoningEngine" />
+    <pattern value="no.runsafe.warpdrive.summoningstone.SummoningEngine" method="SummoningEngine" />
+    <pattern value="no.runsafe.warpdrive.summoningstone.SummoningStone" />
+    <pattern value="no.runsafe.warpdrive.summoningstone.SummoningStone" method="SummoningStone" />
+    <pattern value="no.runsafe.warpdrive.summoningstone.SummoningStoneCleaner" />
+    <pattern value="no.runsafe.warpdrive.summoningstone.SummoningStoneCleaner" method="SummoningStoneCleaner" />
+    <pattern value="no.runsafe.warpdrive.commands.TeleportOther" />
+    <pattern value="no.runsafe.warpdrive.commands.TeleportOther" method="TeleportOther" />
+    <pattern value="no.runsafe.warpdrive.commands.TeleportPos" />
+    <pattern value="no.runsafe.warpdrive.commands.TeleportPos" method="TeleportPos" />
+    <pattern value="no.runsafe.warpdrive.commands.TeleportPos2D" />
+    <pattern value="no.runsafe.warpdrive.commands.TeleportPos2D" method="TeleportPos2D" />
+    <pattern value="no.runsafe.warpdrive.commands.TeleportSelf" />
+    <pattern value="no.runsafe.warpdrive.commands.TeleportSelf" method="TeleportSelf" />
+    <pattern value="no.runsafe.warpdrive.commands.TeleportToEntityID" />
+    <pattern value="no.runsafe.warpdrive.commands.TeleportToEntityID" method="TeleportToEntityID" />
+    <pattern value="no.runsafe.warpdrive.commands.Top" />
+    <pattern value="no.runsafe.warpdrive.commands.Top" method="Top" />
+    <pattern value="no.runsafe.warpdrive.commands.Warp" />
+    <pattern value="no.runsafe.warpdrive.commands.Warp" method="Warp" />
+    <pattern value="no.runsafe.warpdrive.commands.WarpArgument" />
+    <pattern value="no.runsafe.warpdrive.commands.WarpArgument" method="WarpArgument" />
+    <pattern value="no.runsafe.warpdrive.smartwarp.SnazzyWarp.WarpParameters" />
+    <pattern value="no.runsafe.warpdrive.smartwarp.SnazzyWarp.WarpParameters" method="WarpParameters" />
+    <pattern value="no.runsafe.warpdrive.database.WarpRepository" />
+    <pattern value="no.runsafe.warpdrive.database.WarpRepository" method="WarpRepository" />
+    <pattern value="no.runsafe.warpdrive.WarpSignCreator" />
+    <pattern value="no.runsafe.warpdrive.WarpSignCreator" method="WarpSignCreator" />
+    <pattern value="no.runsafe.warpdrive.commands.WipeHomes" />
+    <pattern value="no.runsafe.warpdrive.commands.WipeHomes" method="WipeHomes" />
   </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="org.jetbrains.annotations.Nullable" />
     <option name="myDefaultNotNull" value="javax.annotation.Nonnull" />
     <option name="myNullables">
       <value>
-        <list size="3">
+        <list size="14">
           <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.Nullable" />
           <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nullable" />
           <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.Nullable" />
+          <item index="3" class="java.lang.String" itemvalue="com.android.annotations.Nullable" />
+          <item index="4" class="java.lang.String" itemvalue="org.jspecify.nullness.Nullable" />
+          <item index="5" class="java.lang.String" itemvalue="androidx.annotation.RecentlyNullable" />
+          <item index="6" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableDecl" />
+          <item index="7" class="java.lang.String" itemvalue="androidx.annotation.Nullable" />
+          <item index="8" class="java.lang.String" itemvalue="org.eclipse.jdt.annotation.Nullable" />
+          <item index="9" class="java.lang.String" itemvalue="android.support.annotation.Nullable" />
+          <item index="10" class="java.lang.String" itemvalue="jakarta.annotation.Nullable" />
+          <item index="11" class="java.lang.String" itemvalue="javax.annotation.CheckForNull" />
+          <item index="12" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.qual.Nullable" />
+          <item index="13" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableType" />
         </list>
       </value>
     </option>
     <option name="myNotNulls">
       <value>
-        <list size="3">
+        <list size="13">
           <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.NotNull" />
           <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nonnull" />
           <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
+          <item index="3" class="java.lang.String" itemvalue="androidx.annotation.RecentlyNonNull" />
+          <item index="4" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.qual.NonNull" />
+          <item index="5" class="java.lang.String" itemvalue="jakarta.annotation.Nonnull" />
+          <item index="6" class="java.lang.String" itemvalue="androidx.annotation.NonNull" />
+          <item index="7" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullType" />
+          <item index="8" class="java.lang.String" itemvalue="android.support.annotation.NonNull" />
+          <item index="9" class="java.lang.String" itemvalue="org.jspecify.nullness.NonNull" />
+          <item index="10" class="java.lang.String" itemvalue="com.android.annotations.NonNull" />
+          <item index="11" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullDecl" />
+          <item index="12" class="java.lang.String" itemvalue="org.eclipse.jdt.annotation.NonNull" />
         </list>
       </value>
     </option>
