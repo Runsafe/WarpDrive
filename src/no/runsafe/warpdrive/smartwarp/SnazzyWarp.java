@@ -26,10 +26,8 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
-public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters> implements
-                                                                                    IPlayerRightClickSign, IAsyncEvent,
-                                                                                    IConfigurationChanged,
-                                                                                    IPlayerDamageEvent, IPluginDisabled
+public class SnazzyWarp extends ForegroundWorker<String, SnazzyWarp.WarpParameters>
+	implements IPlayerRightClickSign, IAsyncEvent, IConfigurationChanged, IPlayerDamageEvent, IPluginDisabled
 {
 	public SnazzyWarp(
 		IScheduler scheduler, Engine engine, IDebug output, IPlayerProvider playerProvider, IWorldManager worldManager,
