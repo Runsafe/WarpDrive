@@ -20,13 +20,28 @@ public class WarpSignCreator implements ISignChange
 		String head = strings[0].toLowerCase();
 		if (head.contains(SnazzyWarp.signTag) || head.contains(SnazzyWarp.signHeader.toLowerCase()))
 		{
-			if (player.hasPermission("runsafe.snazzysign.create"))
+			if (!player.hasPermission("runsafe.snazzysign.create"))
+				return false;
+
+			//Check for valid input for outer and inner radius
+			try
 			{
-				console.logInformation("%s created a snazzy warp sign named %s.", player.getPrettyName(), strings[1]);
-				strings[0] = SnazzyWarp.signHeader;
-				return true;
+				if (Integer.parseInt(strings[2]) < 0 || Integer.parseInt(strings[3]) < 0)
+				{
+					player.sendColouredMessage("&2cInvalid warp sign. Outer (top) and Inner (bottom) radius must be a positive integer.");
+					return false;
+				}
 			}
-			return false;
+			catch (NumberFormatException exception)
+			{
+				player.sendColouredMessage("&2cInvalid warp sign. Outer (top) and Inner (bottom) radius must be a positive integer.");
+				return false;
+			}
+
+			player.sendColouredMessage("&aSnazzy warp sign created for world: &r%s", strings[1]);
+			console.logInformation("%s created a snazzy warp sign named %s.", player.getPrettyName(), strings[1]);
+			strings[0] = SnazzyWarp.signHeader;
+			return true;
 		}
 
 		if (head.contains(Warp.signTag) || head.contains(Warp.signHeader.toLowerCase()))
