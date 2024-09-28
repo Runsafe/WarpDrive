@@ -27,20 +27,19 @@ public class SetRegionPortal extends PlayerAsyncCommand
 	@Override
 	public String OnAsyncExecute(IPlayer player, IArgumentList parameters)
 	{
-		IWorld world = parameters.getValue("world");
-		if (world == null)
-			return null;
-		String region = parameters.getValue("region");
+		IWorld world = parameters.getRequired("world");
+		String region = parameters.getRequired("region");
+
 		String portal_name = "region_" + world.getName() + '_' + region;
 		PortalWarp warp = engine.getWarp(world, portal_name);
 		if (warp != null)
 		{
 			warp.setLocation(player.getLocation());
 			engine.updateWarp(warp);
-			return "&aRegion " + region + " in world " + world.getName() + " warp updated!";
+			return String.format("&aRegion %s in world %s warp updated!", region, world.getName());
 		}
 		engine.createRegionWarp(world, region, portal_name, player.getLocation(), parameters.getValue("permission"));
-		return "&aThe region " + region + " in world " + world.getName() + " has been hooked up to a new portal!";
+		return String.format("&aThe region %s in world %s has been hooked up to a new portal!", region, world.getName());
 	}
 
 	private final PortalEngine engine;
