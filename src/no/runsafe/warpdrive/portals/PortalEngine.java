@@ -259,6 +259,12 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		repository.setWarp(warp);
 	}
 
+	public void deleteRegionWarp(IWorld portalWorld, String portalName)
+	{
+		portals.get(portalWorld.getName()).remove(portalName);
+		repository.deleteWarp(portalName);
+	}
+
 	public void finalizeWarp(IPlayer player)
 	{
 		IRegion3D portalArea = scanArea(player.getLocation());
