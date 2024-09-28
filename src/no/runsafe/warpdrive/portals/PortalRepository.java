@@ -58,31 +58,18 @@ public class PortalRepository extends Repository
 		database.execute("DELETE FROM warpdrive_portals WHERE ID = ?", warpID);
 	}
 
-	public void storeWarp(PortalWarp warp)
+	public void setWarp(PortalWarp warp)
 	{
 		database.execute(
 			"INSERT INTO warpdrive_portals (ID, world, x, y, z, destWorld, destX, destY, destZ, destYaw, destPitch, radius, permission, portal_field, region) " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+				"ON DUPLICATE KEY UPDATE x=VALUES(x), y=VALUES(y), z=VALUES(z), destWorld=VALUES(destWorld), " +
+				"destX=VALUES(destX), destY=VALUES(destY), destZ=VALUES(destZ), destYaw=VALUES(destYaw), destPitch=VALUES(destPitch), " +
+				"radius=VALUES(radius), permission=VALUES(permission), portal_field=VALUES(portal_field), region=VALUES(region)",
 			warp.getID(), warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getDestinationWorldName(),
 			warp.getDestinationX(), warp.getDestinationY(), warp.getDestinationZ(), warp.getDestinationYaw(),
 			warp.getDestinationPitch(), null, warp.getPermission(), warp.getRegion() == null ? null : warp.getRegion().toString(),
 			warp.getEnterRegion()
-		);
-	}
-
-	public void updatePortalWarp(PortalWarp warp)
-	{
-		database.execute(
-			"UPDATE warpdrive_portals " +
-				"SET destWorld = ?, destX = ?, destY = ?, destZ = ?, destYaw = ?, destPitch = ?," +
-				"world = ?, x = ?, y = ?, z = ?, type = ?, portal_field = ?, region = ? " +
-				"WHERE world=? AND ID=?",
-			warp.getDestinationWorldName(), warp.getDestinationX(), warp.getDestinationY(),
-			warp.getDestinationZ(), warp.getDestinationYaw(), warp.getDestinationPitch(),
-			warp.getWorldName(), warp.getX(), warp.getY(), warp.getZ(), warp.getType().ordinal(),
-			warp.getRegion() == null ? null : warp.getRegion().toString(),
-			warp.getEnterRegion(),
-			warp.getWorldName(), warp.getID()
 		);
 	}
 
