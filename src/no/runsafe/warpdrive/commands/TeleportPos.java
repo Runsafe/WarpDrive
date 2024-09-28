@@ -22,9 +22,11 @@ public class TeleportPos extends PlayerCommand implements IBranchingExecution
 	@Override
 	public String OnExecute(IPlayer player, IArgumentList parameters)
 	{
-		int x = parameters.getRequired("x");
-		int y = parameters.getRequired("y");
-		int z = parameters.getRequired("z");
+		Integer x = parameters.getValue("x");
+		Integer y = parameters.getValue("y");
+		Integer z = parameters.getValue("z");
+		if (x == null || y==null || z == null)
+			return "&cInvalid coordinates. Make sure you're using integers.";
 		if (abs(x) > 30000000 || y > 255 || y < 0 || abs(z) > 30000000)
 			return "&cOutside the world boundaries.";
 		ILocation target = player.getLocation();
