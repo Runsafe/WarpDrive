@@ -29,12 +29,14 @@ public class SetRegionPortal extends PlayerAsyncCommand
 	{
 		IWorld world = parameters.getRequired("world");
 		String region = parameters.getRequired("region");
+		if (player.getLocation() == null)
+			return "&cInvalid location.";
 
 		String portal_name = "region_" + world.getName() + '_' + region;
 		PortalWarp warp = engine.getWarp(world, portal_name);
 		if (warp != null)
 		{
-			warp.setLocation(player.getLocation());
+			warp.setDestination(player.getLocation());
 			engine.updateWarp(warp);
 			return String.format("&aRegion %s in world %s warp updated!", region, world.getName());
 		}
