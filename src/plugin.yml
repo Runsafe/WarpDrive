@@ -42,5 +42,8 @@ commands:
   setregionportal:
     description: Allows setting/editing of region-based portals in-game.
     aliases: [setrp]
+  delregionportal:
+    description: Deletes a region-based portal.
+    aliases: [delrp]
   setzone:
     description: Allows setting your current zone.

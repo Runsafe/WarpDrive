@@ -252,8 +252,17 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 	public void createRegionWarp(IWorld portalWorld, String region, String portalName, ILocation destination, String permission)
 	{
 		PortalWarp warp = new PortalWarp(portalName, portalWorld.getLocation(0.0, 0.0, 0.0), destination, PortalType.NORMAL, 0, permission, null, region);
-		repository.storeWarp(warp);
-		portals.get(portalWorld.getName()).put(warp.getID(), warp);
+		String worldName = portalWorld.getName();
+		if (!portals.containsKey(worldName))
+			portals.put(worldName, new HashMap<>());
+		portals.get(worldName).put(warp.getID(), warp);
+		repository.setWarp(warp);
+	}
+
+	public void deleteRegionWarp(IWorld portalWorld, String portalName)
+	{
+		portals.get(portalWorld.getName()).remove(portalName);
+		repository.deleteWarp(portalName);
 	}
 
 	public void finalizeWarp(IPlayer player)
@@ -267,7 +276,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		if (!portals.containsKey(worldName)) // Check if we're missing a container for this world.
 			portals.put(worldName, new HashMap<>()); // Create a new warp container.
 
-		repository.storeWarp(warp); // Store the warp in the database.
+		repository.setWarp(warp); // Store the warp in the database.
 		portals.get(worldName).put(warp.getID(), warp); // Add to the in-memory warp storage.
 	}
 
@@ -335,7 +344,7 @@ public class PortalEngine implements IPlayerPortal, IConfigurationChanged, IPlay
 		if (!portals.containsKey(worldName))
 			portals.put(worldName, new HashMap<>());
 
-		repository.updatePortalWarp(warp); // Store changes in the database.
+		repository.setWarp(warp); // Store changes in the database.
 		portals.get(worldName).put(warp.getID(), warp);
 
 		if (abandoned_portals.containsKey(warp.getID()))
